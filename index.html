@@ -1,128 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#2C3E50">
-  <meta name="description" content="365-day meal planner with QR codes — beef, pork, chicken &amp; ground turkey">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Meal Planner">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon.svg">
-  <title>365 Meal Planner</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<div id="app">
-
-  <!-- Header -->
-  <header class="app-header">
-    <div class="header-content">
-      <div class="header-left">
-        <span class="app-icon">🍽️</span>
-        <h1>365 Meal Planner</h1>
-      </div>
-      <div class="header-right">
-        <button id="settingsBtn" class="icon-btn" title="Settings" aria-label="Settings">⚙️</button>
-        <button id="printWeekBtn" class="icon-btn" title="Print this week" aria-label="Print week">🖨️</button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Category Filter -->
-  <div class="filter-bar" role="group" aria-label="Filter by protein">
-    <button class="filter-btn active" data-category="all">All</button>
-    <button class="filter-btn beef"    data-category="beef">🥩 Beef</button>
-    <button class="filter-btn pork"    data-category="pork">🥓 Pork</button>
-    <button class="filter-btn chicken" data-category="chicken">🍗 Chicken</button>
-    <button class="filter-btn turkey"  data-category="groundTurkey">🦃 Ground Turkey</button>
-  </div>
-
-  <!-- Week Navigation -->
-  <div class="week-nav">
-    <button id="prevWeekBtn" class="nav-btn" aria-label="Previous week">&#8249; Prev</button>
-    <div class="week-info">
-      <span id="weekLabel">Week 1</span>
-      <span id="weekDates"></span>
-    </div>
-    <button id="todayBtn" class="today-btn" title="Jump to current week">Today</button>
-    <button id="nextWeekBtn" class="nav-btn" aria-label="Next week">Next &#8250;</button>
-  </div>
-
-  <!-- Week Jump Select -->
-  <div class="week-jump">
-    <label for="weekSelect">Jump to:</label>
-    <select id="weekSelect" aria-label="Jump to week"></select>
-  </div>
-
-  <!-- Day Cards -->
-  <main id="mainContent" class="week-view" aria-live="polite"></main>
-
-</div><!-- #app -->
-
-<!-- Day Detail Modal -->
-<div id="dayModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalDayTitle">
-  <div class="modal-overlay" id="modalOverlay"></div>
-  <div class="modal-content">
-    <div class="modal-header">
-      <div>
-        <h2 id="modalDayTitle"></h2>
-        <p id="modalDayDate"></p>
-      </div>
-      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-    </div>
-    <div class="modal-body">
-      <div id="modalMeals"></div>
-
-      <div class="qr-section">
-        <h3>QR Code</h3>
-        <p class="qr-desc">Scan to share this day's meal plan</p>
-        <div id="qrcode" aria-label="QR code for today's meals"></div>
-        <div class="qr-actions">
-          <button id="printDayBtn"   class="btn btn-primary">🖨️ Print Day</button>
-          <button id="shareBtn"      class="btn btn-share">📤 Text / Share</button>
-          <button id="downloadQrBtn" class="btn btn-secondary">⬇️ Save QR</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Settings Modal -->
-<div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Settings">
-  <div class="modal-overlay" id="settingsOverlay"></div>
-  <div class="modal-content settings-modal">
-    <div class="modal-header">
-      <div><h2>Settings</h2></div>
-      <button class="modal-close" id="settingsClose" aria-label="Close">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="setting-group">
-        <label for="startDateInput">Plan Start Date</label>
-        <input type="date" id="startDateInput">
-        <p class="setting-hint">Day 1 of your 365-day meal plan. Change this to align the plan with any date.</p>
-      </div>
-      <button id="saveSettings" class="btn btn-primary" style="width:100%">💾 Save Settings</button>
-    </div>
-  </div>
-</div>
-
-<!-- Print-only output (hidden on screen) -->
-<div id="printView" class="print-only">
-  <h1>365 Meal Planner</h1>
-  <div id="printContent"></div>
-</div>
-
-<!-- Toast notification -->
-<div id="toast" role="status" aria-live="polite"></div>
-
-<script src="meals-data.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
-        integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4zsiqalo3aP9MN0PV1c9w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="app.js"></script>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2C3E50" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Meal Planner" />
+    <meta name="description" content="365-day meal plan with QR codes — beef, pork, chicken & ground turkey" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    <title>365 Meal Planner</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

@@ -1,0 +1,230 @@
+// Meal pools per protein × meal-time
+const MEALS = {
+  beef: {
+    breakfast: [
+      'Beef & Egg Breakfast Burrito',
+      'Steak & Scrambled Eggs',
+      'Beef Hash with Peppers',
+      'Philly Cheesesteak Omelet',
+      'Ground Beef Breakfast Bowl',
+      'Beefy Veggie Frittata',
+      'Steak & Potato Skillet',
+      'Beef & Cheese Quesadilla',
+      'Corned Beef Hash',
+      'Beef Biscuits & Gravy',
+    ],
+    lunch: [
+      'Classic Cheeseburger',
+      'Beef Taco Bowl',
+      'Roast Beef Sandwich',
+      'Beef & Broccoli Stir-Fry',
+      'Beef Fajitas',
+      'Philly Cheesesteak',
+      'Beef Gyro Wrap',
+      'Beef Noodle Soup',
+      'BBQ Beef Sliders',
+      'Beef & Rice Bowl',
+      'Korean Beef Bulgogi Bowl',
+      'Beef Quesadilla',
+      'Beef Cobb Salad',
+      'Meatball Sub',
+      'Beef Chili',
+    ],
+    dinner: [
+      'Ribeye Steak with Roasted Veggies',
+      'Beef Lasagna',
+      'Pot Roast with Potatoes & Carrots',
+      'Spaghetti Bolognese',
+      'Beef Stew',
+      'Grilled NY Strip with Asparagus',
+      'Beef Tacos',
+      'Beef Stir-Fry with Rice',
+      'Shepherd\'s Pie',
+      'Prime Rib with Mashed Potatoes',
+      'Beef Enchiladas',
+      'Beef & Mushroom Risotto',
+      'Braised Short Ribs',
+      'Beef Stuffed Peppers',
+      'Beef Wellington',
+    ],
+  },
+
+  pork: {
+    breakfast: [
+      'Bacon & Egg Scramble',
+      'Pork Sausage & Pancakes',
+      'BLT Breakfast Wrap',
+      'Pork Belly Fried Rice',
+      'Ham & Cheese Omelette',
+      'Pork Sausage Gravy on Biscuits',
+      'Canadian Bacon Egg Muffin',
+      'Pork Chop & Eggs',
+      'Prosciutto & Veggie Frittata',
+      'Chorizo Breakfast Bowl',
+    ],
+    lunch: [
+      'Pulled Pork Sandwich',
+      'BLT Club Sandwich',
+      'Pork Carnitas Tacos',
+      'Ham & Swiss Panini',
+      'Pork Fried Rice',
+      'BBQ Pork Ribs',
+      'Pork Bánh Mì',
+      'Pork Tenderloin Salad',
+      'Ham & Bean Soup',
+      'Pork Burrito Bowl',
+      'Honey Garlic Pork Chop Plate',
+      'Pork Egg Roll Bowl',
+      'Cuban Sandwich',
+      'Pork Gyoza Bowl',
+      'Pork Lo Mein',
+    ],
+    dinner: [
+      'BBQ Baby Back Ribs',
+      'Slow-Cooker Pulled Pork',
+      'Pork Chops with Apple Sauce',
+      'Pork Loin with Roasted Veggies',
+      'Honey Garlic Pork Tenderloin',
+      'Pork Carnitas with Rice & Beans',
+      'Pork Stir-Fry with Noodles',
+      'Stuffed Pork Chops',
+      'Ham & Potato Casserole',
+      'Pork Ramen',
+      'Maple Glazed Pork Roast',
+      'Pork Belly with Bok Choy',
+      'Pork Schnitzel',
+      'Pork & Sauerkraut',
+      'Char Siu Pork with Rice',
+    ],
+  },
+
+  chicken: {
+    breakfast: [
+      'Chicken & Egg Scramble',
+      'Chicken Sausage Breakfast Bowl',
+      'BBQ Chicken Breakfast Burrito',
+      'Chicken & Avocado Toast',
+      'Rotisserie Chicken Hash',
+      'Chicken Omelette with Salsa',
+      'Chicken & Waffle',
+      'Chicken Sausage & Egg Wrap',
+      'Smoked Chicken Breakfast Plate',
+      'Chicken Frittata',
+    ],
+    lunch: [
+      'Grilled Chicken Caesar Salad',
+      'Chicken Burrito Bowl',
+      'Buffalo Chicken Wrap',
+      'Chicken Soup',
+      'BBQ Chicken Sandwich',
+      'Chicken Quesadilla',
+      'Teriyaki Chicken Bowl',
+      'Chicken Avocado BLT',
+      'Chicken Noodle Soup',
+      'Lemon Herb Chicken Plate',
+      'Chicken Tikka Masala with Naan',
+      'Chicken Gyro',
+      'Chicken Pasta Salad',
+      'Nashville Hot Chicken Sandwich',
+      'Chicken Fried Rice',
+    ],
+    dinner: [
+      'Baked Lemon Herb Chicken',
+      'Chicken Alfredo',
+      'Butter Chicken with Basmati Rice',
+      'Chicken Parmesan',
+      'Grilled Chicken with Roasted Vegetables',
+      'Chicken Stir-Fry with Brown Rice',
+      'Chicken Enchiladas',
+      'Chicken Pot Pie',
+      'BBQ Chicken with Corn & Slaw',
+      'Chicken Marsala',
+      'Honey Garlic Chicken Thighs',
+      'Chicken Piccata',
+      'Roasted Whole Chicken',
+      'Chicken Tikka Masala',
+      'Creamy Tuscan Chicken',
+    ],
+  },
+
+  groundTurkey: {
+    breakfast: [
+      'Turkey Sausage & Egg Burrito',
+      'Ground Turkey Breakfast Bowl',
+      'Turkey & Veggie Scramble',
+      'Turkey Sausage Patty Sandwich',
+      'Turkey Hash',
+      'Ground Turkey Omelette',
+      'Turkey & Sweet Potato Hash',
+      'Turkey Breakfast Skillet',
+      'Turkey Sausage & Pancakes',
+      'Turkey Chorizo Breakfast Bowl',
+    ],
+    lunch: [
+      'Turkey Taco Bowl',
+      'Ground Turkey Lettuce Wraps',
+      'Turkey Burger',
+      'Turkey Stuffed Avocado',
+      'Turkey Chili',
+      'Turkey & Rice Bowl',
+      'Turkey Meatball Sub',
+      'Turkey Gyro',
+      'Turkey Burrito',
+      'Turkey Pasta Bowl',
+      'Ground Turkey Tacos',
+      'Turkey Sloppy Joe',
+      'Turkey Cobb Salad',
+      'Turkey Fried Rice',
+      'Turkey Grain Bowl',
+    ],
+    dinner: [
+      'Ground Turkey Stuffed Peppers',
+      'Turkey Meatloaf',
+      'Turkey Bolognese',
+      'Turkey Chili with Cornbread',
+      'Turkey Tacos Night',
+      'Turkey Lasagna',
+      'Turkey & Vegetable Soup',
+      'Turkey Shepherd\'s Pie',
+      'Ground Turkey Stir-Fry',
+      'Turkey Enchiladas',
+      'Turkey Meatballs with Marinara',
+      'Turkey & Sweet Potato Skillet',
+      'Turkey Kebabs with Rice',
+      'Turkey Zucchini Boats',
+      'Asian Turkey Rice Bowl',
+    ],
+  },
+}
+
+const PROTEINS = ['beef', 'pork', 'chicken', 'groundTurkey']
+
+function pick(arr, index) {
+  return arr[index % arr.length]
+}
+
+export function generateMealPlan() {
+  const days = []
+  for (let i = 0; i < 365; i++) {
+    const protein = PROTEINS[i % PROTEINS.length]
+    const pool = MEALS[protein]
+    // Stagger index per meal to avoid repetition
+    days.push({
+      dayNumber: i + 1,
+      protein,
+      breakfast: pick(pool.breakfast, Math.floor(i / 4)),
+      lunch:     pick(pool.lunch,     Math.floor(i / 4) + 3),
+      dinner:    pick(pool.dinner,    Math.floor(i / 4) + 7),
+    })
+  }
+  return days
+}
+
+export const PROTEIN_LABELS = {
+  beef:         { label: 'Beef',          emoji: '🥩' },
+  pork:         { label: 'Pork',          emoji: '🥓' },
+  chicken:      { label: 'Chicken',       emoji: '🍗' },
+  groundTurkey: { label: 'Ground Turkey', emoji: '🦃' },
+}
+
+export const MEAL_PLAN = generateMealPlan()

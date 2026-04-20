@@ -1,10 +1,14 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import Header from './components/Header'
+import BannerGrid from './components/BannerGrid'
 import FilterBar from './components/FilterBar'
 import WeekNav from './components/WeekNav'
 import DayCard from './components/DayCard'
 import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
+import GroceryListModal from './components/GroceryListModal'
+import SeasonalModal from './components/SeasonalModal'
+import SwapModal from './components/SwapModal'
 import { useMealPlan } from './hooks/useMealPlan'
 import './styles.css'
 
@@ -38,9 +42,14 @@ export default function App() {
     weekStartDate, weekEndDate, activeFilter, setActiveFilter,
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
+    swapMeal,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
+  const [showGrocery, setShowGrocery] = useState(false)
+  const [showSeasonal, setShowSeasonal] = useState(false)
+  const [showSwap, setShowSwap] = useState(false)
+  const weekViewRef = useRef(null)
 
   const handlePrintWeek = useCallback(() => {
     const win = window.open('', '_blank')
@@ -49,9 +58,23 @@ export default function App() {
     win.print()
   }, [weekDays, currentWeek])
 
+  const handleBanner = useCallback((key) => {
+    if (key === 'planYear') {
+      weekViewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    } else if (key === 'grocery') {
+      setShowGrocery(true)
+    } else if (key === 'seasonal') {
+      setShowSeasonal(true)
+    } else if (key === 'swap') {
+      setShowSwap(true)
+    }
+  }, [])
+
   return (
     <div id="app">
       <Header onPrintWeek={handlePrintWeek} onOpenSettings={() => setShowSettings(true)} />
+
+      <BannerGrid onSelect={handleBanner} />
 
       <FilterBar active={activeFilter} onChange={setActiveFilter} />
 
@@ -66,7 +89,7 @@ export default function App() {
         onJump={jumpToWeek}
       />
 
-      <main className="week-view" aria-live="polite">
+      <main className="week-view" ref={weekViewRef} aria-live="polite">
         {weekDays.map(day => (
           <DayCard
             key={day.dayNumber}
@@ -86,6 +109,27 @@ export default function App() {
           startDate={startDate}
           onSave={saveStartDate}
           onClose={() => setShowSettings(false)}
+        />
+      )}
+
+      {showGrocery && (
+        <GroceryListModal
+          weekDays={weekDays}
+          weekNum={currentWeek + 1}
+          onClose={() => setShowGrocery(false)}
+        />
+      )}
+
+      {showSeasonal && (
+        <SeasonalModal onClose={() => setShowSeasonal(false)} />
+      )}
+
+      {showSwap && (
+        <SwapModal
+          weekDays={weekDays}
+          weekNum={currentWeek + 1}
+          onSwap={swapMeal}
+          onClose={() => setShowSwap(false)}
         />
       )}
 

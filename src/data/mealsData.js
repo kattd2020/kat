@@ -1,5 +1,5 @@
 // Meal pools per protein × meal-time
-const MEALS = {
+export const MEALS = {
   beef: {
     breakfast: [
       'Beef & Egg Breakfast Burrito',

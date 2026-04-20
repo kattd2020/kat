@@ -2,6 +2,15 @@ import { useState, useCallback } from 'react'
 import { MEAL_PLAN } from '../data/mealsData'
 
 const STORAGE_KEY = 'mealplanner_startdate'
+const SWAPS_KEY = 'mealplanner_swaps'
+
+function getStoredSwaps() {
+  try {
+    return JSON.parse(localStorage.getItem(SWAPS_KEY)) || {}
+  } catch {
+    return {}
+  }
+}
 
 function getStoredStartDate() {
   const stored = localStorage.getItem(STORAGE_KEY)
@@ -29,14 +38,27 @@ export function useMealPlan() {
   )
   const [activeFilter, setActiveFilter] = useState('all')
   const [selectedDay, setSelectedDay] = useState(null)
+  const [swaps, setSwaps] = useState(getStoredSwaps)
 
   const totalWeeks = Math.ceil(MEAL_PLAN.length / 7)
 
   const weekDays = MEAL_PLAN.slice(currentWeek * 7, currentWeek * 7 + 7).map((day) => {
     const date = new Date(startDate)
     date.setDate(date.getDate() + day.dayNumber - 1)
-    return { ...day, date }
+    const override = swaps[day.dayNumber] || {}
+    return { ...day, ...override, date }
   })
+
+  const swapMeal = useCallback((dayNumber, mealType, newMealName) => {
+    setSwaps(prev => {
+      const next = {
+        ...prev,
+        [dayNumber]: { ...(prev[dayNumber] || {}), [mealType]: newMealName },
+      }
+      localStorage.setItem(SWAPS_KEY, JSON.stringify(next))
+      return next
+    })
+  }, [])
 
   const goToPrevWeek = useCallback(() => setCurrentWeek(w => Math.max(0, w - 1)), [])
   const goToNextWeek = useCallback(() => setCurrentWeek(w => Math.min(totalWeeks - 1, w + 1)), [totalWeeks])
@@ -69,5 +91,6 @@ export function useMealPlan() {
     goToToday,
     jumpToWeek,
     saveStartDate,
+    swapMeal,
   }
 }

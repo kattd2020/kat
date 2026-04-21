@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+package-lock.json
+
+# Playwright / browser-tool artifacts
+.playwright-mcp/
+meal-planner.png
 
 # Editor directories and files
 .vscode/*

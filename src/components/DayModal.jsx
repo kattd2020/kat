@@ -35,7 +35,7 @@ export default function DayModal({ day, onClose }) {
     QRCode.toCanvas(canvasRef.current, buildText(day), {
       width: 200,
       margin: 2,
-      color: { dark: '#2C3E50', light: '#FFFFFF' },
+      color: { dark: '#4F46E5', light: '#FFFFFF' },
     }).then(() => {
       setQrUrl(canvasRef.current.toDataURL())
     })

@@ -195,9 +195,58 @@ export const MEALS = {
       'Asian Turkey Rice Bowl',
     ],
   },
+
+  seafood: {
+    breakfast: [
+      'Smoked Salmon Bagel',
+      'Shrimp & Grits',
+      'Tuna Avocado Toast',
+      'Crab Eggs Benedict',
+      'Salmon & Egg Scramble',
+      'Lox Breakfast Bowl',
+      'Smoked Salmon Frittata',
+      'Shrimp Breakfast Burrito',
+      'Tuna Melt Open-Face',
+      'Smoked Trout & Egg Plate',
+    ],
+    lunch: [
+      'Tuna Salad Sandwich',
+      'Shrimp Caesar Salad',
+      'Salmon Poke Bowl',
+      'Fish Tacos',
+      'Shrimp Po\' Boy',
+      'Crab Cake Salad',
+      'Tuna Niçoise Salad',
+      'Lobster Roll',
+      'Shrimp Burrito Bowl',
+      'Salmon Rice Bowl',
+      'Calamari Pasta Salad',
+      'Mahi Mahi Sandwich',
+      'Shrimp Pad Thai',
+      'Tuna Sushi Roll Bowl',
+      'Cajun Shrimp Wrap',
+    ],
+    dinner: [
+      'Grilled Salmon with Asparagus',
+      'Shrimp Scampi over Linguine',
+      'Pan-Seared Cod with Lemon Butter',
+      'Lobster Tail with Drawn Butter',
+      'Seafood Paella',
+      'Cioppino Seafood Stew',
+      'Blackened Tilapia with Rice',
+      'Coconut Curry Shrimp',
+      'Crab-Stuffed Mushrooms with Pasta',
+      'Miso-Glazed Salmon',
+      'Garlic Butter Scallops',
+      'Fish & Chips',
+      'Tuna Steak with Wasabi Mash',
+      'Seafood Alfredo',
+      'Bouillabaisse',
+    ],
+  },
 }
 
-const PROTEINS = ['beef', 'pork', 'chicken', 'groundTurkey']
+const PROTEINS = ['beef', 'pork', 'chicken', 'groundTurkey', 'seafood']
 
 function pick(arr, index) {
   return arr[index % arr.length]
@@ -225,6 +274,7 @@ export const PROTEIN_LABELS = {
   pork:         { label: 'Pork',          emoji: '🥓' },
   chicken:      { label: 'Chicken',       emoji: '🍗' },
   groundTurkey: { label: 'Ground Turkey', emoji: '🦃' },
+  seafood:      { label: 'Seafood',       emoji: '🐟' },
 }
 
 export const MEAL_PLAN = generateMealPlan()

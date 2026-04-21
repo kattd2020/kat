@@ -4,6 +4,7 @@ const FILTERS = [
   { key: 'pork',        label: '🥓 Pork' },
   { key: 'chicken',     label: '🍗 Chicken' },
   { key: 'groundTurkey',label: '🦃 Ground Turkey' },
+  { key: 'seafood',     label: '🐟 Seafood' },
 ]
 
 export default function FilterBar({ active, onChange }) {

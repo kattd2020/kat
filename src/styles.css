@@ -18,6 +18,8 @@
   --chicken-grad: linear-gradient(135deg, #34D399, #059669);
   --turkey:       #A855F7;
   --turkey-grad:  linear-gradient(135deg, #C084FC, #7E22CE);
+  --seafood:      #06B6D4;
+  --seafood-grad: linear-gradient(135deg, #67E8F9, #0891B2);
 
   /* Surfaces */
   --bg:           #0F172A;
@@ -175,13 +177,14 @@ body::after {
   transform: translateY(-1px);
   box-shadow: 0 10px 22px rgba(99,102,241,0.35);
 }
-.filter-btn.active:not(.beef):not(.pork):not(.chicken):not(.groundTurkey) {
+.filter-btn.active:not(.beef):not(.pork):not(.chicken):not(.groundTurkey):not(.seafood) {
   background: linear-gradient(135deg, #6366F1, #8B5CF6);
 }
 .filter-btn.beef.active        { background: var(--beef-grad);    box-shadow: 0 10px 22px rgba(239,68,68,0.40); }
 .filter-btn.pork.active        { background: var(--pork-grad);    box-shadow: 0 10px 22px rgba(249,115,22,0.40); }
 .filter-btn.chicken.active     { background: var(--chicken-grad); box-shadow: 0 10px 22px rgba(16,185,129,0.40); }
 .filter-btn.groundTurkey.active{ background: var(--turkey-grad);  box-shadow: 0 10px 22px rgba(168,85,247,0.40); }
+.filter-btn.seafood.active     { background: var(--seafood-grad); box-shadow: 0 10px 22px rgba(6,182,212,0.40); }
 
 /* ── Week Navigation ──────────────────────────────────── */
 .week-nav {
@@ -312,12 +315,14 @@ body::after {
 .day-card.pork::after         { background: var(--pork-grad); }
 .day-card.chicken::after      { background: var(--chicken-grad); }
 .day-card.groundTurkey::after { background: var(--turkey-grad); }
+.day-card.seafood::after      { background: var(--seafood-grad); }
 
 /* Soft tinted glow per card */
 .day-card.beef         { box-shadow: 0 10px 30px rgba(239,68,68,0.12), var(--shadow); }
 .day-card.pork         { box-shadow: 0 10px 30px rgba(249,115,22,0.12), var(--shadow); }
 .day-card.chicken      { box-shadow: 0 10px 30px rgba(16,185,129,0.12), var(--shadow); }
 .day-card.groundTurkey { box-shadow: 0 10px 30px rgba(168,85,247,0.12), var(--shadow); }
+.day-card.seafood      { box-shadow: 0 10px 30px rgba(6,182,212,0.12), var(--shadow); }
 
 .day-card-header {
   display: flex;
@@ -359,6 +364,7 @@ body::after {
 .day-card.pork .protein-tag         { background: var(--pork-grad); }
 .day-card.chicken .protein-tag      { background: var(--chicken-grad); }
 .day-card.groundTurkey .protein-tag { background: var(--turkey-grad); }
+.day-card.seafood .protein-tag      { background: var(--seafood-grad); }
 
 .meal-list {
   list-style: none;

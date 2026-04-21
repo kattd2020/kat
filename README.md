@@ -1,16 +1,44 @@
-# React + Vite
+# Plateful365
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A 365-day meal planner PWA. Three meals a day, four rotating proteins
+(beef, pork, chicken, ground turkey), seasonal suggestions, smart grocery
+lists by protein, quick swaps, and a scannable / printable / shareable QR
+code for every day.
 
-Currently, two official plugins are available:
+Live at **[plateful365.com](https://plateful365.com/)**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech
 
-## React Compiler
+- React 19 + Vite 7
+- `vite-plugin-pwa` (Workbox, auto-update service worker)
+- `qrcode` (canvas) for per-day QR codes
+- Plain CSS (`src/styles.css`)
+- Deployed on Cloudflare Pages (see `public/_redirects` for SPA fallback)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Develop
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev      # local dev server
+npm run build    # production build (emits dist/ with SW)
+npm run preview  # preview the production build
+npm run lint     # eslint
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Structure
+
+```
+src/
+  App.jsx                  root; wires banner grid, week view, modals, footer
+  hooks/useMealPlan.js     state: week nav, filter, start date, meal swaps
+  data/mealsData.js        meal pools + 365-day plan generator
+  components/
+    Header, FilterBar, WeekNav, DayCard     core UI
+    BannerGrid                               feature banners
+    DayModal                                 per-day view + QR + print/share
+    GroceryListModal, SeasonalModal, SwapModal   banner actions
+    SettingsModal                            start-date config
+```
+
+Add new meals to the `MEALS` object in `src/data/mealsData.js`.
+All styling lives in `src/styles.css` — no Tailwind or CSS-in-JS.

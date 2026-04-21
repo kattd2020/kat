@@ -134,6 +134,15 @@ export default function App() {
         />
       )}
 
+      <footer className="app-footer">
+        <span>
+          <strong>Plateful365</strong> · A full year of meals, planned
+        </span>
+        <span className="app-footer-meta">
+          365 days · 3 meals · 4 proteins · works offline
+        </span>
+      </footer>
+
       <div id="toast" role="status" aria-live="polite" />
     </div>
   )

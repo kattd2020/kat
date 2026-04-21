@@ -7,21 +7,22 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.svg'],
+      includeAssets: ['icon.svg', 'favicon.svg'],
       manifest: {
-        name: '365 Meal Planner',
-        short_name: 'Meal Planner',
-        description: '365-day meal plan — beef, pork, chicken & ground turkey',
-        theme_color: '#2C3E50',
-        background_color: '#F5F5F5',
+        name: 'Plateful365 — 365 days of meals, planned',
+        short_name: 'Plateful365',
+        description: 'A full year of meals planned for you — seasonal suggestions, smart grocery lists, quick swaps, and a QR for every day.',
+        theme_color: '#6366F1',
+        background_color: '#EEF2FF',
         display: 'standalone',
         start_url: '/',
+        scope: '/',
         icons: [
           { src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg}']
+        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest}']
       }
     })
   ]

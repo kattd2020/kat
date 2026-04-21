@@ -18,6 +18,8 @@
   --chicken-grad: linear-gradient(135deg, #34D399, #059669);
   --turkey:       #A855F7;
   --turkey-grad:  linear-gradient(135deg, #C084FC, #7E22CE);
+  --seafood:      #06B6D4;
+  --seafood-grad: linear-gradient(135deg, #22D3EE, #0E7490);
 
   /* Surfaces */
   --bg:           #0F172A;
@@ -184,13 +186,14 @@ body::after {
   transform: translateY(-1px);
   box-shadow: 0 10px 22px rgba(99,102,241,0.35);
 }
-.filter-btn.active:not(.beef):not(.pork):not(.chicken):not(.groundTurkey) {
+.filter-btn.active:not(.beef):not(.pork):not(.chicken):not(.groundTurkey):not(.seafood) {
   background: linear-gradient(135deg, #6366F1, #8B5CF6);
 }
 .filter-btn.beef.active        { background: var(--beef-grad);    box-shadow: 0 10px 22px rgba(239,68,68,0.40); }
 .filter-btn.pork.active        { background: var(--pork-grad);    box-shadow: 0 10px 22px rgba(249,115,22,0.40); }
 .filter-btn.chicken.active     { background: var(--chicken-grad); box-shadow: 0 10px 22px rgba(16,185,129,0.40); }
 .filter-btn.groundTurkey.active{ background: var(--turkey-grad);  box-shadow: 0 10px 22px rgba(168,85,247,0.40); }
+.filter-btn.seafood.active     { background: var(--seafood-grad); box-shadow: 0 10px 22px rgba(6,182,212,0.40); }
 
 /* ── Week Navigation ──────────────────────────────────── */
 .week-nav {
@@ -321,12 +324,14 @@ body::after {
 .day-card.pork::after         { background: var(--pork-grad); }
 .day-card.chicken::after      { background: var(--chicken-grad); }
 .day-card.groundTurkey::after { background: var(--turkey-grad); }
+.day-card.seafood::after      { background: var(--seafood-grad); }
 
 /* Soft tinted glow per card */
 .day-card.beef         { box-shadow: 0 10px 30px rgba(239,68,68,0.12), var(--shadow); }
 .day-card.pork         { box-shadow: 0 10px 30px rgba(249,115,22,0.12), var(--shadow); }
 .day-card.chicken      { box-shadow: 0 10px 30px rgba(16,185,129,0.12), var(--shadow); }
 .day-card.groundTurkey { box-shadow: 0 10px 30px rgba(168,85,247,0.12), var(--shadow); }
+.day-card.seafood      { box-shadow: 0 10px 30px rgba(6,182,212,0.16), var(--shadow); }
 
 .day-card-header {
   display: flex;
@@ -368,6 +373,7 @@ body::after {
 .day-card.pork .protein-tag         { background: var(--pork-grad); }
 .day-card.chicken .protein-tag      { background: var(--chicken-grad); }
 .day-card.groundTurkey .protein-tag { background: var(--turkey-grad); }
+.day-card.seafood .protein-tag      { background: var(--seafood-grad); }
 
 .meal-list {
   list-style: none;
@@ -606,6 +612,8 @@ body::after {
   .banner { padding: 1rem; }
   .banner-title { font-size: .98rem; }
   .banner-desc { font-size: .8rem; }
+  .cost-summary { grid-template-columns: 1fr; }
+  .cost-table th, .cost-table td { padding: .45rem .35rem; font-size: .78rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -675,6 +683,118 @@ body::after {
 .banner-mint .banner-desc { color: rgba(15,23,42,0.78); }
 .banner-mint .banner-icon { background: rgba(15,23,42,0.12); box-shadow: inset 0 0 0 1px rgba(15,23,42,0.18); }
 .banner-cobalt   { background: linear-gradient(135deg, #1E40AF 0%, #2563EB 55%, #3B82F6 100%); }
+.banner-gold     { background: linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #10B981 100%); }
+
+/* ── Cost UI (DayCard, WeekNav, Modal) ────────────────── */
+.day-card-tags {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .8rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+.day-card-tags .protein-tag { margin-bottom: 0; }
+
+.cost-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .3rem .65rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #78350F;
+  background: linear-gradient(135deg, #FDE68A, #FCA5A5);
+  box-shadow: inset 0 0 0 1px rgba(120,53,15,0.15), 0 2px 6px rgba(15,23,42,0.08);
+}
+
+.week-cost {
+  display: inline-block;
+  margin-left: .4rem;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 800;
+  color: #065F46;
+  background: linear-gradient(135deg, #A7F3D0, #6EE7B7);
+  box-shadow: inset 0 0 0 1px rgba(6,95,70,0.15);
+}
+
+.cost-controls {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin-bottom: 1rem;
+}
+.cost-controls label {
+  font-weight: 700;
+  color: var(--text);
+  font-size: .88rem;
+}
+.cost-controls input {
+  width: 5rem;
+  padding: .45rem .6rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--glass-border);
+  background: #fff;
+  font-weight: 700;
+  text-align: center;
+}
+
+.cost-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: .6rem;
+  margin-bottom: 1.1rem;
+}
+.cost-stat {
+  padding: .85rem 1rem;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+.cost-stat-label {
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
+.cost-stat-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text);
+}
+.cost-stat-hero {
+  background: linear-gradient(135deg, #F59E0B, #10B981);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 10px 22px rgba(16,185,129,0.25);
+}
+.cost-stat-hero .cost-stat-label,
+.cost-stat-hero .cost-stat-value { color: #fff; }
+
+.cost-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .85rem;
+}
+.cost-table th, .cost-table td {
+  padding: .55rem .55rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+.cost-table th { font-weight: 800; color: var(--text-muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; }
+.cost-table td.num, .cost-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.cost-table tbody tr:last-child td { border-bottom: none; }
+.cost-protein { font-size: 1.1rem; }
 
 /* ── Grocery Modal ────────────────────────────────────── */
 .grocery-modal .modal-body { padding-top: 1.25rem; }

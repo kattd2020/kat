@@ -5,6 +5,23 @@ const PROTEIN_NOUN = {
   pork:         'pork',
   chicken:      'chicken',
   groundTurkey: 'ground turkey',
+  seafood:      'fish',
+}
+
+function proteinNoun(name, protein) {
+  if (protein !== 'seafood') return PROTEIN_NOUN[protein] || 'protein'
+  const n = name.toLowerCase()
+  if (n.includes('shrimp'))  return 'shrimp'
+  if (n.includes('salmon'))  return 'salmon'
+  if (n.includes('tuna'))    return 'tuna'
+  if (n.includes('cod'))     return 'cod'
+  if (n.includes('crab'))    return 'crab'
+  if (n.includes('lobster')) return 'lobster'
+  if (n.includes('clam'))    return 'clams'
+  if (n.includes('lox'))     return 'lox'
+  if (n.includes('sardine')) return 'sardines'
+  if (n.includes('kipper'))  return 'kippers'
+  return 'fish'
 }
 
 const ARCHETYPES = [
@@ -190,14 +207,28 @@ const ARCHETYPES = [
   },
 ]
 
-const DEFAULT_STEPS = (m) => [
-  `Pat the ${m.proteinNoun} dry and season it with salt and pepper at least 15 minutes ahead.`,
-  `Prep everything else first: measure sauces, chop vegetables, and have plates warming.`,
-  `Heat a heavy pan over medium-high with a tablespoon of oil until it shimmers.`,
-  `Sear the ${m.proteinNoun} until deeply browned on one side, then flip and finish cooking through.`,
-  `Rest the ${m.proteinNoun} on a warm plate for 5 minutes while you reduce any pan sauce or plate the sides.`,
-  `Slice against the grain, plate with the sides, and finish with a squeeze of lemon or fresh herbs.`,
-]
+const SEAFOOD_NOUNS = new Set(['salmon', 'cod', 'tuna', 'fish', 'shrimp', 'crab', 'lobster', 'clams', 'lox', 'sardines', 'kippers'])
+
+const DEFAULT_STEPS = (m) => {
+  if (SEAFOOD_NOUNS.has(m.proteinNoun)) {
+    return [
+      `Pat the ${m.proteinNoun} dry and season with salt, pepper, and a squeeze of lemon juice.`,
+      `Heat a nonstick or cast-iron pan over medium-high with a thin layer of neutral oil.`,
+      `Cook the ${m.proteinNoun} skin-side down first (if applicable) until crisp, pressing gently so it doesn't curl.`,
+      `Flip once and cook until the flesh is just opaque and flakes easily — about 2–4 minutes more, depending on thickness.`,
+      `Finish with a pat of butter, fresh herbs (dill or parsley), and more lemon off the heat.`,
+      `Serve immediately; seafood keeps cooking on the plate, so don't let it overshoot.`,
+    ]
+  }
+  return [
+    `Pat the ${m.proteinNoun} dry and season it with salt and pepper at least 15 minutes ahead.`,
+    `Prep everything else first: measure sauces, chop vegetables, and have plates warming.`,
+    `Heat a heavy pan over medium-high with a tablespoon of oil until it shimmers.`,
+    `Sear the ${m.proteinNoun} until deeply browned on one side, then flip and finish cooking through.`,
+    `Rest the ${m.proteinNoun} on a warm plate for 5 minutes while you reduce any pan sauce or plate the sides.`,
+    `Slice against the grain, plate with the sides, and finish with a squeeze of lemon or fresh herbs.`,
+  ]
+}
 
 function findArchetype(name) {
   return ARCHETYPES.find(a => a.match.test(name))
@@ -206,7 +237,7 @@ function findArchetype(name) {
 export function getRecipeSteps(name, protein) {
   const meta = {
     name,
-    proteinNoun: PROTEIN_NOUN[protein] || 'protein',
+    proteinNoun: proteinNoun(name, protein),
     proteinLabel: PROTEIN_LABELS[protein]?.label || 'Protein',
   }
   const arch = findArchetype(name)

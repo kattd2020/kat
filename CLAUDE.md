@@ -11,7 +11,9 @@
 ## Project Purpose
 365-day meal planner PWA with:
 - 3 meals/day (breakfast, lunch, dinner)
-- 4 protein categories: Beef, Pork, Chicken, Ground Turkey (rotate every 4 days)
+- 5 protein categories: Beef, Pork, Chicken, Ground Turkey, Seafood (rotate every 5 days)
+- Step-by-step recipe for every meal (archetype-based generator in `src/data/recipes.js`)
+- Cost estimator (per meal / day / week / year) in `src/data/costs.js`
 - QR code per day — scannable, printable, shareable via Web Share API
 - Print single day or full week
 - Configurable start date (saved to localStorage)

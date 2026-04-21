@@ -9,7 +9,9 @@ import SettingsModal from './components/SettingsModal'
 import GroceryListModal from './components/GroceryListModal'
 import SeasonalModal from './components/SeasonalModal'
 import SwapModal from './components/SwapModal'
+import CostModal from './components/CostModal'
 import { useMealPlan } from './hooks/useMealPlan'
+import { estimateWeekCost } from './data/costs'
 import './styles.css'
 
 function buildWeekPrintHTML(weekDays, weekNum) {
@@ -50,6 +52,7 @@ export default function App() {
   const [showGrocery, setShowGrocery] = useState(false)
   const [showSeasonal, setShowSeasonal] = useState(false)
   const [showSwap, setShowSwap] = useState(false)
+  const [showCost, setShowCost] = useState(false)
   const weekViewRef = useRef(null)
 
   const handlePrintWeek = useCallback(() => {
@@ -68,6 +71,8 @@ export default function App() {
       setShowSeasonal(true)
     } else if (key === 'swap') {
       setShowSwap(true)
+    } else if (key === 'cost') {
+      setShowCost(true)
     }
   }, [])
 
@@ -84,6 +89,7 @@ export default function App() {
         totalWeeks={totalWeeks}
         weekStartDate={weekStartDate}
         weekEndDate={weekEndDate}
+        weekCost={estimateWeekCost(weekDays)}
         onPrev={goToPrevWeek}
         onNext={goToNextWeek}
         onToday={goToToday}
@@ -131,6 +137,15 @@ export default function App() {
           weekNum={currentWeek + 1}
           onSwap={swapMeal}
           onClose={() => setShowSwap(false)}
+        />
+      )}
+
+      {showCost && (
+        <CostModal
+          weekDays={weekDays}
+          weekNum={currentWeek + 1}
+          totalWeeks={totalWeeks}
+          onClose={() => setShowCost(false)}
         />
       )}
 

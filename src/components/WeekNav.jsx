@@ -1,7 +1,9 @@
+import { formatUSD } from '../data/costs'
+
 const fmt = (d) => d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''
 
 export default function WeekNav({
-  currentWeek, totalWeeks, weekStartDate, weekEndDate,
+  currentWeek, totalWeeks, weekStartDate, weekEndDate, weekCost,
   onPrev, onNext, onToday, onJump,
 }) {
   return (
@@ -13,6 +15,11 @@ export default function WeekNav({
         <div className="week-info">
           <span className="week-label">Week {currentWeek + 1}</span>
           <span className="week-dates">{fmt(weekStartDate)} – {fmt(weekEndDate)}</span>
+          {typeof weekCost === 'number' && (
+            <span className="week-cost" title="Estimated weekly cost for one diner">
+              💰 ~{formatUSD(weekCost)}
+            </span>
+          )}
         </div>
         <button className="today-btn" onClick={onToday}>Today</button>
         <button className="nav-btn" onClick={onNext} disabled={currentWeek === totalWeeks - 1} aria-label="Next week">

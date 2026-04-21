@@ -27,6 +27,13 @@ const BANNERS = [
     desc: 'Kid said no to salmon? Swap for an alternative in one tap.',
     className: 'banner-cobalt',
   },
+  {
+    key: 'cost',
+    icon: '💰',
+    title: 'Cost estimator',
+    desc: 'See weekly grocery spend at a glance — plus a yearly projection and per-diner scaling.',
+    className: 'banner-gold',
+  },
 ]
 
 export default function BannerGrid({ onSelect }) {

@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 import { PROTEIN_LABELS } from '../data/mealsData'
 
+const SITE_URL = 'https://plateful365.com'
+const dayLink = (dayNumber) => `${SITE_URL}/?day=${dayNumber}`
+
 const fmt = (d) =>
   d
     ? d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
@@ -15,6 +18,8 @@ function buildText(day) {
     `🌅 Breakfast: ${day.breakfast}`,
     `☀️  Lunch: ${day.lunch}`,
     `🌙 Dinner: ${day.dinner}`,
+    ``,
+    `🔗 ${dayLink(day.dayNumber)}`,
   ].join('\n')
 }
 
@@ -32,7 +37,7 @@ export default function DayModal({ day, onClose }) {
 
   useEffect(() => {
     if (!day || !canvasRef.current) return
-    QRCode.toCanvas(canvasRef.current, buildText(day), {
+    QRCode.toCanvas(canvasRef.current, dayLink(day.dayNumber), {
       width: 200,
       margin: 2,
       color: { dark: '#4F46E5', light: '#FFFFFF' },

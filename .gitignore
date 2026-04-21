@@ -15,7 +15,7 @@ package-lock.json
 
 # Playwright / browser-tool artifacts
 .playwright-mcp/
-meal-planner.png
+*.png
 
 # Editor directories and files
 .vscode/*

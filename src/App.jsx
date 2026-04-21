@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Header from './components/Header'
 import FilterBar from './components/FilterBar'
 import WeekNav from './components/WeekNav'
@@ -42,6 +42,19 @@ export default function App() {
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const dayParam = parseInt(params.get('day'), 10)
+    if (!(dayParam >= 1 && dayParam <= 365)) return
+    const match = weekDays.find(d => d.dayNumber === dayParam)
+    if (match) {
+      setSelectedDay(match)
+      window.history.replaceState({}, '', window.location.pathname)
+    } else {
+      jumpToWeek(Math.floor((dayParam - 1) / 7))
+    }
+  }, [weekDays, jumpToWeek, setSelectedDay])
 
   const handlePrintWeek = useCallback(() => {
     const win = window.open('', '_blank')

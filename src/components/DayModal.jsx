@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 import { PROTEIN_LABELS } from '../data/mealsData'
+import { getRecipeSteps } from '../data/recipes'
+
+const MEAL_TYPES = [
+  { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
+  { key: 'lunch',     emoji: '☀️', label: 'Lunch' },
+  { key: 'dinner',    emoji: '🌙', label: 'Dinner' },
+]
 
 const fmt = (d) =>
   d
@@ -26,8 +33,61 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500)
 }
 
+function RecipeSteps({ name, protein }) {
+  const [open, setOpen] = useState(false)
+  const steps = open ? getRecipeSteps(name, protein) : null
+  return (
+    <div className={`recipe-steps ${open ? 'open' : ''}`}>
+      <button
+        type="button"
+        className="recipe-toggle"
+        aria-expanded={open}
+        onClick={() => setOpen(v => !v)}
+      >
+        {open ? '▾ Hide recipe steps' : '▸ Show recipe steps'}
+      </button>
+      {open && (
+        <ol className="recipe-list">
+          {steps.map((s, i) => (
+            <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
+          ))}
+        </ol>
+      )}
+    </div>
+  )
+}
+
+function buildPrintHTML(day, qrUrl) {
+  const { label, emoji } = PROTEIN_LABELS[day.protein]
+  const sections = MEAL_TYPES.map(t => {
+    const name = day[t.key]
+    const steps = getRecipeSteps(name, day.protein)
+    return `
+      <section class="meal">
+        <h3>${t.emoji} ${t.label} — ${name}</h3>
+        <ol>${steps.map(s => `<li>${s}</li>`).join('')}</ol>
+      </section>`
+  }).join('')
+  return `<html><head><title>Day ${day.dayNumber} — ${label}</title>
+    <style>
+      body{font-family:Inter,system-ui,sans-serif;padding:2rem;max-width:720px;margin:auto;color:#0F172A}
+      h2{margin-bottom:.25rem;background:linear-gradient(90deg,#6366F1,#EC4899);-webkit-background-clip:text;background-clip:text;color:transparent}
+      .meta{color:#475569;margin-bottom:1.25rem}
+      .meal{page-break-inside:avoid;margin-bottom:1.5rem;padding:1rem 1.25rem;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0}
+      .meal h3{margin-bottom:.65rem;font-size:1.05rem}
+      ol{padding-left:1.25rem}
+      ol li{margin-bottom:.4rem;line-height:1.45}
+      img{margin-top:1rem;display:block}
+    </style></head><body>
+    <h2>Day ${day.dayNumber} — ${emoji} ${label}</h2>
+    <p class="meta">${fmt(day.date)}</p>
+    ${sections}
+    ${qrUrl ? `<img src="${qrUrl}" width="180" alt="QR code"/>` : ''}
+    </body></html>`
+}
+
 export default function DayModal({ day, onClose }) {
-  const canvasRef  = useRef(null)
+  const canvasRef = useRef(null)
   const [qrUrl, setQrUrl] = useState('')
 
   useEffect(() => {
@@ -54,25 +114,7 @@ export default function DayModal({ day, onClose }) {
 
   const handlePrint = () => {
     const win = window.open('', '_blank')
-    win.document.write(`
-      <html><head><title>Day ${day.dayNumber}</title>
-      <style>
-        body{font-family:sans-serif;padding:2rem;max-width:500px;margin:auto}
-        h2{margin-bottom:4px}
-        .protein{background:#eee;display:inline-block;padding:4px 10px;border-radius:4px;margin-bottom:1rem}
-        .meals li{margin-bottom:.5rem;font-size:1.1rem}
-        img{margin-top:1.5rem;display:block}
-      </style></head><body>
-      <h2>Day ${day.dayNumber} — ${emoji} ${label}</h2>
-      <p>${fmt(day.date)}</p>
-      <ul class="meals">
-        <li>🌅 <strong>Breakfast:</strong> ${day.breakfast}</li>
-        <li>☀️ <strong>Lunch:</strong> ${day.lunch}</li>
-        <li>🌙 <strong>Dinner:</strong> ${day.dinner}</li>
-      </ul>
-      ${qrUrl ? `<img src="${qrUrl}" width="200" alt="QR code"/>` : ''}
-      </body></html>
-    `)
+    win.document.write(buildPrintHTML(day, qrUrl))
     win.document.close()
     win.print()
   }
@@ -109,10 +151,16 @@ export default function DayModal({ day, onClose }) {
         </div>
 
         <div className="modal-body">
-          <ul className="modal-meals">
-            <li><span className="meal-time">🌅 Breakfast</span> {day.breakfast}</li>
-            <li><span className="meal-time">☀️ Lunch</span> {day.lunch}</li>
-            <li><span className="meal-time">🌙 Dinner</span> {day.dinner}</li>
+          <ul className="modal-meals with-recipes">
+            {MEAL_TYPES.map(t => (
+              <li key={t.key} className="meal-row">
+                <div className="meal-row-head">
+                  <span className="meal-time">{t.emoji} {t.label}</span>
+                  <span className="meal-name">{day[t.key]}</span>
+                </div>
+                <RecipeSteps name={day[t.key]} protein={day.protein} />
+              </li>
+            ))}
           </ul>
 
           <div className="qr-section">
@@ -120,7 +168,7 @@ export default function DayModal({ day, onClose }) {
             <p className="qr-desc">Scan to share this day's meals</p>
             <canvas ref={canvasRef} />
             <div className="qr-actions">
-              <button className="btn btn-primary"   onClick={handlePrint}>🖨️ Print Day</button>
+              <button className="btn btn-primary"   onClick={handlePrint}>🖨️ Print Day + Recipes</button>
               <button className="btn btn-share"     onClick={handleShare}>📤 Text / Share</button>
               <button className="btn btn-secondary" onClick={handleDownloadQr}>⬇️ Save QR</button>
             </div>

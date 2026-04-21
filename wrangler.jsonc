@@ -1,8 +1,13 @@
 {
   "name": "plateful",
   "compatibility_date": "2025-04-01",
+  "workers_dev": true,
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application"
-  }
+  },
+  "routes": [
+    { "pattern": "plateful365.com", "custom_domain": true, "zone_name": "plateful365.com" },
+    { "pattern": "www.plateful365.com", "custom_domain": true, "zone_name": "plateful365.com" }
+  ]
 }

@@ -116,6 +116,7 @@ export const MEALS = {
       'Chicken Sausage & Egg Wrap',
       'Smoked Chicken Breakfast Plate',
       'Chicken Frittata',
+      'Chicken Tender & Egg Sandwich',
     ],
     lunch: [
       'Grilled Chicken Caesar Salad',
@@ -134,6 +135,8 @@ export const MEALS = {
       'Nashville Hot Chicken Sandwich',
       'Chicken Fried Rice',
       'Buffalo Wings Basket',
+      'Crispy Chicken Tenders Basket',
+      'Ground Chicken Lettuce Wraps',
     ],
     dinner: [
       'Baked Lemon Herb Chicken',
@@ -154,6 +157,11 @@ export const MEALS = {
       'Honey Garlic Chicken Wings',
       'BBQ Baked Drumsticks',
       'Roast Leg Quarters with Root Veg',
+      'Honey Mustard Chicken Tenders',
+      'Chicken Meatballs with Marinara',
+      'Chicken Burger with Slaw',
+      'Roast Cornish Hen with Herbs',
+      'Dirty Rice with Chicken Livers',
     ],
   },
 

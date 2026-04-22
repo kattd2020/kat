@@ -159,7 +159,7 @@ const ARCHETYPES = [
   },
   {
     key: 'breaded',
-    match: /schnitzel|parmesan|piccata|nashville|fried chicken|katsu/i,
+    match: /schnitzel|parmesan|piccata|nashville|fried chicken|katsu|\btenders?\b|\bnuggets?\b/i,
     steps: (m) => [
       `Pound the ${m.proteinNoun} to even ½-inch thickness between sheets of plastic so it cooks evenly.`,
       `Set up three shallow dishes: seasoned flour, beaten eggs, and breadcrumbs (panko is crispest).`,
@@ -506,4 +506,46 @@ export function scaleIngredients(list, servings) {
   const factor = (servings || BASE_SERVINGS) / BASE_SERVINGS
   if (factor === 1) return list
   return list.map(line => scaleIngredient(line, factor))
+}
+
+// ── Cook time estimates (total, including prep) ───────────
+// Rough "start to plate" minutes per archetype. Intentionally ballpark
+// — real times swing with cut, skill, and whether you pre-prep.
+
+const COOK_TIMES = {
+  stirFry:          20,
+  soup:             45,
+  sandwich:         15,
+  salad:            15,
+  mexican:          25,
+  breakfastSkillet: 20,
+  roast:            90,
+  grill:            25,
+  pasta:            25,
+  casserole:        50,
+  risotto:          40,
+  breaded:          25,
+  bowl:             25,
+  pancakes:         20,
+  avocadoToast:     10,
+  default:          30,
+}
+
+export function getCookTime(name, protein) {
+  const noun = proteinNoun(name, protein)
+  const key = findArchetype(name)?.key || 'default'
+  let minutes = COOK_TIMES[key]
+  // Seafood cooks fast when no archetype matches
+  if (key === 'default' && SEAFOOD_NOUNS.has(noun)) minutes = 15
+  return minutes || COOK_TIMES.default
+}
+
+export function formatCookTime(minutes) {
+  if (!minutes) return ''
+  if (minutes >= 60) {
+    const h = Math.floor(minutes / 60)
+    const m = minutes % 60
+    return m ? `${h}h ${m}m` : `${h}h`
+  }
+  return `${minutes} min`
 }

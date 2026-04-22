@@ -4,6 +4,7 @@ import { getRecipeIngredients, scaleIngredients } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 import CutTag from './CutTag'
+import TimeTag from './TimeTag'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -31,7 +32,10 @@ function SearchResultRow({ recipe, picked, servings, setServings, onToggleAdd })
         <span className="grocery-pick-time">{pLabel.emoji} {mLabel.emoji} {mLabel.label}</span>
         <span className="grocery-pick-name">
           {recipe.title}
-          <CutTag protein={recipe.protein} name={recipe.title} />
+          <span className="recipe-tag-row">
+            <CutTag protein={recipe.protein} name={recipe.title} />
+            <TimeTag protein={recipe.protein} name={recipe.title} />
+          </span>
         </span>
         <span className="search-chevron" aria-hidden="true">{open ? '▾' : '▸'}</span>
       </button>
@@ -208,7 +212,10 @@ export default function GroceryListModal({ weekNum, grocerySelection, toggleGroc
                     <div className="grocery-summary-head">
                       <span className="grocery-summary-meal">
                         {p.title}
-                        <CutTag protein={p.protein} name={p.title} />
+                        <span className="recipe-tag-row">
+                          <CutTag protein={p.protein} name={p.title} />
+                          <TimeTag protein={p.protein} name={p.title} />
+                        </span>
                       </span>
                       <div className="grocery-summary-meta">
                         <span className="grocery-summary-date">

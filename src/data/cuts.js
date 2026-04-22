@@ -35,14 +35,17 @@ export const CUTS = {
     { key: 'schnitzel',   label: 'Schnitzel',        emoji: '🍗' },
   ],
   chicken: [
-    { key: 'all',         label: 'All',                 emoji: '🍗' },
-    { key: 'breast',      label: 'Chicken breast',      emoji: '🍗' },
-    { key: 'thigh',       label: 'Thighs (bone-in or boneless)', emoji: '🍗' },
-    { key: 'drumstick',   label: 'Drumsticks',          emoji: '🍗' },
-    { key: 'legQuarter',  label: 'Leg quarters',        emoji: '🍗' },
-    { key: 'wings',       label: 'Wings',               emoji: '🍗' },
-    { key: 'whole',       label: 'Whole / Rotisserie',  emoji: '🍗' },
-    { key: 'chickenSausage', label: 'Chicken sausage',  emoji: '🌭' },
+    { key: 'all',            label: 'All',                 emoji: '🍗' },
+    { key: 'breast',         label: 'Chicken breast',      emoji: '🍗' },
+    { key: 'tenders',        label: 'Chicken tenders',     emoji: '🍗' },
+    { key: 'thigh',          label: 'Thighs (bone-in or boneless)', emoji: '🍗' },
+    { key: 'drumstick',      label: 'Drumsticks',          emoji: '🍗' },
+    { key: 'legQuarter',     label: 'Leg quarters',        emoji: '🍗' },
+    { key: 'wings',          label: 'Wings',               emoji: '🍗' },
+    { key: 'ground',         label: 'Ground chicken',      emoji: '🍗' },
+    { key: 'liver',          label: 'Chicken liver',       emoji: '🍗' },
+    { key: 'whole',          label: 'Whole / Rotisserie / Cornish hen', emoji: '🍗' },
+    { key: 'chickenSausage', label: 'Chicken sausage',     emoji: '🌭' },
   ],
   groundTurkey: [
     { key: 'all',         label: 'All',               emoji: '🦃' },
@@ -117,11 +120,14 @@ export function classifyCut(protein, name) {
 
   if (protein === 'chicken') {
     if (/\bchicken sausage\b/.test(n))                     return 'chickenSausage'
-    if (/\bwhole chicken\b|\broasted whole\b|\brotisserie\b|\bsmoked chicken\b/.test(n)) return 'whole'
+    if (/\bwhole chicken\b|\broasted whole\b|\brotisserie\b|\bsmoked chicken\b|\bcornish hen\b/.test(n)) return 'whole'
+    if (/\bchicken livers?\b|\bdirty rice\b/.test(n))      return 'liver'
     if (/\bwings?\b/.test(n))                              return 'wings'
     if (/\bdrumsticks?\b/.test(n))                         return 'drumstick'
     if (/\bleg quarters?\b/.test(n))                       return 'legQuarter'
     if (/\bthighs?\b/.test(n))                             return 'thigh'
+    if (/\bchicken tenders?\b|\bchicken tenderloins?\b/.test(n)) return 'tenders'
+    if (/\bground chicken\b|\bchicken meatballs?\b|\bchicken burger\b|\bchicken meatloaf\b|\bchicken lettuce wraps?\b|\bchicken patty\b/.test(n)) return 'ground'
     return 'breast'
   }
 

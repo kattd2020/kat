@@ -5,6 +5,7 @@ import { CUTS, classifyCut } from '../data/cuts'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 import CutTag from './CutTag'
+import TimeTag from './TimeTag'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -26,7 +27,10 @@ function RecipeRow({ name, protein, servings, setServings, picked, onToggleGroce
       >
         <span className="pr-recipe-name-col">
           <span className="pr-recipe-name">{name}</span>
-          <CutTag protein={protein} name={name} />
+          <span className="recipe-tag-row">
+            <CutTag protein={protein} name={name} />
+            <TimeTag protein={protein} name={name} />
+          </span>
         </span>
         <span className="pr-recipe-chevron" aria-hidden="true">{open ? '▾' : '▸'}</span>
       </button>

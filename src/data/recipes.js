@@ -99,7 +99,7 @@ const ARCHETYPES = [
   },
   {
     key: 'grill',
-    match: /grilled|grill|steak|ribeye|ny strip|bbq (ribs|baby back|pork)|baby back|chop(s)?|kebab|skewer|shawarma|jerk chicken|souvlaki/i,
+    match: /grilled|grill|steak|ribeye|ny strip|bbq (ribs|baby back|pork)|baby back|chop(s)?|kebab|skewer|shawarma|\bjerk\b|souvlaki/i,
     steps: (m) => [
       `Bring the ${m.proteinNoun} to room temperature 30 minutes before cooking. Pat dry.`,
       `Season generously with salt, pepper, and a light drizzle of oil just before grilling.`,

@@ -795,7 +795,7 @@ body::after {
 }
 .grocery-pick {
   display: grid;
-  grid-template-columns: 28px 110px 1fr;
+  grid-template-columns: 28px 110px 1fr auto;
   align-items: center;
   gap: .6rem;
   width: 100%;
@@ -844,6 +844,21 @@ body::after {
   font-weight: 600;
   color: var(--text);
 }
+.grocery-pick-action {
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: .25rem .6rem;
+  border-radius: 999px;
+  background: rgba(14,165,233,0.12);
+  color: #0369A1;
+  white-space: nowrap;
+  transition: background .2s, color .2s;
+}
+.grocery-pick.picked .grocery-pick-action {
+  background: linear-gradient(135deg, #0EA5E9, #22D3EE);
+  color: #fff;
+}
 
 .grocery-summary {
   margin-top: 1.25rem;
@@ -876,21 +891,62 @@ body::after {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: .35rem;
+  gap: .6rem;
 }
-.grocery-summary-list li {
+.grocery-summary-list > li {
+  padding: .75rem .9rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+}
+.grocery-summary-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: .5rem;
-  padding: .45rem .7rem;
-  border-radius: 9px;
-  background: rgba(255,255,255,0.8);
-  border: 1px solid var(--glass-border);
-  font-size: .88rem;
+  align-items: baseline;
+  gap: .6rem;
+  margin-bottom: .5rem;
+  flex-wrap: wrap;
 }
-.grocery-summary-date { font-weight: 700; color: var(--text-muted); }
-.grocery-summary-meal { font-weight: 600; color: var(--text); text-align: right; flex: 1; min-width: 160px; }
+.grocery-summary-meal {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.grocery-summary-date {
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.grocery-ingredients {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+.grocery-ingredients li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: .87rem;
+  line-height: 1.4;
+  color: var(--text);
+  font-weight: 500;
+}
+.grocery-ingredients li::before {
+  content: "";
+  position: absolute;
+  left: .1rem;
+  top: .55rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0EA5E9, #22D3EE);
+}
 
 /* ── Seasonal Modal ───────────────────────────────────── */
 .seasonal-modal .modal-body { padding-top: 1.25rem; }

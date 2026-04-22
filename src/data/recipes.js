@@ -247,3 +247,199 @@ export function getRecipeSteps(name, protein) {
 export function getRecipeArchetype(name) {
   return findArchetype(name)?.key || 'default'
 }
+
+// ── Ingredients ─────────────────────────────────────────
+// Rough shopping lists per archetype, serving about 4. The
+// protein noun is interpolated in via `m.proteinNoun` from the same
+// archetype detection used for steps so the list reads naturally for
+// beef, pork, chicken, ground turkey, and seafood variants.
+
+const INGREDIENTS = {
+  stirFry: (m) => [
+    `1 lb ${m.proteinNoun}, sliced thin or cubed`,
+    '3 tbsp soy sauce',
+    '1 tbsp rice vinegar',
+    '1 tsp sesame oil',
+    '1 tsp cornstarch',
+    '2 cloves garlic, minced',
+    '1 tbsp fresh ginger, grated',
+    '3 cups mixed stir-fry vegetables (broccoli, peppers, snap peas)',
+    '2 cups cooked rice or noodles',
+    '2 tbsp neutral oil',
+    '2 green onions, sliced',
+  ],
+  soup: (m) => [
+    `1 lb ${m.proteinNoun}`,
+    '4 cups chicken or beef stock',
+    '1 yellow onion',
+    '2 carrots',
+    '2 celery stalks',
+    '3 cloves garlic',
+    '1 can (15 oz) diced tomatoes or beans',
+    'Fresh thyme or a bay leaf',
+    '2 tbsp olive oil',
+    'Salt and pepper',
+  ],
+  sandwich: (m) => [
+    `1 lb ${m.proteinNoun}`,
+    '4 buns, rolls, or slices of good bread',
+    '4 slices cheese (cheddar, Swiss, or provolone)',
+    '1 head lettuce or a handful of greens',
+    '1 tomato',
+    '½ red onion',
+    'Pickles',
+    'Mayo and/or mustard',
+  ],
+  salad: (m) => [
+    `1 lb ${m.proteinNoun}`,
+    '6 cups mixed greens or romaine',
+    '½ cup cheese (feta, blue, or Parmesan)',
+    '¼ cup toasted nuts (walnuts, almonds, pine nuts)',
+    '1 seasonal topping (apple, pear, berries, avocado)',
+    '3 tbsp olive oil',
+    '1 tbsp red wine vinegar or lemon juice',
+    '1 tsp Dijon mustard',
+    'Salt and pepper',
+  ],
+  mexican: (m) => [
+    `1 lb ${m.proteinNoun}`,
+    '8 tortillas (corn or flour)',
+    '1 tsp cumin',
+    '1 tsp chili powder',
+    '½ tsp smoked paprika',
+    '1 yellow onion',
+    '2 cloves garlic',
+    'Fresh cilantro',
+    '2 limes',
+    '1 cup shredded cheese (cheddar or Monterey jack)',
+    'Salsa',
+    'Sour cream or crema',
+  ],
+  breakfastSkillet: (m) => [
+    `½ lb ${m.proteinNoun}`,
+    '8 eggs',
+    '2 medium potatoes',
+    '1 yellow onion',
+    '1 bell pepper',
+    '1 cup shredded cheese',
+    '2 tbsp butter or oil',
+    'Splash of milk',
+    'Salt, pepper, fresh chives or parsley',
+  ],
+  roast: (m) => [
+    `2–4 lb ${m.proteinNoun} roast (or whole chicken)`,
+    '3 tbsp olive oil',
+    'Kosher salt and black pepper',
+    '2 sprigs rosemary',
+    '4 sprigs thyme',
+    '6 cloves garlic',
+    '2 lbs root vegetables (potatoes, carrots, onions)',
+  ],
+  grill: (m) => [
+    `1 lb ${m.proteinNoun} (steak, chops, or cubed for kebabs)`,
+    '2 tbsp olive oil',
+    'Kosher salt',
+    'Black pepper',
+    '2 tbsp butter',
+    'Fresh herbs (rosemary, parsley)',
+    '1 lemon',
+  ],
+  pasta: (m) => [
+    `1 lb ${m.proteinNoun}`,
+    '1 lb pasta',
+    '3 tbsp olive oil',
+    '3 cloves garlic',
+    '1 jar (24 oz) marinara or 1 cup heavy cream',
+    '½ cup grated Parmesan',
+    'Fresh basil or parsley',
+    'Salt and pepper',
+  ],
+  casserole: (m) => [
+    `1 lb ${m.proteinNoun}`,
+    '1 yellow onion',
+    '2 cloves garlic',
+    '2 cups sauce, gravy, or crushed tomatoes',
+    '1 cup topping (mashed potato, biscuit, or breadcrumbs)',
+    '1 cup shredded cheese',
+    'Fresh herbs',
+    'Salt and pepper',
+  ],
+  risotto: (m) => [
+    `1 lb ${m.proteinNoun}`,
+    '1½ cups arborio rice',
+    '4 cups warm stock',
+    '½ cup dry white wine',
+    '1 shallot',
+    '3 tbsp butter',
+    '½ cup grated Parmesan',
+  ],
+  breaded: (m) => [
+    `1 lb ${m.proteinNoun}, pounded thin`,
+    '1 cup flour',
+    '3 eggs',
+    '1½ cups panko breadcrumbs',
+    'Neutral oil for frying',
+    '1 lemon',
+    'Salt',
+  ],
+  bowl: (m) => [
+    `1 lb ${m.proteinNoun}`,
+    '2 cups cooked rice, quinoa, or grain',
+    '2 cups roasted or raw vegetables',
+    '1 avocado',
+    'Sauce (soy + sesame, tahini + lemon, or lime + chili)',
+    'Fresh herbs or seeds (cilantro, sesame)',
+    '1 lime',
+  ],
+  pancakes: (m) => [
+    `1 lb ${m.proteinNoun} (sausage or bacon)`,
+    '1½ cups flour',
+    '2 tbsp sugar',
+    '1 tbsp baking powder',
+    '½ tsp salt',
+    '1¼ cups milk',
+    '1 egg',
+    '2 tbsp melted butter',
+    'Maple syrup',
+  ],
+  avocadoToast: (m) => [
+    `½ lb ${m.proteinNoun}`,
+    '4 slices thick sourdough or seeded bread',
+    '2 ripe avocados',
+    '1 lemon',
+    'Flaky salt',
+    'Chili flakes',
+    '4 eggs (optional)',
+    'Microgreens or cilantro',
+  ],
+  default: (m) => {
+    if (SEAFOOD_NOUNS.has(m.proteinNoun)) {
+      return [
+        `1 lb ${m.proteinNoun}`,
+        '2 tbsp olive oil',
+        '2 tbsp butter',
+        '1 lemon',
+        'Fresh dill or parsley',
+        'Salt and pepper',
+      ]
+    }
+    return [
+      `1 lb ${m.proteinNoun}`,
+      '3 tbsp olive oil',
+      '2 cloves garlic',
+      'Fresh herbs (rosemary, thyme, or parsley)',
+      '1 lemon',
+      '2 cups side vegetable or grain of your choice',
+      'Salt and pepper',
+    ]
+  },
+}
+
+export function getRecipeIngredients(name, protein) {
+  const meta = {
+    name,
+    proteinNoun: proteinNoun(name, protein),
+  }
+  const key = findArchetype(name)?.key || 'default'
+  return (INGREDIENTS[key] || INGREDIENTS.default)(meta)
+}

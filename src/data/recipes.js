@@ -111,7 +111,7 @@ const ARCHETYPES = [
   },
   {
     key: 'roast',
-    match: /roast(ed)?|baked|loin|tenderloin|whole chicken|prime rib|pot roast|maple glazed|honey glazed|honey garlic (pork|chicken)/i,
+    match: /roast(ed)?|baked|loin|tenderloin|whole chicken|prime rib|pot roast|maple glazed|honey glazed|honey garlic (pork|chicken)|\bwings?\b|\bdrumsticks?\b|\bleg quarters?\b/i,
     steps: (m) => [
       `Pat the ${m.proteinNoun} dry and season generously with salt, pepper, and herbs (rosemary, thyme, garlic).`,
       `Let it sit at room temp 30 minutes while the oven heats to 400°F (or 325°F for large cuts).`,

@@ -11,7 +11,12 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    // Run the Worker's fetch handler for every request (including static
+    // asset hits) so our Cache-Control overrides actually apply. Without
+    // this the default assets-first strategy bypasses the handler for
+    // asset matches and Cloudflare edge-caches stale HTML.
+    "run_worker_first": true
   },
   "observability": {
     "enabled": true

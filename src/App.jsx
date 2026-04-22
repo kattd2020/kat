@@ -11,7 +11,6 @@ import SeasonalModal from './components/SeasonalModal'
 import SwapModal from './components/SwapModal'
 import CostModal from './components/CostModal'
 import { useMealPlan } from './hooks/useMealPlan'
-import { estimateWeekCost } from './data/costs'
 import './styles.css'
 
 function buildWeekPrintHTML(weekDays, weekNum) {
@@ -46,7 +45,7 @@ export default function App() {
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
     swapMeal,
-    priceOverrides, setPrice, resetPrices,
+    calcEntries, addCalcEntry, removeCalcEntry, clearCalc,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
@@ -90,7 +89,6 @@ export default function App() {
         totalWeeks={totalWeeks}
         weekStartDate={weekStartDate}
         weekEndDate={weekEndDate}
-        weekCost={estimateWeekCost(weekDays, priceOverrides)}
         onPrev={goToPrevWeek}
         onNext={goToNextWeek}
         onToday={goToToday}
@@ -103,7 +101,6 @@ export default function App() {
             key={day.dayNumber}
             day={day}
             dimmed={activeFilter !== 'all' && day.protein !== activeFilter}
-            priceOverrides={priceOverrides}
             onClick={setSelectedDay}
           />
         ))}
@@ -144,12 +141,10 @@ export default function App() {
 
       {showCost && (
         <CostModal
-          weekDays={weekDays}
-          weekNum={currentWeek + 1}
-          totalWeeks={totalWeeks}
-          priceOverrides={priceOverrides}
-          setPrice={setPrice}
-          resetPrices={resetPrices}
+          calcEntries={calcEntries}
+          addCalcEntry={addCalcEntry}
+          removeCalcEntry={removeCalcEntry}
+          clearCalc={clearCalc}
           onClose={() => setShowCost(false)}
         />
       )}

@@ -612,8 +612,8 @@ body::after {
   .banner { padding: 1rem; }
   .banner-title { font-size: .98rem; }
   .banner-desc { font-size: .8rem; }
-  .cost-summary { grid-template-columns: 1fr; }
-  .cost-table th, .cost-table td { padding: .45rem .35rem; font-size: .78rem; }
+  .calc-total { font-size: 2.35rem; padding: .9rem .75rem; }
+  .calc-entry input { font-size: 1.05rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -685,204 +685,93 @@ body::after {
 .banner-cobalt   { background: linear-gradient(135deg, #1E40AF 0%, #2563EB 55%, #3B82F6 100%); }
 .banner-gold     { background: linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #10B981 100%); }
 
-/* ── Cost UI (DayCard, WeekNav, Modal) ────────────────── */
-.day-card-tags {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .5rem;
-  margin-bottom: .8rem;
-  flex-wrap: wrap;
+/* ── Cost Calculator Modal ────────────────────────────── */
+.calc-modal .modal-body { padding-top: 1.25rem; }
+
+.calc-total {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-align: center;
+  padding: 1.1rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #F59E0B, #10B981);
+  color: #fff;
+  box-shadow: 0 14px 30px rgba(16,185,129,0.30);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-entry {
   position: relative;
-  z-index: 2;
-}
-.day-card-tags .protein-tag { margin-bottom: 0; }
-
-.cost-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  padding: .3rem .65rem;
-  border-radius: 999px;
-  font-size: .72rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: #78350F;
-  background: linear-gradient(135deg, #FDE68A, #FCA5A5);
-  box-shadow: inset 0 0 0 1px rgba(120,53,15,0.15), 0 2px 6px rgba(15,23,42,0.08);
-}
-
-.week-cost {
-  display: inline-block;
-  margin-left: .4rem;
-  padding: .15rem .55rem;
-  border-radius: 999px;
-  font-size: .72rem;
-  font-weight: 800;
-  color: #065F46;
-  background: linear-gradient(135deg, #A7F3D0, #6EE7B7);
-  box-shadow: inset 0 0 0 1px rgba(6,95,70,0.15);
-}
-
-.cost-controls {
   display: flex;
-  align-items: center;
-  gap: .65rem;
+  align-items: stretch;
+  gap: .5rem;
   margin-bottom: 1rem;
 }
-.cost-controls label {
-  font-weight: 700;
-  color: var(--text);
-  font-size: .88rem;
-}
-.cost-controls input {
-  width: 5rem;
-  padding: .45rem .6rem;
-  border-radius: 10px;
-  border: 1.5px solid var(--glass-border);
-  background: #fff;
-  font-weight: 700;
-  text-align: center;
-}
-
-.cost-summary {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1.3fr;
-  gap: .6rem;
-  margin-bottom: 1.1rem;
-}
-.cost-stat {
-  padding: .85rem 1rem;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.7);
-  border: 1px solid var(--glass-border);
-  display: flex;
-  flex-direction: column;
-  gap: .15rem;
-}
-.cost-stat-label {
-  font-size: .7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--text-muted);
-}
-.cost-stat-value {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--text);
-}
-.cost-stat-hero {
-  background: linear-gradient(135deg, #F59E0B, #10B981);
-  color: #FFFFFF;
-  border: none;
-  box-shadow: 0 10px 22px rgba(16,185,129,0.25);
-}
-.cost-stat-hero .cost-stat-label,
-.cost-stat-hero .cost-stat-value { color: #fff; }
-
-.price-editor {
-  margin: 1rem 0 1.1rem;
-  padding: .9rem 1rem 1rem;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(245,158,11,0.10), rgba(16,185,129,0.10));
-  border: 1px solid var(--glass-border);
-}
-.price-editor-toggle {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  font-weight: 800;
-  font-size: .88rem;
-  color: var(--text);
-  cursor: pointer;
-  letter-spacing: 0.01em;
-}
-.price-editor-toggle:hover { color: var(--primary-600); }
-.price-editor-subhead {
-  font-size: .72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--text-muted);
-  margin: .75rem 0 .4rem;
-}
-.price-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: .5rem;
-}
-.price-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .5rem;
-  padding: .45rem .65rem;
-  background: rgba(255,255,255,0.75);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  font-size: .86rem;
-  font-weight: 600;
-  color: var(--text);
-}
-.price-emoji { margin-right: .2rem; }
-.price-input {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.price-input-prefix {
+.calc-prefix {
   position: absolute;
-  left: .5rem;
+  left: .85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--text-muted);
   pointer-events: none;
-  font-size: .85rem;
 }
-.price-input input {
-  width: 92px;
-  padding: .35rem .5rem .35rem 1.15rem;
-  border-radius: 8px;
+.calc-entry input {
+  flex: 1;
+  padding: .8rem 1rem .8rem 1.9rem;
+  border-radius: 12px;
   border: 1.5px solid var(--glass-border);
   background: #fff;
   font: inherit;
+  font-size: 1.15rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  text-align: right;
 }
-.price-input input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.18); }
-.price-editor-footer {
+.calc-entry input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.20); }
+.calc-add { padding: .8rem 1.25rem; font-size: .95rem; }
+
+.calc-list {
+  list-style: none;
+  margin: 0 0 .9rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.calc-list li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .75rem;
-  margin-top: .9rem;
-  flex-wrap: wrap;
+  padding: .55rem .85rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.75);
+  border: 1px solid var(--glass-border);
+  font-weight: 700;
+  font-size: .95rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
 }
-.price-reset-btn { padding: .4rem .85rem; font-size: .8rem; }
-.price-reset-btn:disabled { opacity: .5; cursor: not-allowed; }
-.price-editor-hint {
-  font-size: .72rem;
+.calc-remove {
+  border: none;
+  background: rgba(15,23,42,0.06);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: .78rem;
   color: var(--text-muted);
-  font-weight: 600;
-  line-height: 1.4;
+  transition: background .2s, color .2s, transform .2s;
 }
+.calc-remove:hover { background: rgba(239,68,68,0.15); color: #DC2626; transform: rotate(90deg); }
 
-.cost-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: .85rem;
+.calc-actions {
+  display: flex;
+  justify-content: flex-end;
 }
-.cost-table th, .cost-table td {
-  padding: .55rem .55rem;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-}
-.cost-table th { font-weight: 800; color: var(--text-muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; }
-.cost-table td.num, .cost-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
-.cost-table tbody tr:last-child td { border-bottom: none; }
-.cost-protein { font-size: 1.1rem; }
 
 /* ── Grocery Modal ────────────────────────────────────── */
 .grocery-modal .modal-body { padding-top: 1.25rem; }

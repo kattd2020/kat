@@ -31,7 +31,7 @@ const BANNERS = [
     key: 'cost',
     icon: '💰',
     title: 'Cost calculator',
-    desc: 'Enter your store prices and see weekly, daily, and yearly spend update live.',
+    desc: 'Punch in prices as you shop and watch the running total tally up.',
     className: 'banner-gold',
   },
 ]

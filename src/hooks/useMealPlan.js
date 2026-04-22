@@ -3,7 +3,7 @@ import { MEAL_PLAN } from '../data/mealsData'
 
 const STORAGE_KEY = 'mealplanner_startdate'
 const SWAPS_KEY = 'mealplanner_swaps'
-const PRICES_KEY = 'mealplanner_prices'
+const CALC_KEY = 'mealplanner_calc'
 
 function getStoredSwaps() {
   try {
@@ -13,11 +13,12 @@ function getStoredSwaps() {
   }
 }
 
-function getStoredPrices() {
+function getStoredCalcEntries() {
   try {
-    return JSON.parse(localStorage.getItem(PRICES_KEY)) || {}
+    const v = JSON.parse(localStorage.getItem(CALC_KEY))
+    return Array.isArray(v) ? v : []
   } catch {
-    return {}
+    return []
   }
 }
 
@@ -48,7 +49,7 @@ export function useMealPlan() {
   const [activeFilter, setActiveFilter] = useState('all')
   const [selectedDay, setSelectedDay] = useState(null)
   const [swaps, setSwaps] = useState(getStoredSwaps)
-  const [priceOverrides, setPriceOverrides] = useState(getStoredPrices)
+  const [calcEntries, setCalcEntries] = useState(getStoredCalcEntries)
 
   const totalWeeks = Math.ceil(MEAL_PLAN.length / 7)
 
@@ -70,26 +71,28 @@ export function useMealPlan() {
     })
   }, [])
 
-  const setPrice = useCallback((category, key, value) => {
-    setPriceOverrides(prev => {
-      const nextCat = { ...(prev[category] || {}) }
-      if (value === '' || value === null || value === undefined) {
-        delete nextCat[key]
-      } else {
-        nextCat[key] = value
-      }
-      const next = { ...prev }
-      if (Object.keys(nextCat).length === 0) delete next[category]
-      else next[category] = nextCat
-      if (Object.keys(next).length === 0) localStorage.removeItem(PRICES_KEY)
-      else localStorage.setItem(PRICES_KEY, JSON.stringify(next))
+  const addCalcEntry = useCallback((amount) => {
+    const n = Number(amount)
+    if (!Number.isFinite(n) || n <= 0) return
+    setCalcEntries(prev => {
+      const next = [...prev, { id: Date.now() + Math.random(), amount: Math.round(n * 100) / 100 }]
+      localStorage.setItem(CALC_KEY, JSON.stringify(next))
       return next
     })
   }, [])
 
-  const resetPrices = useCallback(() => {
-    localStorage.removeItem(PRICES_KEY)
-    setPriceOverrides({})
+  const removeCalcEntry = useCallback((id) => {
+    setCalcEntries(prev => {
+      const next = prev.filter(e => e.id !== id)
+      if (next.length === 0) localStorage.removeItem(CALC_KEY)
+      else localStorage.setItem(CALC_KEY, JSON.stringify(next))
+      return next
+    })
+  }, [])
+
+  const clearCalc = useCallback(() => {
+    localStorage.removeItem(CALC_KEY)
+    setCalcEntries([])
   }, [])
 
   const goToPrevWeek = useCallback(() => setCurrentWeek(w => Math.max(0, w - 1)), [])
@@ -124,8 +127,9 @@ export function useMealPlan() {
     jumpToWeek,
     saveStartDate,
     swapMeal,
-    priceOverrides,
-    setPrice,
-    resetPrices,
+    calcEntries,
+    addCalcEntry,
+    removeCalcEntry,
+    clearCalc,
   }
 }

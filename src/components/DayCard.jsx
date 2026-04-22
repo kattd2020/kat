@@ -1,13 +1,11 @@
 import { PROTEIN_LABELS } from '../data/mealsData'
-import { estimateDayCost, formatUSD } from '../data/costs'
 
 const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 const fmt = (d) => d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''
 
-export default function DayCard({ day, dimmed, priceOverrides, onClick }) {
+export default function DayCard({ day, dimmed, onClick }) {
   const { label, emoji } = PROTEIN_LABELS[day.protein]
   const dayName = DAY_NAMES[day.date.getDay()]
-  const cost = estimateDayCost(day, priceOverrides)
 
   return (
     <article
@@ -15,7 +13,7 @@ export default function DayCard({ day, dimmed, priceOverrides, onClick }) {
       onClick={() => onClick(day)}
       tabIndex={0}
       role="button"
-      aria-label={`Day ${day.dayNumber}: ${dayName} ${fmt(day.date)}, estimated ${formatUSD(cost)}`}
+      aria-label={`Day ${day.dayNumber}: ${dayName} ${fmt(day.date)}`}
       onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onClick(day)}
     >
       <div className="day-card-header">
@@ -26,13 +24,8 @@ export default function DayCard({ day, dimmed, priceOverrides, onClick }) {
         <div className="day-number">Day {day.dayNumber}</div>
       </div>
 
-      <div className="day-card-tags">
-        <div className="protein-tag">
-          <span>{emoji}</span> {label}
-        </div>
-        <div className="cost-chip" title="Estimated cost for one diner">
-          💰 {formatUSD(cost)}
-        </div>
+      <div className="protein-tag">
+        <span>{emoji}</span> {label}
       </div>
 
       <ul className="meal-list">

@@ -79,7 +79,10 @@ export default function App() {
     <div id="app">
       <Header onPrintWeek={handlePrintWeek} onOpenSettings={() => setShowSettings(true)} />
 
-      <BannerGrid onSelect={handleBanner} />
+      <BannerGrid
+        onSelect={handleBanner}
+        badges={{ grocery: grocerySelection.length }}
+      />
 
       <FilterBar onSelect={setBrowseProtein} />
 
@@ -127,7 +130,6 @@ export default function App() {
 
       {showGrocery && (
         <GroceryListModal
-          weekDays={weekDays}
           weekNum={currentWeek + 1}
           grocerySelection={grocerySelection}
           toggleGrocery={toggleGrocery}

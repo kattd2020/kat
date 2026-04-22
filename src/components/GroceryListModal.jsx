@@ -10,7 +10,6 @@ const MEAL_TYPES = [
   { key: 'dinner',    emoji: '🌙', label: 'Dinner' },
 ]
 
-// One flat list of every recipe in the MEALS pool for searching.
 function buildPool() {
   const out = []
   for (const [protein, types] of Object.entries(MEALS)) {
@@ -48,7 +47,7 @@ function buildPrintHTML(picks, weekNum, servings) {
     </body></html>`
 }
 
-export default function GroceryListModal({ weekDays, weekNum, grocerySelection, toggleGrocery, clearGrocery, servings, setServings, onClose }) {
+export default function GroceryListModal({ weekNum, grocerySelection, toggleGrocery, clearGrocery, servings, setServings, onClose }) {
   const [query, setQuery] = useState('')
   const pool = useMemo(buildPool, [])
 
@@ -59,11 +58,8 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
   const isPicked = (protein, title) => pickedKeys.has(makeGroceryKey(protein, title))
 
   const trimmed = query.trim().toLowerCase()
-  const searching = trimmed.length > 0
-  const searchResults = searching
-    ? pool
-        .filter(r => r.title.toLowerCase().includes(trimmed))
-        .slice(0, 40)
+  const searchResults = trimmed
+    ? pool.filter(r => r.title.toLowerCase().includes(trimmed)).slice(0, 40)
     : []
 
   const handleTogglePoolItem = (protein, mealType, title) => {
@@ -72,18 +68,6 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
       protein,
       mealType,
       ingredients: getRecipeIngredients(title, protein),
-    })
-  }
-
-  const handleToggleDayItem = (day, mealType) => {
-    const title = day[mealType]
-    toggleGrocery({
-      title,
-      protein: day.protein,
-      mealType,
-      ingredients: getRecipeIngredients(title, day.protein),
-      dayNumber: day.dayNumber,
-      dateLabel: day.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
     })
   }
 
@@ -104,7 +88,7 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
         <div className="modal-header">
           <div>
             <h2 id="grocery-title">🛒 Grocery list</h2>
-            <p className="modal-date">Week {weekNum} · pick from the week or search every recipe</p>
+            <p className="modal-date">Only the recipes you pick show up here. Add them from any day, the protein browser, or the search below.</p>
           </div>
           <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
@@ -114,7 +98,7 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
             <span className="grocery-search-icon" aria-hidden="true">🔍</span>
             <input
               type="search"
-              placeholder="Search any recipe (e.g. taco, salmon, stir-fry)…"
+              placeholder="Search any recipe to add (e.g. taco, salmon, stir-fry)…"
               value={query}
               onChange={e => setQuery(e.target.value)}
               aria-label="Search recipes"
@@ -131,12 +115,12 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
             )}
           </div>
 
-          {searching ? (
+          {trimmed && (
             <div className="grocery-search-results">
               <p className="setting-hint" style={{ marginBottom: '.6rem' }}>
                 {searchResults.length === 0
                   ? 'No matches. Try a simpler term like "soup" or "stir-fry".'
-                  : `${searchResults.length} match${searchResults.length === 1 ? '' : 'es'} across all recipes`}
+                  : `${searchResults.length} match${searchResults.length === 1 ? '' : 'es'}`}
               </p>
               <ul className="grocery-pick-list">
                 {searchResults.map(r => {
@@ -161,71 +145,50 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
                 })}
               </ul>
             </div>
-          ) : (
-            <div className="grocery-days">
-              {weekDays.map(day => {
-                const pLabel = PROTEIN_LABELS[day.protein]
-                return (
-                  <div key={day.dayNumber} className="grocery-day-block">
-                    <div className="grocery-day-head">
-                      <strong>
-                        {day.date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
-                      </strong>
-                      <span className={`protein-tag ${day.protein}`}>
-                        {pLabel.emoji} {pLabel.label}
-                      </span>
-                    </div>
-                    <ul className="grocery-pick-list">
-                      {MEAL_TYPES.map(t => {
-                        const picked = isPicked(day.protein, day[t.key])
-                        return (
-                          <li key={t.key}>
-                            <button
-                              type="button"
-                              className={`grocery-pick ${picked ? 'picked' : ''}`}
-                              onClick={() => handleToggleDayItem(day, t.key)}
-                              aria-pressed={picked}
-                            >
-                              <span className="grocery-check" aria-hidden="true">{picked ? '✓' : ''}</span>
-                              <span className="grocery-pick-time">{t.emoji} {t.label}</span>
-                              <span className="grocery-pick-name">{day[t.key]}</span>
-                              <span className="grocery-pick-action">{picked ? 'Added' : '+ Add to list'}</span>
-                            </button>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </div>
-                )
-              })}
-            </div>
           )}
 
           <div className="grocery-summary">
             <div className="grocery-summary-header">
               <h3 className="grocery-summary-title">
                 Your grocery list
-                <span className="grocery-count">
+                <span className="grocery-count" key={grocerySelection.length}>
                   {grocerySelection.length} {grocerySelection.length === 1 ? 'recipe' : 'recipes'} · {totalItems} {totalItems === 1 ? 'item' : 'items'}
                 </span>
               </h3>
               <ServingsPicker servings={servings} onChange={setServings} />
             </div>
             {grocerySelection.length === 0 ? (
-              <p className="setting-hint">Nothing picked yet. Tap any recipe above — or search — to add its ingredients.</p>
+              <p className="setting-hint">
+                Nothing picked yet. Browse a day, the protein chips, seasonal suggestions, or search above — every recipe has a 🛒 Add to list button.
+              </p>
             ) : (
               <ul className="grocery-summary-list">
                 {grocerySelection.map(p => (
                   <li key={p.key}>
                     <div className="grocery-summary-head">
                       <span className="grocery-summary-meal">{p.title}</span>
-                      <span className="grocery-summary-date">
-                        {p.dateLabel
-                          ? p.dateLabel
-                          : p.protein
-                            ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || ''}`
-                            : 'Seasonal'}
-                      </span>
+                      <div className="grocery-summary-meta">
+                        <span className="grocery-summary-date">
+                          {p.dateLabel
+                            ? p.dateLabel
+                            : p.protein
+                              ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || ''}`
+                              : 'Seasonal'}
+                        </span>
+                        <button
+                          type="button"
+                          className="grocery-summary-remove"
+                          onClick={() => toggleGrocery({
+                            title: p.title,
+                            protein: p.protein,
+                            mealType: p.mealType,
+                            ingredients: p.ingredients,
+                          })}
+                          aria-label={`Remove ${p.title} from list`}
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
                     <ul className="grocery-ingredients">
                       {scaleIngredients(p.ingredients, servings).map((ing, i) => (
@@ -251,7 +214,7 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
               onClick={clearGrocery}
               disabled={grocerySelection.length === 0}
             >
-              Clear picks
+              Clear list
             </button>
             <button className="btn btn-secondary" onClick={onClose}>Close</button>
           </div>

@@ -675,6 +675,32 @@ body::after {
 .banner-cobalt   { background: linear-gradient(135deg, #1E40AF 0%, #2563EB 55%, #3B82F6 100%); }
 .banner-gold     { background: linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #10B981 100%); }
 
+.banner-badge {
+  position: absolute;
+  top: .6rem;
+  right: .6rem;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 .55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #fff;
+  color: #0369A1;
+  font-size: .82rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 6px 14px rgba(15,23,42,0.22), inset 0 0 0 2px rgba(14,165,233,0.45);
+  z-index: 3;
+  animation: badgePulse .55s ease-out;
+}
+@keyframes badgePulse {
+  0%   { transform: scale(0.6); opacity: 0; }
+  45%  { transform: scale(1.18); opacity: 1; box-shadow: 0 0 0 6px rgba(14,165,233,0.25), 0 6px 14px rgba(15,23,42,0.22), inset 0 0 0 2px rgba(14,165,233,0.45); }
+  100% { transform: scale(1); opacity: 1; box-shadow: 0 6px 14px rgba(15,23,42,0.22), inset 0 0 0 2px rgba(14,165,233,0.45); }
+}
+
 /* ── Cost Calculator Modal ────────────────────────────── */
 .calc-modal .modal-body { padding-top: 1.25rem; }
 
@@ -811,26 +837,6 @@ body::after {
 
 .grocery-search-results { margin-bottom: 1rem; }
 .grocery-search-results .grocery-pick-list { gap: .35rem; }
-.grocery-days {
-  display: flex;
-  flex-direction: column;
-  gap: .85rem;
-}
-.grocery-day-block {
-  padding: .85rem .95rem 1rem;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.65);
-  border: 1px solid var(--glass-border);
-}
-.grocery-day-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: .75rem;
-  margin-bottom: .6rem;
-  flex-wrap: wrap;
-}
-.grocery-day-head strong { font-size: .95rem; color: var(--text); letter-spacing: -0.01em; }
 .grocery-pick-list {
   list-style: none;
   margin: 0;
@@ -930,6 +936,7 @@ body::after {
   background: linear-gradient(135deg, #0EA5E9, #22D3EE);
   color: #fff;
   letter-spacing: 0.02em;
+  animation: badgePulse .45s ease-out;
 }
 .grocery-summary-list {
   list-style: none;
@@ -960,6 +967,11 @@ body::after {
   color: var(--text);
   letter-spacing: -0.01em;
 }
+.grocery-summary-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
 .grocery-summary-date {
   font-size: .75rem;
   font-weight: 700;
@@ -967,6 +979,19 @@ body::after {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+.grocery-summary-remove {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  width: 24px; height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(15,23,42,0.06);
+  color: var(--text-muted);
+  font-size: .72rem;
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .2s;
+}
+.grocery-summary-remove:hover { background: rgba(239,68,68,0.15); color: #DC2626; transform: rotate(90deg); }
 .grocery-ingredients {
   list-style: none;
   margin: 0;

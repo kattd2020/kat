@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
 import { getRecipeIngredients, scaleIngredients } from '../data/recipes'
+import { estimateScaledPrice, estimateRecipePrice, formatUSD } from '../data/prices'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 
@@ -25,25 +26,37 @@ function buildPool() {
 function buildPrintHTML(picks, weekNum, servings) {
   const sections = picks.map(p => {
     const scaled = scaleIngredients(p.ingredients, servings)
+    const recipeTotal = estimateRecipePrice(p.ingredients, servings)
+    const lines = scaled.map((ing, i) => {
+      const price = estimateScaledPrice(p.ingredients[i], servings)
+      return `<li><span>${ing}</span>${price > 0 ? `<em>${formatUSD(price)}</em>` : ''}</li>`
+    }).join('')
     return `
     <section class="pick">
-      <h3>${p.title}</h3>
+      <h3>${p.title} <span class="pick-total">${formatUSD(recipeTotal)}</span></h3>
       ${p.dateLabel || p.protein ? `<p class="meta">${p.dateLabel ? p.dateLabel + ' · ' : ''}${p.protein ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || p.protein}` : 'Seasonal'} · serves ${servings}</p>` : ''}
-      <ul>${scaled.map(ing => `<li>${ing}</li>`).join('')}</ul>
+      <ul>${lines}</ul>
     </section>`
   }).join('')
+  const grand = picks.reduce((s, p) => s + estimateRecipePrice(p.ingredients, servings), 0)
   return `<html><head><title>Grocery List — Week ${weekNum}</title>
     <style>
       body{font-family:Inter,system-ui,sans-serif;padding:1.5rem;color:#0F172A;max-width:640px;margin:auto}
-      h2{margin-bottom:1rem;background:linear-gradient(90deg,#0EA5E9,#22D3EE);-webkit-background-clip:text;background-clip:text;color:transparent}
+      h2{margin-bottom:.25rem;background:linear-gradient(90deg,#0EA5E9,#22D3EE);-webkit-background-clip:text;background-clip:text;color:transparent}
+      .grand{color:#0F172A;font-weight:700;font-size:1rem;margin-bottom:1rem}
       .pick{page-break-inside:avoid;margin-bottom:1.25rem;padding:1rem 1.15rem;border-radius:10px;background:#F8FAFC;border:1px solid #E2E8F0}
-      .pick h3{margin-bottom:.2rem;font-size:1.05rem}
+      .pick h3{margin-bottom:.2rem;font-size:1.05rem;display:flex;justify-content:space-between;gap:.5rem}
+      .pick-total{font-weight:800;color:#065F46}
       .meta{color:#475569;font-size:.85rem;margin-bottom:.6rem}
-      .pick ul{padding-left:1.2rem}
-      .pick li{margin-bottom:.25rem;line-height:1.45;font-size:.93rem}
+      .pick ul{padding-left:1.2rem;list-style:disc}
+      .pick li{margin-bottom:.25rem;line-height:1.45;font-size:.93rem;display:flex;justify-content:space-between;gap:.5rem}
+      .pick li em{font-style:normal;font-weight:600;color:#0369A1;font-variant-numeric:tabular-nums}
+      .disclaimer{color:#64748B;font-size:.78rem;margin-top:1rem}
     </style></head><body>
     <h2>🛒 Grocery List — Week ${weekNum}</h2>
+    <p class="grand">Estimated total: ${formatUSD(grand)} · serves ${servings}</p>
     ${sections}
+    <p class="disclaimer">Rough IGA / US-average estimates. Prices vary by store and sale week.</p>
     </body></html>`
 }
 
@@ -72,6 +85,10 @@ export default function GroceryListModal({ weekNum, grocerySelection, toggleGroc
   }
 
   const totalItems = grocerySelection.reduce((n, p) => n + p.ingredients.length, 0)
+  const grandTotal = grocerySelection.reduce(
+    (s, p) => s + estimateRecipePrice(p.ingredients, servings),
+    0,
+  )
 
   const handlePrint = () => {
     if (grocerySelection.length === 0) return
@@ -157,46 +174,62 @@ export default function GroceryListModal({ weekNum, grocerySelection, toggleGroc
               </h3>
               <ServingsPicker servings={servings} onChange={setServings} />
             </div>
+            {grocerySelection.length > 0 && (
+              <p className="grocery-grand-total">
+                Estimated total <strong>{formatUSD(grandTotal)}</strong>
+                <span className="grocery-grand-hint">rough IGA / US-average pricing</span>
+              </p>
+            )}
             {grocerySelection.length === 0 ? (
               <p className="setting-hint">
                 Nothing picked yet. Browse a day, the protein chips, seasonal suggestions, or search above — every recipe has a 🛒 Add to list button.
               </p>
             ) : (
               <ul className="grocery-summary-list">
-                {grocerySelection.map(p => (
-                  <li key={p.key}>
-                    <div className="grocery-summary-head">
-                      <span className="grocery-summary-meal">{p.title}</span>
-                      <div className="grocery-summary-meta">
-                        <span className="grocery-summary-date">
-                          {p.dateLabel
-                            ? p.dateLabel
-                            : p.protein
-                              ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || ''}`
-                              : 'Seasonal'}
-                        </span>
-                        <button
-                          type="button"
-                          className="grocery-summary-remove"
-                          onClick={() => toggleGrocery({
-                            title: p.title,
-                            protein: p.protein,
-                            mealType: p.mealType,
-                            ingredients: p.ingredients,
-                          })}
-                          aria-label={`Remove ${p.title} from list`}
-                        >
-                          ✕
-                        </button>
+                {grocerySelection.map(p => {
+                  const recipeTotal = estimateRecipePrice(p.ingredients, servings)
+                  return (
+                    <li key={p.key}>
+                      <div className="grocery-summary-head">
+                        <span className="grocery-summary-meal">{p.title}</span>
+                        <div className="grocery-summary-meta">
+                          <span className="grocery-recipe-total">{formatUSD(recipeTotal)}</span>
+                          <span className="grocery-summary-date">
+                            {p.dateLabel
+                              ? p.dateLabel
+                              : p.protein
+                                ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || ''}`
+                                : 'Seasonal'}
+                          </span>
+                          <button
+                            type="button"
+                            className="grocery-summary-remove"
+                            onClick={() => toggleGrocery({
+                              title: p.title,
+                              protein: p.protein,
+                              mealType: p.mealType,
+                              ingredients: p.ingredients,
+                            })}
+                            aria-label={`Remove ${p.title} from list`}
+                          >
+                            ✕
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <ul className="grocery-ingredients">
-                      {scaleIngredients(p.ingredients, servings).map((ing, i) => (
-                        <li key={i}>{ing}</li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
+                      <ul className="grocery-ingredients priced">
+                        {scaleIngredients(p.ingredients, servings).map((ing, i) => {
+                          const price = estimateScaledPrice(p.ingredients[i], servings)
+                          return (
+                            <li key={i}>
+                              <span className="ingredient-text">{ing}</span>
+                              {price > 0 && <span className="ingredient-price">{formatUSD(price)}</span>}
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </div>

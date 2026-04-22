@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
 import { getRecipeSteps, getRecipeIngredients, scaleIngredients } from '../data/recipes'
+import { estimateScaledPrice, estimateRecipePrice, formatUSD } from '../data/prices'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 
@@ -31,11 +32,22 @@ function RecipeRow({ name, protein, servings, setServings, picked, onToggleGroce
             <h4 className="pr-recipe-subhead">Ingredients</h4>
             <ServingsPicker servings={servings} onChange={setServings} />
           </div>
-          <ul className="pr-recipe-ingredients">
-            {ingredients.map((ing, i) => (
-              <li key={i}>{ing}</li>
-            ))}
+          <ul className="pr-recipe-ingredients priced">
+            {ingredients.map((ing, i) => {
+              const price = estimateScaledPrice(getRecipeIngredients(name, protein)[i], servings)
+              return (
+                <li key={i}>
+                  <span className="ingredient-text">{ing}</span>
+                  {price > 0 && <span className="ingredient-price">{formatUSD(price)}</span>}
+                </li>
+              )
+            })}
           </ul>
+          <div className="ingredient-total">
+            <span>Est. total</span>
+            <span>{formatUSD(estimateRecipePrice(getRecipeIngredients(name, protein), servings))}</span>
+          </div>
+          <p className="price-disclaimer">Rough IGA / US-average estimates — prices vary by store and sale week.</p>
           <h4 className="pr-recipe-subhead">Steps</h4>
           <ol className="pr-recipe-steps">
             {steps.map((s, i) => (

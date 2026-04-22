@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 import { PROTEIN_LABELS } from '../data/mealsData'
 import { getRecipeSteps, getRecipeIngredients, scaleIngredients } from '../data/recipes'
+import { estimateScaledPrice, estimateRecipePrice, formatUSD } from '../data/prices'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 
@@ -83,11 +84,22 @@ function MealRow({ mealType, name, protein, day, servings, setServings, onToggle
             <h4 className="recipe-subhead">Ingredients</h4>
             <ServingsPicker servings={servings} onChange={setServings} />
           </div>
-          <ul className="recipe-ingredients">
-            {ingredients.map((ing, i) => (
-              <li key={i}>{ing}</li>
-            ))}
+          <ul className="recipe-ingredients priced">
+            {ingredients.map((ing, i) => {
+              const price = estimateScaledPrice(getRecipeIngredients(name, protein)[i], servings)
+              return (
+                <li key={i}>
+                  <span className="ingredient-text">{ing}</span>
+                  {price > 0 && <span className="ingredient-price">{formatUSD(price)}</span>}
+                </li>
+              )
+            })}
           </ul>
+          <div className="ingredient-total">
+            <span>Est. total</span>
+            <span>{formatUSD(estimateRecipePrice(getRecipeIngredients(name, protein), servings))}</span>
+          </div>
+          <p className="price-disclaimer">Rough IGA / US-average estimates — prices vary by store and sale week.</p>
           <h4 className="recipe-subhead">Steps</h4>
           <ol className="recipe-list">
             {steps.map((s, i) => (

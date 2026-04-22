@@ -1162,6 +1162,120 @@ body::after {
   font-size: .78rem;
 }
 
+/* ── Priced ingredient list (recipes + grocery) ────────*/
+.recipe-ingredients.priced,
+.pr-recipe-ingredients.priced,
+.seasonal-recipe-ingredients.priced,
+.grocery-ingredients.priced {
+  list-style: none;
+  padding-left: 0;
+}
+.recipe-ingredients.priced li,
+.pr-recipe-ingredients.priced li,
+.seasonal-recipe-ingredients.priced li,
+.grocery-ingredients.priced li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .6rem;
+  padding-left: 1rem;
+  position: relative;
+}
+.recipe-ingredients.priced li::before,
+.pr-recipe-ingredients.priced li::before,
+.seasonal-recipe-ingredients.priced li::before,
+.grocery-ingredients.priced li::before {
+  content: "";
+  position: absolute;
+  left: .15rem;
+  top: .55rem;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0EA5E9, #22D3EE);
+}
+.ingredient-text { flex: 1; min-width: 0; }
+.ingredient-price {
+  font-size: .8rem;
+  font-weight: 700;
+  color: #0369A1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ingredient-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: .55rem;
+  padding: .45rem .25rem .1rem;
+  border-top: 1px dashed var(--border);
+  font-size: .88rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.ingredient-total span:last-child {
+  background: linear-gradient(90deg, #10B981, #0EA5E9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.price-disclaimer {
+  font-size: .7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: .35rem;
+  margin-bottom: .25rem;
+  line-height: 1.4;
+}
+
+.grocery-grand-total {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  justify-content: space-between;
+  margin: 0 0 .75rem;
+  padding: .65rem .85rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.10), rgba(14,165,233,0.12));
+  border: 1px solid var(--glass-border);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--text);
+  flex-wrap: wrap;
+}
+.grocery-grand-total strong {
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, #10B981, #0EA5E9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-left: auto;
+}
+.grocery-grand-hint {
+  font-size: .68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-basis: 100%;
+}
+
+.grocery-recipe-total {
+  font-size: .8rem;
+  font-weight: 800;
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #10B981, #0EA5E9);
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ── DayModal meal rows ─────────────────────────────────*/
 .meal-row-actions {
   display: flex;

@@ -1,10 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  // Worker name is "kat" because that's the Worker the custom domain
-  // plateful365.com is bound to. There is also a "plateful" Worker on
-  // the same account with identical code, kept for symmetry but not
-  // routed. Deploy to "kat" to update the live site.
-  "name": "kat",
+  // plateful365.com (and www.) are bound to the "plateful" Worker —
+  // verified via GET /accounts/:id/workers/domains. There is also a
+  // "kat" Worker on the account with identical code (legacy/leftover)
+  // but it is NOT routed to the custom domain. Deploy to "plateful"
+  // to update the live site.
+  "name": "plateful",
   "main": "worker/index.js",
   "compatibility_date": "2026-04-21",
   "assets": {

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
-import { getRecipeIngredients } from '../data/recipes'
+import { getRecipeIngredients, scaleIngredients } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 
 const MEAL_TYPES = [
@@ -22,13 +22,16 @@ function buildPool() {
   return out
 }
 
-function buildPrintHTML(picks, weekNum) {
-  const sections = picks.map(p => `
+function buildPrintHTML(picks, weekNum, servings) {
+  const sections = picks.map(p => {
+    const scaled = scaleIngredients(p.ingredients, servings)
+    return `
     <section class="pick">
       <h3>${p.title}</h3>
-      ${p.dateLabel || p.protein ? `<p class="meta">${p.dateLabel ? p.dateLabel + ' · ' : ''}${p.protein ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || p.protein}` : 'Seasonal'}</p>` : ''}
-      <ul>${p.ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
-    </section>`).join('')
+      ${p.dateLabel || p.protein ? `<p class="meta">${p.dateLabel ? p.dateLabel + ' · ' : ''}${p.protein ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || p.protein}` : 'Seasonal'} · serves ${servings}</p>` : ''}
+      <ul>${scaled.map(ing => `<li>${ing}</li>`).join('')}</ul>
+    </section>`
+  }).join('')
   return `<html><head><title>Grocery List — Week ${weekNum}</title>
     <style>
       body{font-family:Inter,system-ui,sans-serif;padding:1.5rem;color:#0F172A;max-width:640px;margin:auto}
@@ -44,7 +47,7 @@ function buildPrintHTML(picks, weekNum) {
     </body></html>`
 }
 
-export default function GroceryListModal({ weekDays, weekNum, grocerySelection, toggleGrocery, clearGrocery, onClose }) {
+export default function GroceryListModal({ weekDays, weekNum, grocerySelection, toggleGrocery, clearGrocery, servings, onClose }) {
   const [query, setQuery] = useState('')
   const pool = useMemo(buildPool, [])
 
@@ -88,7 +91,7 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
   const handlePrint = () => {
     if (grocerySelection.length === 0) return
     const win = window.open('', '_blank')
-    win.document.write(buildPrintHTML(grocerySelection, weekNum))
+    win.document.write(buildPrintHTML(grocerySelection, weekNum, servings))
     win.document.close()
     win.print()
   }
@@ -201,7 +204,7 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
             <h3 className="grocery-summary-title">
               Your grocery list
               <span className="grocery-count">
-                {grocerySelection.length} {grocerySelection.length === 1 ? 'recipe' : 'recipes'} · {totalItems} {totalItems === 1 ? 'item' : 'items'}
+                {grocerySelection.length} {grocerySelection.length === 1 ? 'recipe' : 'recipes'} · serves {servings} · {totalItems} {totalItems === 1 ? 'item' : 'items'}
               </span>
             </h3>
             {grocerySelection.length === 0 ? (
@@ -221,7 +224,7 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
                       </span>
                     </div>
                     <ul className="grocery-ingredients">
-                      {p.ingredients.map((ing, i) => (
+                      {scaleIngredients(p.ingredients, servings).map((ing, i) => (
                         <li key={i}>{ing}</li>
                       ))}
                     </ul>

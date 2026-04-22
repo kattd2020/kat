@@ -46,6 +46,7 @@ export default function App() {
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
     calcEntries, addCalcEntry, removeCalcEntry, clearCalc,
     grocerySelection, toggleGrocery, clearGrocery,
+    servings, setServings,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
@@ -115,7 +116,9 @@ export default function App() {
       {showSettings && (
         <SettingsModal
           startDate={startDate}
-          onSave={saveStartDate}
+          servings={servings}
+          onSaveStartDate={saveStartDate}
+          onSetServings={setServings}
           onClose={() => setShowSettings(false)}
         />
       )}
@@ -127,6 +130,7 @@ export default function App() {
           grocerySelection={grocerySelection}
           toggleGrocery={toggleGrocery}
           clearGrocery={clearGrocery}
+          servings={servings}
           onClose={() => setShowGrocery(false)}
         />
       )}
@@ -135,6 +139,7 @@ export default function App() {
         <SeasonalModal
           grocerySelection={grocerySelection}
           toggleGrocery={toggleGrocery}
+          servings={servings}
           onClose={() => setShowSeasonal(false)}
         />
       )}
@@ -154,6 +159,7 @@ export default function App() {
           protein={browseProtein}
           grocerySelection={grocerySelection}
           toggleGrocery={toggleGrocery}
+          servings={servings}
           onClose={() => setBrowseProtein(null)}
         />
       )}

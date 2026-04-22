@@ -443,3 +443,67 @@ export function getRecipeIngredients(name, protein) {
   const key = findArchetype(name)?.key || 'default'
   return (INGREDIENTS[key] || INGREDIENTS.default)(meta)
 }
+
+// ── Serving-size scaling ────────────────────────────────
+// Default ingredient lists above are written to serve about 4. The
+// functions below let a caller re-scale them at render time without
+// touching stored data.
+
+export const BASE_SERVINGS = 4
+
+const UNICODE_FRACTIONS = {
+  '¼': 0.25, '⅓': 1 / 3, '½': 0.5, '⅔': 2 / 3, '¾': 0.75,
+  '⅕': 0.2, '⅖': 0.4, '⅗': 0.6, '⅘': 0.8,
+  '⅛': 0.125, '⅜': 0.375, '⅝': 0.625, '⅞': 0.875,
+}
+const INVERSE_FRACTIONS = [
+  [0.125, '⅛'], [0.25, '¼'], [1 / 3, '⅓'], [0.375, '⅜'],
+  [0.5, '½'], [0.625, '⅝'], [2 / 3, '⅔'], [0.75, '¾'], [0.875, '⅞'],
+]
+
+function parseLeadingQty(s) {
+  const range = s.match(/^(\d+)\s*[-–]\s*(\d+)\b/)
+  if (range) {
+    return { range: [Number(range[1]), Number(range[2])], matchLen: range[0].length }
+  }
+  const mix = s.match(/^(\d+)\s*([¼⅓½⅔¾⅕⅖⅗⅘⅛⅜⅝⅞])/)
+  if (mix) {
+    return { value: Number(mix[1]) + UNICODE_FRACTIONS[mix[2]], matchLen: mix[0].length }
+  }
+  const whole = s.match(/^\d+/)
+  if (whole) return { value: Number(whole[0]), matchLen: whole[0].length }
+  const frac = s.match(/^[¼⅓½⅔¾⅕⅖⅗⅘⅛⅜⅝⅞]/)
+  if (frac) return { value: UNICODE_FRACTIONS[frac[0]], matchLen: 1 }
+  return null
+}
+
+function formatQty(n) {
+  if (n <= 0) return '0'
+  const whole = Math.floor(n + 1e-9)
+  const frac = n - whole
+  for (const [v, ch] of INVERSE_FRACTIONS) {
+    if (Math.abs(frac - v) < 0.04) {
+      return whole > 0 ? `${whole}${ch}` : ch
+    }
+  }
+  if (frac < 0.04) return String(whole)
+  return Number(n.toFixed(2)).toString()
+}
+
+export function scaleIngredient(line, factor) {
+  if (factor === 1) return line
+  const parsed = parseLeadingQty(line)
+  if (!parsed) return line
+  const rest = line.slice(parsed.matchLen)
+  if (parsed.range) {
+    const [lo, hi] = parsed.range
+    return `${formatQty(lo * factor)}–${formatQty(hi * factor)}${rest}`
+  }
+  return `${formatQty(parsed.value * factor)}${rest}`
+}
+
+export function scaleIngredients(list, servings) {
+  const factor = (servings || BASE_SERVINGS) / BASE_SERVINGS
+  if (factor === 1) return list
+  return list.map(line => scaleIngredient(line, factor))
+}

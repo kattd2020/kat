@@ -1133,6 +1133,66 @@ body::after {
 .add-to-grocery-btn.picked:hover { filter: brightness(1.05); }
 
 .pr-recipe-actions { padding: 0 1rem 1rem; }
+.pr-recipe-body { padding: 0 1rem 1rem; }
+.pr-recipe-subhead {
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--primary-600);
+  margin: .55rem 0 .35rem;
+}
+.pr-recipe-ingredients {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0 0 .4rem;
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+.pr-recipe-ingredients li {
+  font-size: .86rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ── Servings picker (SettingsModal) ──────────────────── */
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .35rem;
+}
+.setting-row input { flex: 1; }
+.setting-save-btn { padding: .55rem .95rem; font-size: .85rem; }
+
+.servings-picker {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: .4rem;
+  margin-top: .35rem;
+}
+.servings-btn {
+  padding: .65rem .25rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--glass-border);
+  background: rgba(255,255,255,0.75);
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: transform .15s, background .2s, border-color .2s, box-shadow .2s, color .2s;
+}
+.servings-btn:hover { transform: translateY(-1px); background: #fff; }
+.servings-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+.servings-btn.active {
+  background: linear-gradient(135deg, #6366F1, #EC4899);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 10px 20px rgba(99,102,241,0.30);
+}
 
 /* ── Recipe Steps (DayModal) ──────────────────────────── */
 .modal-meals.with-recipes li { padding: .85rem 1rem; }

@@ -8,13 +8,14 @@ function toInputValue(date) {
   return `${y}-${m}-${d}`
 }
 
-export default function SettingsModal({ startDate, onSave, onClose }) {
-  const [value, setValue] = useState(toInputValue(startDate))
+const SERVING_OPTIONS = [1, 2, 3, 4, 5, 6]
 
-  const handleSave = () => {
-    if (value) {
-      onSave(value)
-      onClose()
+export default function SettingsModal({ startDate, servings, onSaveStartDate, onSetServings, onClose }) {
+  const [dateValue, setDateValue] = useState(toInputValue(startDate))
+
+  const handleSaveDate = () => {
+    if (dateValue) {
+      onSaveStartDate(dateValue)
     }
   }
 
@@ -28,20 +29,47 @@ export default function SettingsModal({ startDate, onSave, onClose }) {
         </div>
         <div className="modal-body">
           <div className="setting-group">
-            <label htmlFor="startDateInput">Plan Start Date</label>
-            <input
-              id="startDateInput"
-              type="date"
-              value={value}
-              onChange={e => setValue(e.target.value)}
-            />
+            <label htmlFor="startDateInput">Plan start date</label>
+            <div className="setting-row">
+              <input
+                id="startDateInput"
+                type="date"
+                value={dateValue}
+                onChange={e => setDateValue(e.target.value)}
+              />
+              <button className="btn btn-primary setting-save-btn" onClick={handleSaveDate}>
+                Save
+              </button>
+            </div>
             <p className="setting-hint">
               Day 1 of your 365-day plan. Adjust this to align meals with any start date.
             </p>
           </div>
-          <button className="btn btn-primary" style={{ width: '100%' }} onClick={handleSave}>
-            💾 Save Settings
-          </button>
+
+          <div className="setting-group">
+            <label>Servings per recipe</label>
+            <div className="servings-picker" role="radiogroup" aria-label="Servings per recipe">
+              {SERVING_OPTIONS.map(n => (
+                <button
+                  key={n}
+                  type="button"
+                  role="radio"
+                  aria-checked={servings === n}
+                  className={`servings-btn ${servings === n ? 'active' : ''}`}
+                  onClick={() => onSetServings(n)}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+            <p className="setting-hint">
+              Recipes and grocery quantities scale automatically to this many people. Changes apply instantly across the app.
+            </p>
+          </div>
+
+          <div className="qr-actions" style={{ marginTop: '1rem' }}>
+            <button className="btn btn-secondary" onClick={onClose}>Done</button>
+          </div>
         </div>
       </div>
     </div>

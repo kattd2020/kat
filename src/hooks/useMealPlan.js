@@ -8,6 +8,10 @@ export function makeGroceryKey(protein, title) {
 const STORAGE_KEY = 'mealplanner_startdate'
 const CALC_KEY = 'mealplanner_calc'
 const GROCERY_KEY = 'mealplanner_grocery'
+const SERVINGS_KEY = 'mealplanner_servings'
+const MIN_SERVINGS = 1
+const MAX_SERVINGS = 6
+const DEFAULT_SERVINGS = 4
 
 function getStoredCalcEntries() {
   try {
@@ -16,6 +20,12 @@ function getStoredCalcEntries() {
   } catch {
     return []
   }
+}
+
+function getStoredServings() {
+  const raw = Number(localStorage.getItem(SERVINGS_KEY))
+  if (!Number.isFinite(raw)) return DEFAULT_SERVINGS
+  return Math.max(MIN_SERVINGS, Math.min(MAX_SERVINGS, Math.round(raw)))
 }
 
 function getStoredGrocery() {
@@ -64,6 +74,7 @@ export function useMealPlan() {
   const [selectedDay, setSelectedDay] = useState(null)
   const [calcEntries, setCalcEntries] = useState(getStoredCalcEntries)
   const [grocerySelection, setGrocerySelection] = useState(getStoredGrocery)
+  const [servings, setServingsState] = useState(getStoredServings)
 
   const totalWeeks = Math.ceil(MEAL_PLAN.length / 7)
 
@@ -116,6 +127,12 @@ export function useMealPlan() {
     setGrocerySelection([])
   }, [])
 
+  const setServings = useCallback((n) => {
+    const num = Math.max(MIN_SERVINGS, Math.min(MAX_SERVINGS, Math.round(Number(n) || DEFAULT_SERVINGS)))
+    localStorage.setItem(SERVINGS_KEY, String(num))
+    setServingsState(num)
+  }, [])
+
   const goToPrevWeek = useCallback(() => setCurrentWeek(w => Math.max(0, w - 1)), [])
   const goToNextWeek = useCallback(() => setCurrentWeek(w => Math.min(totalWeeks - 1, w + 1)), [totalWeeks])
   const goToToday   = useCallback(() => setCurrentWeek(getWeekForDay(getTodayDayIndex(startDate))), [startDate])
@@ -152,5 +169,7 @@ export function useMealPlan() {
     grocerySelection,
     toggleGrocery,
     clearGrocery,
+    servings,
+    setServings,
   }
 }

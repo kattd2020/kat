@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { getSeasonalRecipe } from '../data/seasonalRecipes'
 import { scaleIngredients } from '../data/recipes'
-import { estimateScaledPrice, estimateRecipePrice, formatUSD } from '../data/prices'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 
@@ -78,22 +77,11 @@ export default function SeasonalModal({ grocerySelection, toggleGrocery, serving
                 <h4 className="seasonal-recipe-subhead">Ingredients</h4>
                 <ServingsPicker servings={servings} onChange={setServings} />
               </div>
-              <ul className="seasonal-recipe-ingredients priced">
-                {scaleIngredients(recipe.ingredients, servings).map((ing, i) => {
-                  const price = estimateScaledPrice(recipe.ingredients[i], servings)
-                  return (
-                    <li key={i}>
-                      <span className="ingredient-text">{ing}</span>
-                      {price > 0 && <span className="ingredient-price">{formatUSD(price)}</span>}
-                    </li>
-                  )
-                })}
+              <ul className="seasonal-recipe-ingredients">
+                {scaleIngredients(recipe.ingredients, servings).map((ing, i) => (
+                  <li key={i}>{ing}</li>
+                ))}
               </ul>
-              <div className="ingredient-total">
-                <span>Est. total</span>
-                <span>{formatUSD(estimateRecipePrice(recipe.ingredients, servings))}</span>
-              </div>
-              <p className="price-disclaimer">Rough IGA / US-average estimates — prices vary by store and sale week.</p>
 
               <h4 className="seasonal-recipe-subhead">Steps</h4>
               <ol className="seasonal-recipe-steps">

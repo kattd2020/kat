@@ -7,13 +7,17 @@
 
 export const CUTS = {
   beef: [
-    { key: 'all',         label: 'All',             emoji: '🥩' },
-    { key: 'ground',      label: 'Ground',          emoji: '🥩' },
-    { key: 'steak',       label: 'Steak',           emoji: '🥩' },
-    { key: 'roast',       label: 'Roast',           emoji: '🍖' },
-    { key: 'shortRib',    label: 'Short rib / Stew',emoji: '🍖' },
+    { key: 'all',         label: 'All',                  emoji: '🥩' },
+    { key: 'ground',      label: 'Ground',               emoji: '🥩' },
+    { key: 'ribeye',      label: 'Ribeye',               emoji: '🥩' },
+    { key: 'nyStrip',     label: 'NY Strip',             emoji: '🥩' },
+    { key: 'tbone',       label: 'T-bone / Porterhouse', emoji: '🥩' },
+    { key: 'filet',       label: 'Filet Mignon',         emoji: '🥩' },
+    { key: 'sirloin',     label: 'Sirloin / Flank / Skirt', emoji: '🥩' },
+    { key: 'roast',       label: 'Roast',                emoji: '🍖' },
+    { key: 'shortRib',    label: 'Short rib / Stew',     emoji: '🍖' },
     { key: 'philly',      label: 'Philly / Cheesesteak', emoji: '🥖' },
-    { key: 'cornedBeef',  label: 'Corned beef',     emoji: '🥩' },
+    { key: 'cornedBeef',  label: 'Corned beef',          emoji: '🥩' },
   ],
   pork: [
     { key: 'all',         label: 'All',              emoji: '🥓' },
@@ -30,7 +34,10 @@ export const CUTS = {
   chicken: [
     { key: 'all',         label: 'All',                 emoji: '🍗' },
     { key: 'breast',      label: 'Chicken breast',      emoji: '🍗' },
-    { key: 'thigh',       label: 'Chicken thighs',      emoji: '🍗' },
+    { key: 'thigh',       label: 'Thighs (bone-in or boneless)', emoji: '🍗' },
+    { key: 'drumstick',   label: 'Drumsticks',          emoji: '🍗' },
+    { key: 'legQuarter',  label: 'Leg quarters',        emoji: '🍗' },
+    { key: 'wings',       label: 'Wings',               emoji: '🍗' },
     { key: 'whole',       label: 'Whole / Rotisserie',  emoji: '🍗' },
     { key: 'chickenSausage', label: 'Chicken sausage',  emoji: '🌭' },
   ],
@@ -60,9 +67,17 @@ export function classifyCut(protein, name) {
   if (protein === 'beef') {
     if (/\bcorned beef\b/.test(n))                         return 'cornedBeef'
     if (/\bphilly\b|\bcheesesteak\b/.test(n))              return 'philly'
-    if (/\bshort ribs?\b|\bbrisket\b|\bbeef stew\b|\bnoodle soup\b/.test(n)) return 'shortRib'
-    if (/\bwellington\b|\bprime rib\b|\bpot roast\b|\broast beef\b/.test(n)) return 'roast'
-    if (/\bribeye\b|\bny strip\b|\bsteak\b|\bfajitas?\b|\bbulgogi\b|\bstir[- ]?fry\b|\brisotto\b|\bcobb salad\b/.test(n)) return 'steak'
+    // Specific steak cuts, most specific first
+    if (/\bt[- ]?bone\b|\bporterhouse\b/.test(n))          return 'tbone'
+    if (/\bfilet mignon\b|\btenderloin\b|\bwellington\b/.test(n)) return 'filet'
+    if (/\bribeye\b/.test(n))                              return 'ribeye'
+    if (/\bny strip\b|\bnew york strip\b|\bstrip steak\b/.test(n)) return 'nyStrip'
+    // Roasts and simmered cuts
+    if (/\bshort ribs?\b|\bbrisket\b|\bbeef stew\b|\bbeef noodle soup\b/.test(n)) return 'shortRib'
+    if (/\bprime rib\b|\bpot roast\b|\broast beef\b|\bbeef roast\b/.test(n)) return 'roast'
+    // Lean quick-cook cuts (generic "steak" lands here — real-world
+    // stir-fry, fajitas, bulgogi, and Cobb salad are flank/skirt/sirloin)
+    if (/\bsirloin\b|\bflank\b|\bskirt\b|\bflatiron\b|\bhanger\b|\bstroganoff\b|\bfajitas?\b|\bbulgogi\b|\bstir[- ]?fry\b|\brisotto\b|\bcobb salad\b|\bsteak\b/.test(n)) return 'sirloin'
     return 'ground'
   }
 
@@ -83,9 +98,12 @@ export function classifyCut(protein, name) {
   }
 
   if (protein === 'chicken') {
-    if (/\bwhole chicken\b|\broasted whole\b|\brotisserie\b|\bsmoked chicken\b/.test(n)) return 'whole'
-    if (/\bthigh\b/.test(n))                               return 'thigh'
     if (/\bchicken sausage\b/.test(n))                     return 'chickenSausage'
+    if (/\bwhole chicken\b|\broasted whole\b|\brotisserie\b|\bsmoked chicken\b/.test(n)) return 'whole'
+    if (/\bwings?\b/.test(n))                              return 'wings'
+    if (/\bdrumsticks?\b/.test(n))                         return 'drumstick'
+    if (/\bleg quarters?\b/.test(n))                       return 'legQuarter'
+    if (/\bthighs?\b/.test(n))                             return 'thigh'
     return 'breast'
   }
 

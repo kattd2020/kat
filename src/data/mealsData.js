@@ -46,6 +46,9 @@ export const MEALS = {
       'Braised Short Ribs',
       'Beef Stuffed Peppers',
       'Beef Wellington',
+      'T-bone Steak with Baked Potato',
+      'Filet Mignon with Red Wine Sauce',
+      'Sirloin Stroganoff',
     ],
   },
 
@@ -127,6 +130,7 @@ export const MEALS = {
       'Chicken Pasta Salad',
       'Nashville Hot Chicken Sandwich',
       'Chicken Fried Rice',
+      'Buffalo Wings Basket',
     ],
     dinner: [
       'Baked Lemon Herb Chicken',
@@ -144,6 +148,9 @@ export const MEALS = {
       'Roasted Whole Chicken',
       'Chicken Tikka Masala',
       'Creamy Tuscan Chicken',
+      'Honey Garlic Chicken Wings',
+      'BBQ Baked Drumsticks',
+      'Roast Leg Quarters with Root Veg',
     ],
   },
 

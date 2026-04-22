@@ -64,6 +64,13 @@ export const CUTS = {
   ],
 }
 
+export function getCut(protein, name) {
+  const key = classifyCut(protein, name)
+  if (key === 'all') return null
+  const cuts = CUTS[protein] || []
+  return cuts.find(c => c.key === key) || null
+}
+
 export function classifyCut(protein, name) {
   const n = name.toLowerCase()
 

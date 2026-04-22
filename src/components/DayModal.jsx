@@ -4,6 +4,7 @@ import { PROTEIN_LABELS } from '../data/mealsData'
 import { getRecipeSteps, getRecipeIngredients, scaleIngredients } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
+import CutTag from './CutTag'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -58,6 +59,7 @@ function MealRow({ mealType, name, protein, day, servings, setServings, onToggle
       <div className="meal-row-head">
         <span className="meal-time">{mealType.emoji} {mealType.label}</span>
         <span className="meal-name">{name}</span>
+        <CutTag protein={protein} name={name} />
       </div>
       <div className="meal-row-actions">
         <button

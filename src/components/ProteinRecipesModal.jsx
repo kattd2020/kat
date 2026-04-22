@@ -4,6 +4,7 @@ import { getRecipeSteps, getRecipeIngredients, scaleIngredients } from '../data/
 import { CUTS, classifyCut } from '../data/cuts'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
+import CutTag from './CutTag'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -23,7 +24,10 @@ function RecipeRow({ name, protein, servings, setServings, picked, onToggleGroce
         onClick={() => setOpen(v => !v)}
         aria-expanded={open}
       >
-        <span className="pr-recipe-name">{name}</span>
+        <span className="pr-recipe-name-col">
+          <span className="pr-recipe-name">{name}</span>
+          <CutTag protein={protein} name={name} />
+        </span>
         <span className="pr-recipe-chevron" aria-hidden="true">{open ? '▾' : '▸'}</span>
       </button>
       {open && (

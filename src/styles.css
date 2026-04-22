@@ -1657,7 +1657,70 @@ body::after {
 }
 .pr-recipe-head:hover { background: rgba(99,102,241,0.06); }
 .pr-recipe-head:focus-visible { outline: none; box-shadow: var(--ring) inset; }
+.pr-recipe-name-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .2rem;
+  flex: 1;
+  min-width: 0;
+}
 .pr-recipe-name { font-size: .93rem; font-weight: 600; }
+
+/* ── Cut tag ───────────────────────────────────────────── */
+.cut-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .1rem .5rem;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--primary-600);
+  background: rgba(99,102,241,0.10);
+  border: 1px solid rgba(99,102,241,0.22);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Tint the tag to the meat color family where it's helpful */
+.cut-ribeye, .cut-nyStrip, .cut-tbone, .cut-filet, .cut-sirloin,
+.cut-topRound, .cut-bottomRound, .cut-londonBroil, .cut-ground,
+.cut-roast, .cut-shortRib, .cut-philly, .cut-cornedBeef {
+  color: #9A1E1E;
+  background: rgba(239,68,68,0.10);
+  border-color: rgba(239,68,68,0.22);
+}
+.cut-bacon, .cut-ham, .cut-sausage, .cut-chops, .cut-tenderloin,
+.cut-belly, .cut-ribs, .cut-pulled, .cut-schnitzel {
+  color: #9A4B1E;
+  background: rgba(249,115,22,0.10);
+  border-color: rgba(249,115,22,0.22);
+}
+.cut-breast, .cut-thigh, .cut-drumstick, .cut-legQuarter,
+.cut-wings, .cut-whole, .cut-chickenSausage {
+  color: #065F46;
+  background: rgba(16,185,129,0.10);
+  border-color: rgba(16,185,129,0.22);
+}
+.cut-turkeySausage, .cut-ground.protein-groundTurkey {
+  color: #6B21A8;
+  background: rgba(168,85,247,0.10);
+  border-color: rgba(168,85,247,0.22);
+}
+.cut-salmon, .cut-shrimp, .cut-tuna, .cut-cod, .cut-crab,
+.cut-lobster, .cut-lox, .cut-mixed, .cut-sardines, .cut-otherFish {
+  color: #0E7490;
+  background: rgba(6,182,212,0.10);
+  border-color: rgba(6,182,212,0.22);
+}
+
+/* Meal-row-head: allow the cut tag to wrap under the meal name on mobile */
+.meal-row-head {
+  flex-wrap: wrap;
+}
 .pr-recipe-chevron {
   font-size: .85rem;
   color: var(--primary-600);

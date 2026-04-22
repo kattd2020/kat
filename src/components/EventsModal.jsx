@@ -4,6 +4,7 @@ import { EVENT_MENUS } from '../data/eventMenus'
 import { getRecipeIngredients, getRecipeSteps, scaleIngredients } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
+import CutTag from './CutTag'
 
 function resolveRecipe(recipe) {
   if (recipe.custom) {
@@ -42,7 +43,10 @@ function EventRecipeRow({ resolved, picked, servings, setServings, onToggleAdd }
           </span>
         )}
         {!resolved.protein && <span className="event-recipe-badge">✨</span>}
-        <span className="event-recipe-name">{resolved.title}</span>
+        <span className="event-recipe-name">
+          {resolved.title}
+          <CutTag protein={resolved.protein} name={resolved.title} />
+        </span>
         <span className="event-recipe-chevron" aria-hidden="true">{open ? '▾' : '▸'}</span>
       </button>
       {open && (

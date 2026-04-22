@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
 import { getRecipeSteps, getRecipeIngredients, scaleIngredients } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
+import ServingsPicker from './ServingsPicker'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -9,7 +10,7 @@ const MEAL_TYPES = [
   { key: 'dinner',    emoji: '🌙', label: 'Dinner' },
 ]
 
-function RecipeRow({ name, protein, servings, picked, onToggleGrocery }) {
+function RecipeRow({ name, protein, servings, setServings, picked, onToggleGrocery }) {
   const [open, setOpen] = useState(false)
   const steps = open ? getRecipeSteps(name, protein) : null
   const ingredients = open ? scaleIngredients(getRecipeIngredients(name, protein), servings) : null
@@ -26,7 +27,10 @@ function RecipeRow({ name, protein, servings, picked, onToggleGrocery }) {
       </button>
       {open && (
         <div className="pr-recipe-body">
-          <h4 className="pr-recipe-subhead">Ingredients · serves {servings}</h4>
+          <div className="recipe-subhead-row">
+            <h4 className="pr-recipe-subhead">Ingredients</h4>
+            <ServingsPicker servings={servings} onChange={setServings} />
+          </div>
           <ul className="pr-recipe-ingredients">
             {ingredients.map((ing, i) => (
               <li key={i}>{ing}</li>
@@ -57,7 +61,7 @@ function RecipeRow({ name, protein, servings, picked, onToggleGrocery }) {
   )
 }
 
-export default function ProteinRecipesModal({ protein, grocerySelection, toggleGrocery, servings, onClose }) {
+export default function ProteinRecipesModal({ protein, grocerySelection, toggleGrocery, servings, setServings, onClose }) {
   const pool = MEALS[protein]
   const { label, emoji } = PROTEIN_LABELS[protein]
   const totalCount =
@@ -95,6 +99,7 @@ export default function ProteinRecipesModal({ protein, grocerySelection, toggleG
                     name={name}
                     protein={protein}
                     servings={servings}
+                    setServings={setServings}
                     picked={isPicked(name)}
                     onToggleGrocery={toggleGrocery}
                   />

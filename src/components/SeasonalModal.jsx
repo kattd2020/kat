@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { getSeasonalRecipe } from '../data/seasonalRecipes'
 import { scaleIngredients } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
+import ServingsPicker from './ServingsPicker'
 
 const SEASONS = [
   { name: 'Winter', months: [12, 1, 2], emoji: '❄️', foods: ['citrus', 'root veg', 'kale', 'squash', 'pears', 'pomegranate'] },
@@ -15,7 +16,7 @@ function currentSeason() {
   return SEASONS.find(s => s.months.includes(m)) || SEASONS[0]
 }
 
-export default function SeasonalModal({ grocerySelection, toggleGrocery, servings, onClose }) {
+export default function SeasonalModal({ grocerySelection, toggleGrocery, servings, setServings, onClose }) {
   const season = currentSeason()
   const [selected, setSelected] = useState(null)
   const recipe = selected ? getSeasonalRecipe(selected) : null
@@ -72,7 +73,10 @@ export default function SeasonalModal({ grocerySelection, toggleGrocery, serving
                 </button>
               </div>
 
-              <h4 className="seasonal-recipe-subhead">Ingredients · serves {servings}</h4>
+              <div className="recipe-subhead-row">
+                <h4 className="seasonal-recipe-subhead">Ingredients</h4>
+                <ServingsPicker servings={servings} onChange={setServings} />
+              </div>
               <ul className="seasonal-recipe-ingredients">
                 {scaleIngredients(recipe.ingredients, servings).map((ing, i) => (
                   <li key={i}>{ing}</li>

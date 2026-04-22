@@ -1156,6 +1156,98 @@ body::after {
   color: var(--text);
 }
 
+/* ── Inline servings stepper (recipes & grocery) ──────── */
+.recipe-subhead-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin: .75rem 0 .45rem;
+}
+.recipe-subhead-row .pr-recipe-subhead,
+.recipe-subhead-row .recipe-subhead,
+.recipe-subhead-row .seasonal-recipe-subhead { margin: 0; }
+
+.recipe-subhead { /* DayModal inline recipes use this */
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--primary-600);
+  margin: .75rem 0 .45rem;
+}
+.recipe-ingredients {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0 0 .35rem;
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+.recipe-ingredients li {
+  font-size: .86rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.serves-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .2rem .35rem;
+  border-radius: 999px;
+  background: rgba(99,102,241,0.08);
+  border: 1px solid var(--glass-border);
+}
+.serves-label {
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: .1rem;
+  padding-left: .4rem;
+}
+.serves-btn {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  width: 26px; height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366F1, #EC4899);
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(99,102,241,0.30);
+  transition: transform .15s, filter .2s, opacity .2s;
+}
+.serves-btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.05); }
+.serves-btn:focus-visible { outline: none; box-shadow: var(--ring), 0 4px 10px rgba(99,102,241,0.30); }
+.serves-btn:active:not(:disabled) { transform: translateY(0) scale(.96); }
+.serves-btn:disabled { opacity: .35; cursor: not-allowed; }
+.serves-value {
+  min-width: 1.2rem;
+  text-align: center;
+  font-weight: 800;
+  font-size: .95rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.grocery-summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin-bottom: .6rem;
+}
+.grocery-summary-header .grocery-summary-title { margin-bottom: 0; }
+
 /* ── Servings picker (SettingsModal) ──────────────────── */
 .setting-row {
   display: flex;

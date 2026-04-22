@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
 import { getRecipeIngredients, scaleIngredients } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
+import ServingsPicker from './ServingsPicker'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -47,7 +48,7 @@ function buildPrintHTML(picks, weekNum, servings) {
     </body></html>`
 }
 
-export default function GroceryListModal({ weekDays, weekNum, grocerySelection, toggleGrocery, clearGrocery, servings, onClose }) {
+export default function GroceryListModal({ weekDays, weekNum, grocerySelection, toggleGrocery, clearGrocery, servings, setServings, onClose }) {
   const [query, setQuery] = useState('')
   const pool = useMemo(buildPool, [])
 
@@ -201,12 +202,15 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
           )}
 
           <div className="grocery-summary">
-            <h3 className="grocery-summary-title">
-              Your grocery list
-              <span className="grocery-count">
-                {grocerySelection.length} {grocerySelection.length === 1 ? 'recipe' : 'recipes'} · serves {servings} · {totalItems} {totalItems === 1 ? 'item' : 'items'}
-              </span>
-            </h3>
+            <div className="grocery-summary-header">
+              <h3 className="grocery-summary-title">
+                Your grocery list
+                <span className="grocery-count">
+                  {grocerySelection.length} {grocerySelection.length === 1 ? 'recipe' : 'recipes'} · {totalItems} {totalItems === 1 ? 'item' : 'items'}
+                </span>
+              </h3>
+              <ServingsPicker servings={servings} onChange={setServings} />
+            </div>
             {grocerySelection.length === 0 ? (
               <p className="setting-hint">Nothing picked yet. Tap any recipe above — or search — to add its ingredients.</p>
             ) : (

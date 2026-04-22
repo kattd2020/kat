@@ -109,6 +109,8 @@ export default function App() {
           day={selectedDay}
           grocerySelection={grocerySelection}
           toggleGrocery={toggleGrocery}
+          servings={servings}
+          setServings={setServings}
           onClose={() => setSelectedDay(null)}
         />
       )}
@@ -131,6 +133,7 @@ export default function App() {
           toggleGrocery={toggleGrocery}
           clearGrocery={clearGrocery}
           servings={servings}
+          setServings={setServings}
           onClose={() => setShowGrocery(false)}
         />
       )}
@@ -140,6 +143,7 @@ export default function App() {
           grocerySelection={grocerySelection}
           toggleGrocery={toggleGrocery}
           servings={servings}
+          setServings={setServings}
           onClose={() => setShowSeasonal(false)}
         />
       )}
@@ -160,6 +164,7 @@ export default function App() {
           grocerySelection={grocerySelection}
           toggleGrocery={toggleGrocery}
           servings={servings}
+          setServings={setServings}
           onClose={() => setBrowseProtein(null)}
         />
       )}

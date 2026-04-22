@@ -10,6 +10,52 @@ const MEAL_TYPES = [
   { key: 'dinner',    emoji: '🌙', label: 'Dinner' },
 ]
 
+function SearchResultRow({ recipe, picked, servings, setServings, onToggleAdd }) {
+  const [open, setOpen] = useState(false)
+  const pLabel = PROTEIN_LABELS[recipe.protein]
+  const mLabel = MEAL_TYPES.find(m => m.key === recipe.mealType)
+  const ingredients = open
+    ? scaleIngredients(getRecipeIngredients(recipe.title, recipe.protein), servings)
+    : null
+
+  return (
+    <li className={`search-result ${open ? 'open' : ''} ${picked ? 'picked' : ''}`}>
+      <button
+        type="button"
+        className="grocery-pick search-pick"
+        onClick={() => setOpen(v => !v)}
+        aria-expanded={open}
+      >
+        <span className="grocery-check" aria-hidden="true">{picked ? '✓' : ''}</span>
+        <span className="grocery-pick-time">{pLabel.emoji} {mLabel.emoji} {mLabel.label}</span>
+        <span className="grocery-pick-name">{recipe.title}</span>
+        <span className="search-chevron" aria-hidden="true">{open ? '▾' : '▸'}</span>
+      </button>
+      {open && (
+        <div className="search-result-body">
+          <div className="recipe-subhead-row">
+            <h4 className="pr-recipe-subhead">Ingredients</h4>
+            <ServingsPicker servings={servings} onChange={setServings} />
+          </div>
+          <ul className="pr-recipe-ingredients">
+            {ingredients.map((ing, i) => (
+              <li key={i}>{ing}</li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            className={`add-to-grocery-btn ${picked ? 'picked' : ''}`}
+            onClick={() => onToggleAdd(recipe)}
+            aria-pressed={picked}
+          >
+            {picked ? '✓ Added to grocery list' : '🛒 Add to grocery list'}
+          </button>
+        </div>
+      )}
+    </li>
+  )
+}
+
 function buildPool() {
   const out = []
   for (const [protein, types] of Object.entries(MEALS)) {
@@ -120,29 +166,19 @@ export default function GroceryListModal({ weekNum, grocerySelection, toggleGroc
               <p className="setting-hint" style={{ marginBottom: '.6rem' }}>
                 {searchResults.length === 0
                   ? 'No matches. Try a simpler term like "soup" or "stir-fry".'
-                  : `${searchResults.length} match${searchResults.length === 1 ? '' : 'es'}`}
+                  : `${searchResults.length} match${searchResults.length === 1 ? '' : 'es'} · tap any to see ingredients`}
               </p>
               <ul className="grocery-pick-list">
-                {searchResults.map(r => {
-                  const picked = isPicked(r.protein, r.title)
-                  const pLabel = PROTEIN_LABELS[r.protein]
-                  const mLabel = MEAL_TYPES.find(m => m.key === r.mealType)
-                  return (
-                    <li key={`${r.protein}-${r.mealType}-${r.title}`}>
-                      <button
-                        type="button"
-                        className={`grocery-pick ${picked ? 'picked' : ''}`}
-                        onClick={() => handleTogglePoolItem(r.protein, r.mealType, r.title)}
-                        aria-pressed={picked}
-                      >
-                        <span className="grocery-check" aria-hidden="true">{picked ? '✓' : ''}</span>
-                        <span className="grocery-pick-time">{pLabel.emoji} {mLabel.emoji} {mLabel.label}</span>
-                        <span className="grocery-pick-name">{r.title}</span>
-                        <span className="grocery-pick-action">{picked ? 'Added' : '+ Add to list'}</span>
-                      </button>
-                    </li>
-                  )
-                })}
+                {searchResults.map(r => (
+                  <SearchResultRow
+                    key={`${r.protein}-${r.mealType}-${r.title}`}
+                    recipe={r}
+                    picked={isPicked(r.protein, r.title)}
+                    servings={servings}
+                    setServings={setServings}
+                    onToggleAdd={(recipe) => handleTogglePoolItem(recipe.protein, recipe.mealType, recipe.title)}
+                  />
+                ))}
               </ul>
             </div>
           )}

@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { getSeasonalRecipe } from '../data/seasonalRecipes'
+
 const SEASONS = [
   { name: 'Winter', months: [12, 1, 2], emoji: '❄️', foods: ['citrus', 'root veg', 'kale', 'squash', 'pears', 'pomegranate'] },
   { name: 'Spring', months: [3, 4, 5], emoji: '🌱', foods: ['asparagus', 'peas', 'strawberries', 'radishes', 'herbs', 'artichokes'] },
@@ -12,6 +15,9 @@ function currentSeason() {
 
 export default function SeasonalModal({ onClose }) {
   const season = currentSeason()
+  const [selected, setSelected] = useState(null)
+  const recipe = selected ? getSeasonalRecipe(selected) : null
+
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-labelledby="seasonal-title">
       <div className="modal-overlay" onClick={onClose} />
@@ -25,13 +31,55 @@ export default function SeasonalModal({ onClose }) {
         </div>
         <div className="modal-body">
           <p className="setting-hint" style={{ marginBottom: '1rem' }}>
-            These ingredients are at peak flavor and lowest price right now. Build your meals around them.
+            These ingredients are at peak flavor and lowest price right now. Tap one for a quick recipe.
           </p>
           <div className="seasonal-chips">
             {season.foods.map(f => (
-              <span key={f} className="seasonal-chip">{f}</span>
+              <button
+                key={f}
+                type="button"
+                className={`seasonal-chip ${selected === f ? 'active' : ''}`}
+                onClick={() => setSelected(selected === f ? null : f)}
+                aria-pressed={selected === f}
+              >
+                {f}
+              </button>
             ))}
           </div>
+
+          {recipe && (
+            <div className="seasonal-recipe" role="region" aria-label={`Recipe for ${selected}`}>
+              <div className="seasonal-recipe-head">
+                <div>
+                  <h3>{recipe.title}</h3>
+                  <p className="seasonal-recipe-meta">⏱ {recipe.time} · using {selected}</p>
+                </div>
+                <button
+                  type="button"
+                  className="seasonal-recipe-close"
+                  onClick={() => setSelected(null)}
+                  aria-label="Close recipe"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <h4 className="seasonal-recipe-subhead">Ingredients</h4>
+              <ul className="seasonal-recipe-ingredients">
+                {recipe.ingredients.map((ing, i) => (
+                  <li key={i}>{ing}</li>
+                ))}
+              </ul>
+
+              <h4 className="seasonal-recipe-subhead">Steps</h4>
+              <ol className="seasonal-recipe-steps">
+                {recipe.steps.map((s, i) => (
+                  <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
+                ))}
+              </ol>
+            </div>
+          )}
+
           <div className="qr-actions" style={{ marginTop: '1.75rem' }}>
             <button className="btn btn-secondary" onClick={onClose}>Close</button>
           </div>

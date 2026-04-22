@@ -14,8 +14,11 @@ export const CUTS = {
     { key: 'tbone',       label: 'T-bone / Porterhouse', emoji: '🥩' },
     { key: 'filet',       label: 'Filet Mignon',         emoji: '🥩' },
     { key: 'sirloin',     label: 'Sirloin / Flank / Skirt', emoji: '🥩' },
-    { key: 'roast',       label: 'Roast',                emoji: '🍖' },
-    { key: 'shortRib',    label: 'Short rib / Stew',     emoji: '🍖' },
+    { key: 'topRound',    label: 'Top round',            emoji: '🥩' },
+    { key: 'bottomRound', label: 'Bottom round',         emoji: '🍖' },
+    { key: 'londonBroil', label: 'London broil',         emoji: '🥩' },
+    { key: 'roast',       label: 'Prime rib / Rib roast',emoji: '🍖' },
+    { key: 'shortRib',    label: 'Short rib / Brisket',  emoji: '🍖' },
     { key: 'philly',      label: 'Philly / Cheesesteak', emoji: '🥖' },
     { key: 'cornedBeef',  label: 'Corned beef',          emoji: '🥩' },
   ],
@@ -67,14 +70,22 @@ export function classifyCut(protein, name) {
   if (protein === 'beef') {
     if (/\bcorned beef\b/.test(n))                         return 'cornedBeef'
     if (/\bphilly\b|\bcheesesteak\b/.test(n))              return 'philly'
-    // Specific steak cuts, most specific first
+    // Named round cuts — check before generic "steak" / "roast"
+    if (/\blondon broil\b/.test(n))                        return 'londonBroil'
+    if (/\btop round\b/.test(n))                           return 'topRound'
+    if (/\bbottom round\b/.test(n))                        return 'bottomRound'
+    // Specific premium steak cuts, most specific first
     if (/\bt[- ]?bone\b|\bporterhouse\b/.test(n))          return 'tbone'
     if (/\bfilet mignon\b|\btenderloin\b|\bwellington\b/.test(n)) return 'filet'
     if (/\bribeye\b/.test(n))                              return 'ribeye'
     if (/\bny strip\b|\bnew york strip\b|\bstrip steak\b/.test(n)) return 'nyStrip'
-    // Roasts and simmered cuts
-    if (/\bshort ribs?\b|\bbrisket\b|\bbeef stew\b|\bbeef noodle soup\b/.test(n)) return 'shortRib'
-    if (/\bprime rib\b|\bpot roast\b|\broast beef\b|\bbeef roast\b/.test(n)) return 'roast'
+    // Roasts and simmered cuts — pot roast and stew are classic
+    // bottom-round uses; deli-style roast beef is almost always top round.
+    if (/\bpot roast\b/.test(n))                           return 'bottomRound'
+    if (/\bbeef stew\b/.test(n))                           return 'bottomRound'
+    if (/\broast beef\b/.test(n))                          return 'topRound'
+    if (/\bshort ribs?\b|\bbrisket\b|\bbeef noodle soup\b/.test(n)) return 'shortRib'
+    if (/\bprime rib\b|\brib roast\b|\bbeef roast\b/.test(n)) return 'roast'
     // Lean quick-cook cuts (generic "steak" lands here — real-world
     // stir-fry, fajitas, bulgogi, and Cobb salad are flank/skirt/sirloin)
     if (/\bsirloin\b|\bflank\b|\bskirt\b|\bflatiron\b|\bhanger\b|\bstroganoff\b|\bfajitas?\b|\bbulgogi\b|\bstir[- ]?fry\b|\brisotto\b|\bcobb salad\b|\bsteak\b/.test(n)) return 'sirloin'

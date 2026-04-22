@@ -29,6 +29,7 @@ export const MEALS = {
       'Beef Cobb Salad',
       'Meatball Sub',
       'Beef Chili',
+      'London Broil Sandwich',
     ],
     dinner: [
       'Ribeye Steak with Roasted Veggies',
@@ -49,6 +50,8 @@ export const MEALS = {
       'T-bone Steak with Baked Potato',
       'Filet Mignon with Red Wine Sauce',
       'Sirloin Stroganoff',
+      'Herb-Marinated London Broil',
+      'Slow-Roasted Top Round with Gravy',
     ],
   },
 

@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
-import { getRecipeSteps } from '../data/recipes'
+import { getRecipeSteps, getRecipeIngredients } from '../data/recipes'
+import { makeGroceryKey } from '../hooks/useMealPlan'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -8,7 +9,7 @@ const MEAL_TYPES = [
   { key: 'dinner',    emoji: '🌙', label: 'Dinner' },
 ]
 
-function RecipeRow({ name, protein }) {
+function RecipeRow({ name, protein, picked, onToggleGrocery }) {
   const [open, setOpen] = useState(false)
   const steps = open ? getRecipeSteps(name, protein) : null
   return (
@@ -23,21 +24,44 @@ function RecipeRow({ name, protein }) {
         <span className="pr-recipe-chevron" aria-hidden="true">{open ? '▾' : '▸'}</span>
       </button>
       {open && (
-        <ol className="pr-recipe-steps">
-          {steps.map((s, i) => (
-            <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
-          ))}
-        </ol>
+        <>
+          <ol className="pr-recipe-steps">
+            {steps.map((s, i) => (
+              <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
+            ))}
+          </ol>
+          <div className="pr-recipe-actions">
+            <button
+              type="button"
+              className={`add-to-grocery-btn ${picked ? 'picked' : ''}`}
+              onClick={() => onToggleGrocery({
+                title: name,
+                protein,
+                mealType: null,
+                ingredients: getRecipeIngredients(name, protein),
+              })}
+              aria-pressed={picked}
+            >
+              {picked ? '✓ Added to grocery list' : '🛒 Add to grocery list'}
+            </button>
+          </div>
+        </>
       )}
     </li>
   )
 }
 
-export default function ProteinRecipesModal({ protein, onClose }) {
+export default function ProteinRecipesModal({ protein, grocerySelection, toggleGrocery, onClose }) {
   const pool = MEALS[protein]
   const { label, emoji } = PROTEIN_LABELS[protein]
   const totalCount =
     pool.breakfast.length + pool.lunch.length + pool.dinner.length
+
+  const pickedKeys = useMemo(
+    () => new Set((grocerySelection || []).map(i => i.key)),
+    [grocerySelection]
+  )
+  const isPicked = (title) => pickedKeys.has(makeGroceryKey(protein, title))
 
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-labelledby="pr-title">
@@ -60,7 +84,13 @@ export default function ProteinRecipesModal({ protein, onClose }) {
               </h3>
               <ul className="pr-list">
                 {pool[t.key].map(name => (
-                  <RecipeRow key={name} name={name} protein={protein} />
+                  <RecipeRow
+                    key={name}
+                    name={name}
+                    protein={protein}
+                    picked={isPicked(name)}
+                    onToggleGrocery={toggleGrocery}
+                  />
                 ))}
               </ul>
             </section>

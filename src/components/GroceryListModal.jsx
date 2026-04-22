@@ -1,5 +1,7 @@
-import { PROTEIN_LABELS } from '../data/mealsData'
+import { useMemo, useState } from 'react'
+import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
 import { getRecipeIngredients } from '../data/recipes'
+import { makeGroceryKey } from '../hooks/useMealPlan'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -7,11 +9,24 @@ const MEAL_TYPES = [
   { key: 'dinner',    emoji: '🌙', label: 'Dinner' },
 ]
 
+// One flat list of every recipe in the MEALS pool for searching.
+function buildPool() {
+  const out = []
+  for (const [protein, types] of Object.entries(MEALS)) {
+    for (const t of MEAL_TYPES) {
+      for (const name of types[t.key]) {
+        out.push({ protein, mealType: t.key, title: name })
+      }
+    }
+  }
+  return out
+}
+
 function buildPrintHTML(picks, weekNum) {
   const sections = picks.map(p => `
     <section class="pick">
-      <h3>${p.mealEmoji} ${p.meal}</h3>
-      <p class="meta">${p.dateLabel} · ${p.proteinEmoji} ${p.proteinLabel}</p>
+      <h3>${p.title}</h3>
+      ${p.dateLabel || p.protein ? `<p class="meta">${p.dateLabel ? p.dateLabel + ' · ' : ''}${p.protein ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || p.protein}` : 'Seasonal'}</p>` : ''}
       <ul>${p.ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
     </section>`).join('')
   return `<html><head><title>Grocery List — Week ${weekNum}</title>
@@ -30,34 +45,50 @@ function buildPrintHTML(picks, weekNum) {
 }
 
 export default function GroceryListModal({ weekDays, weekNum, grocerySelection, toggleGrocery, clearGrocery, onClose }) {
-  const isPicked = (dayNumber, mealType) =>
-    grocerySelection.includes(`${dayNumber}-${mealType}`)
+  const [query, setQuery] = useState('')
+  const pool = useMemo(buildPool, [])
 
-  const picks = []
-  for (const day of weekDays) {
-    for (const t of MEAL_TYPES) {
-      if (isPicked(day.dayNumber, t.key)) {
-        picks.push({
-          key: `${day.dayNumber}-${t.key}`,
-          date: day.date,
-          dateLabel: day.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-          meal: day[t.key],
-          mealEmoji: t.emoji,
-          mealLabel: t.label,
-          proteinEmoji: PROTEIN_LABELS[day.protein].emoji,
-          proteinLabel: PROTEIN_LABELS[day.protein].label,
-          ingredients: getRecipeIngredients(day[t.key], day.protein),
-        })
-      }
-    }
+  const pickedKeys = useMemo(
+    () => new Set(grocerySelection.map(i => i.key)),
+    [grocerySelection]
+  )
+  const isPicked = (protein, title) => pickedKeys.has(makeGroceryKey(protein, title))
+
+  const trimmed = query.trim().toLowerCase()
+  const searching = trimmed.length > 0
+  const searchResults = searching
+    ? pool
+        .filter(r => r.title.toLowerCase().includes(trimmed))
+        .slice(0, 40)
+    : []
+
+  const handleTogglePoolItem = (protein, mealType, title) => {
+    toggleGrocery({
+      title,
+      protein,
+      mealType,
+      ingredients: getRecipeIngredients(title, protein),
+    })
   }
 
-  const totalItems = picks.reduce((n, p) => n + p.ingredients.length, 0)
+  const handleToggleDayItem = (day, mealType) => {
+    const title = day[mealType]
+    toggleGrocery({
+      title,
+      protein: day.protein,
+      mealType,
+      ingredients: getRecipeIngredients(title, day.protein),
+      dayNumber: day.dayNumber,
+      dateLabel: day.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+    })
+  }
+
+  const totalItems = grocerySelection.reduce((n, p) => n + p.ingredients.length, 0)
 
   const handlePrint = () => {
-    if (picks.length === 0) return
+    if (grocerySelection.length === 0) return
     const win = window.open('', '_blank')
-    win.document.write(buildPrintHTML(picks, weekNum))
+    win.document.write(buildPrintHTML(grocerySelection, weekNum))
     win.document.close()
     win.print()
   }
@@ -69,72 +100,125 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
         <div className="modal-header">
           <div>
             <h2 id="grocery-title">🛒 Grocery list</h2>
-            <p className="modal-date">Week {weekNum} · tap meals to add their ingredients to your list</p>
+            <p className="modal-date">Week {weekNum} · pick from the week or search every recipe</p>
           </div>
           <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
         <div className="modal-body">
-          <div className="grocery-days">
-            {weekDays.map(day => {
-              const proteinLabel = PROTEIN_LABELS[day.protein]
-              return (
-                <div key={day.dayNumber} className="grocery-day-block">
-                  <div className="grocery-day-head">
-                    <strong>
-                      {day.date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
-                    </strong>
-                    <span className={`protein-tag ${day.protein}`}>
-                      {proteinLabel.emoji} {proteinLabel.label}
-                    </span>
-                  </div>
-                  <ul className="grocery-pick-list">
-                    {MEAL_TYPES.map(t => {
-                      const picked = isPicked(day.dayNumber, t.key)
-                      return (
-                        <li key={t.key}>
-                          <button
-                            type="button"
-                            className={`grocery-pick ${picked ? 'picked' : ''}`}
-                            onClick={() => toggleGrocery(day.dayNumber, t.key)}
-                            aria-pressed={picked}
-                          >
-                            <span className="grocery-check" aria-hidden="true">
-                              {picked ? '✓' : ''}
-                            </span>
-                            <span className="grocery-pick-time">{t.emoji} {t.label}</span>
-                            <span className="grocery-pick-name">{day[t.key]}</span>
-                            <span className="grocery-pick-action">
-                              {picked ? 'Added' : '+ Add to list'}
-                            </span>
-                          </button>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-              )
-            })}
+          <div className="grocery-search">
+            <span className="grocery-search-icon" aria-hidden="true">🔍</span>
+            <input
+              type="search"
+              placeholder="Search any recipe (e.g. taco, salmon, stir-fry)…"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              aria-label="Search recipes"
+            />
+            {query && (
+              <button
+                type="button"
+                className="grocery-search-clear"
+                onClick={() => setQuery('')}
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            )}
           </div>
+
+          {searching ? (
+            <div className="grocery-search-results">
+              <p className="setting-hint" style={{ marginBottom: '.6rem' }}>
+                {searchResults.length === 0
+                  ? 'No matches. Try a simpler term like "soup" or "stir-fry".'
+                  : `${searchResults.length} match${searchResults.length === 1 ? '' : 'es'} across all recipes`}
+              </p>
+              <ul className="grocery-pick-list">
+                {searchResults.map(r => {
+                  const picked = isPicked(r.protein, r.title)
+                  const pLabel = PROTEIN_LABELS[r.protein]
+                  const mLabel = MEAL_TYPES.find(m => m.key === r.mealType)
+                  return (
+                    <li key={`${r.protein}-${r.mealType}-${r.title}`}>
+                      <button
+                        type="button"
+                        className={`grocery-pick ${picked ? 'picked' : ''}`}
+                        onClick={() => handleTogglePoolItem(r.protein, r.mealType, r.title)}
+                        aria-pressed={picked}
+                      >
+                        <span className="grocery-check" aria-hidden="true">{picked ? '✓' : ''}</span>
+                        <span className="grocery-pick-time">{pLabel.emoji} {mLabel.emoji} {mLabel.label}</span>
+                        <span className="grocery-pick-name">{r.title}</span>
+                        <span className="grocery-pick-action">{picked ? 'Added' : '+ Add to list'}</span>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ) : (
+            <div className="grocery-days">
+              {weekDays.map(day => {
+                const pLabel = PROTEIN_LABELS[day.protein]
+                return (
+                  <div key={day.dayNumber} className="grocery-day-block">
+                    <div className="grocery-day-head">
+                      <strong>
+                        {day.date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                      </strong>
+                      <span className={`protein-tag ${day.protein}`}>
+                        {pLabel.emoji} {pLabel.label}
+                      </span>
+                    </div>
+                    <ul className="grocery-pick-list">
+                      {MEAL_TYPES.map(t => {
+                        const picked = isPicked(day.protein, day[t.key])
+                        return (
+                          <li key={t.key}>
+                            <button
+                              type="button"
+                              className={`grocery-pick ${picked ? 'picked' : ''}`}
+                              onClick={() => handleToggleDayItem(day, t.key)}
+                              aria-pressed={picked}
+                            >
+                              <span className="grocery-check" aria-hidden="true">{picked ? '✓' : ''}</span>
+                              <span className="grocery-pick-time">{t.emoji} {t.label}</span>
+                              <span className="grocery-pick-name">{day[t.key]}</span>
+                              <span className="grocery-pick-action">{picked ? 'Added' : '+ Add to list'}</span>
+                            </button>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                )
+              })}
+            </div>
+          )}
 
           <div className="grocery-summary">
             <h3 className="grocery-summary-title">
               Your grocery list
               <span className="grocery-count">
-                {picks.length} {picks.length === 1 ? 'recipe' : 'recipes'} · {totalItems} {totalItems === 1 ? 'item' : 'items'}
+                {grocerySelection.length} {grocerySelection.length === 1 ? 'recipe' : 'recipes'} · {totalItems} {totalItems === 1 ? 'item' : 'items'}
               </span>
             </h3>
-            {picks.length === 0 ? (
-              <p className="setting-hint">Nothing picked yet. Tap any meal above to add its ingredients.</p>
+            {grocerySelection.length === 0 ? (
+              <p className="setting-hint">Nothing picked yet. Tap any recipe above — or search — to add its ingredients.</p>
             ) : (
               <ul className="grocery-summary-list">
-                {picks.map(p => (
+                {grocerySelection.map(p => (
                   <li key={p.key}>
                     <div className="grocery-summary-head">
-                      <span className="grocery-summary-meal">
-                        {p.mealEmoji} {p.meal}
+                      <span className="grocery-summary-meal">{p.title}</span>
+                      <span className="grocery-summary-date">
+                        {p.dateLabel
+                          ? p.dateLabel
+                          : p.protein
+                            ? `${PROTEIN_LABELS[p.protein]?.emoji || ''} ${PROTEIN_LABELS[p.protein]?.label || ''}`
+                            : 'Seasonal'}
                       </span>
-                      <span className="grocery-summary-date">{p.dateLabel}</span>
                     </div>
                     <ul className="grocery-ingredients">
                       {p.ingredients.map((ing, i) => (
@@ -151,7 +235,7 @@ export default function GroceryListModal({ weekDays, weekNum, grocerySelection, 
             <button
               className="btn btn-primary"
               onClick={handlePrint}
-              disabled={picks.length === 0}
+              disabled={grocerySelection.length === 0}
             >
               🖨️ Print list
             </button>

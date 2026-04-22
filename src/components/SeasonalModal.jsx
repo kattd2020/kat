@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { getSeasonalRecipe } from '../data/seasonalRecipes'
+import { makeGroceryKey } from '../hooks/useMealPlan'
 
 const SEASONS = [
   { name: 'Winter', months: [12, 1, 2], emoji: '❄️', foods: ['citrus', 'root veg', 'kale', 'squash', 'pears', 'pomegranate'] },
@@ -13,10 +14,16 @@ function currentSeason() {
   return SEASONS.find(s => s.months.includes(m)) || SEASONS[0]
 }
 
-export default function SeasonalModal({ onClose }) {
+export default function SeasonalModal({ grocerySelection, toggleGrocery, onClose }) {
   const season = currentSeason()
   const [selected, setSelected] = useState(null)
   const recipe = selected ? getSeasonalRecipe(selected) : null
+
+  const pickedKeys = useMemo(
+    () => new Set((grocerySelection || []).map(i => i.key)),
+    [grocerySelection]
+  )
+  const picked = recipe ? pickedKeys.has(makeGroceryKey(undefined, recipe.title)) : false
 
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-labelledby="seasonal-title">
@@ -77,6 +84,20 @@ export default function SeasonalModal({ onClose }) {
                   <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
                 ))}
               </ol>
+
+              <button
+                type="button"
+                className={`add-to-grocery-btn ${picked ? 'picked' : ''}`}
+                onClick={() => toggleGrocery({
+                  title: recipe.title,
+                  protein: undefined,
+                  mealType: null,
+                  ingredients: recipe.ingredients,
+                })}
+                aria-pressed={picked}
+              >
+                {picked ? '✓ Added to grocery list' : '🛒 Add to grocery list'}
+              </button>
             </div>
           )}
 

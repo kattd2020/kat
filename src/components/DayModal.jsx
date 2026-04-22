@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 import { PROTEIN_LABELS } from '../data/mealsData'
-import { getRecipeSteps } from '../data/recipes'
+import { getRecipeSteps, getRecipeIngredients } from '../data/recipes'
+import { makeGroceryKey } from '../hooks/useMealPlan'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -33,9 +34,10 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500)
 }
 
-function RecipeSteps({ name, protein }) {
+function RecipeSteps({ name, protein, day, onToggleGrocery, isPicked }) {
   const [open, setOpen] = useState(false)
   const steps = open ? getRecipeSteps(name, protein) : null
+  const picked = isPicked(protein, name)
   return (
     <div className={`recipe-steps ${open ? 'open' : ''}`}>
       <button
@@ -47,11 +49,28 @@ function RecipeSteps({ name, protein }) {
         {open ? '▾ Hide recipe steps' : '▸ Show recipe steps'}
       </button>
       {open && (
-        <ol className="recipe-list">
-          {steps.map((s, i) => (
-            <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
-          ))}
-        </ol>
+        <>
+          <ol className="recipe-list">
+            {steps.map((s, i) => (
+              <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
+            ))}
+          </ol>
+          <button
+            type="button"
+            className={`add-to-grocery-btn ${picked ? 'picked' : ''}`}
+            onClick={() => onToggleGrocery({
+              title: name,
+              protein,
+              mealType: null,
+              ingredients: getRecipeIngredients(name, protein),
+              dayNumber: day.dayNumber,
+              dateLabel: day.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+            })}
+            aria-pressed={picked}
+          >
+            {picked ? '✓ Added to grocery list' : '🛒 Add to grocery list'}
+          </button>
+        </>
       )}
     </div>
   )
@@ -86,9 +105,11 @@ function buildPrintHTML(day, qrUrl) {
     </body></html>`
 }
 
-export default function DayModal({ day, onClose }) {
+export default function DayModal({ day, grocerySelection, toggleGrocery, onClose }) {
   const canvasRef = useRef(null)
   const [qrUrl, setQrUrl] = useState('')
+  const pickedKeys = new Set((grocerySelection || []).map(i => i.key))
+  const isPicked = (protein, title) => pickedKeys.has(makeGroceryKey(protein, title))
 
   useEffect(() => {
     if (!day || !canvasRef.current) return
@@ -158,7 +179,13 @@ export default function DayModal({ day, onClose }) {
                   <span className="meal-time">{t.emoji} {t.label}</span>
                   <span className="meal-name">{day[t.key]}</span>
                 </div>
-                <RecipeSteps name={day[t.key]} protein={day.protein} />
+                <RecipeSteps
+                  name={day[t.key]}
+                  protein={day.protein}
+                  day={day}
+                  onToggleGrocery={toggleGrocery}
+                  isPicked={isPicked}
+                />
               </li>
             ))}
           </ul>

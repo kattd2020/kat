@@ -1,6 +1,10 @@
 import { useState, useCallback } from 'react'
 import { MEAL_PLAN } from '../data/mealsData'
 
+export function makeGroceryKey(protein, title) {
+  return `${protein || 'seasonal'}::${title}`
+}
+
 const STORAGE_KEY = 'mealplanner_startdate'
 const CALC_KEY = 'mealplanner_calc'
 const GROCERY_KEY = 'mealplanner_grocery'
@@ -17,11 +21,21 @@ function getStoredCalcEntries() {
 function getStoredGrocery() {
   try {
     const v = JSON.parse(localStorage.getItem(GROCERY_KEY))
-    return Array.isArray(v) ? v : []
+    if (!Array.isArray(v)) return []
+    // Only accept the rich-item shape; older string-based entries are
+    // discarded silently so the app doesn't crash on stale data.
+    return v.filter(item =>
+      item &&
+      typeof item === 'object' &&
+      typeof item.key === 'string' &&
+      typeof item.title === 'string' &&
+      Array.isArray(item.ingredients)
+    )
   } catch {
     return []
   }
 }
+
 
 function getStoredStartDate() {
   const stored = localStorage.getItem(STORAGE_KEY)
@@ -83,12 +97,14 @@ export function useMealPlan() {
     setCalcEntries([])
   }, [])
 
-  const toggleGrocery = useCallback((dayNumber, mealType) => {
-    const key = `${dayNumber}-${mealType}`
+  const toggleGrocery = useCallback((item) => {
+    if (!item || !item.title || !Array.isArray(item.ingredients)) return
+    const key = makeGroceryKey(item.protein, item.title)
     setGrocerySelection(prev => {
-      const next = prev.includes(key)
-        ? prev.filter(k => k !== key)
-        : [...prev, key]
+      const exists = prev.some(i => i.key === key)
+      const next = exists
+        ? prev.filter(i => i.key !== key)
+        : [...prev, { ...item, key }]
       if (next.length === 0) localStorage.removeItem(GROCERY_KEY)
       else localStorage.setItem(GROCERY_KEY, JSON.stringify(next))
       return next

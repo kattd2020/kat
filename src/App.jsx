@@ -104,7 +104,12 @@ export default function App() {
       </main>
 
       {selectedDay && (
-        <DayModal day={selectedDay} onClose={() => setSelectedDay(null)} />
+        <DayModal
+          day={selectedDay}
+          grocerySelection={grocerySelection}
+          toggleGrocery={toggleGrocery}
+          onClose={() => setSelectedDay(null)}
+        />
       )}
 
       {showSettings && (
@@ -127,7 +132,11 @@ export default function App() {
       )}
 
       {showSeasonal && (
-        <SeasonalModal onClose={() => setShowSeasonal(false)} />
+        <SeasonalModal
+          grocerySelection={grocerySelection}
+          toggleGrocery={toggleGrocery}
+          onClose={() => setShowSeasonal(false)}
+        />
       )}
 
       {showCost && (
@@ -143,6 +152,8 @@ export default function App() {
       {browseProtein && (
         <ProteinRecipesModal
           protein={browseProtein}
+          grocerySelection={grocerySelection}
+          toggleGrocery={toggleGrocery}
           onClose={() => setBrowseProtein(null)}
         />
       )}

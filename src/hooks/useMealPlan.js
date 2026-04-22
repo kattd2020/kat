@@ -2,20 +2,21 @@ import { useState, useCallback } from 'react'
 import { MEAL_PLAN } from '../data/mealsData'
 
 const STORAGE_KEY = 'mealplanner_startdate'
-const SWAPS_KEY = 'mealplanner_swaps'
 const CALC_KEY = 'mealplanner_calc'
-
-function getStoredSwaps() {
-  try {
-    return JSON.parse(localStorage.getItem(SWAPS_KEY)) || {}
-  } catch {
-    return {}
-  }
-}
+const GROCERY_KEY = 'mealplanner_grocery'
 
 function getStoredCalcEntries() {
   try {
     const v = JSON.parse(localStorage.getItem(CALC_KEY))
+    return Array.isArray(v) ? v : []
+  } catch {
+    return []
+  }
+}
+
+function getStoredGrocery() {
+  try {
+    const v = JSON.parse(localStorage.getItem(GROCERY_KEY))
     return Array.isArray(v) ? v : []
   } catch {
     return []
@@ -46,30 +47,17 @@ export function useMealPlan() {
   const [currentWeek, setCurrentWeek] = useState(() =>
     getWeekForDay(getTodayDayIndex(getStoredStartDate()))
   )
-  const [activeFilter, setActiveFilter] = useState('all')
   const [selectedDay, setSelectedDay] = useState(null)
-  const [swaps, setSwaps] = useState(getStoredSwaps)
   const [calcEntries, setCalcEntries] = useState(getStoredCalcEntries)
+  const [grocerySelection, setGrocerySelection] = useState(getStoredGrocery)
 
   const totalWeeks = Math.ceil(MEAL_PLAN.length / 7)
 
   const weekDays = MEAL_PLAN.slice(currentWeek * 7, currentWeek * 7 + 7).map((day) => {
     const date = new Date(startDate)
     date.setDate(date.getDate() + day.dayNumber - 1)
-    const override = swaps[day.dayNumber] || {}
-    return { ...day, ...override, date }
+    return { ...day, date }
   })
-
-  const swapMeal = useCallback((dayNumber, mealType, newMealName) => {
-    setSwaps(prev => {
-      const next = {
-        ...prev,
-        [dayNumber]: { ...(prev[dayNumber] || {}), [mealType]: newMealName },
-      }
-      localStorage.setItem(SWAPS_KEY, JSON.stringify(next))
-      return next
-    })
-  }, [])
 
   const addCalcEntry = useCallback((amount) => {
     const n = Number(amount)
@@ -95,6 +83,23 @@ export function useMealPlan() {
     setCalcEntries([])
   }, [])
 
+  const toggleGrocery = useCallback((dayNumber, mealType) => {
+    const key = `${dayNumber}-${mealType}`
+    setGrocerySelection(prev => {
+      const next = prev.includes(key)
+        ? prev.filter(k => k !== key)
+        : [...prev, key]
+      if (next.length === 0) localStorage.removeItem(GROCERY_KEY)
+      else localStorage.setItem(GROCERY_KEY, JSON.stringify(next))
+      return next
+    })
+  }, [])
+
+  const clearGrocery = useCallback(() => {
+    localStorage.removeItem(GROCERY_KEY)
+    setGrocerySelection([])
+  }, [])
+
   const goToPrevWeek = useCallback(() => setCurrentWeek(w => Math.max(0, w - 1)), [])
   const goToNextWeek = useCallback(() => setCurrentWeek(w => Math.min(totalWeeks - 1, w + 1)), [totalWeeks])
   const goToToday   = useCallback(() => setCurrentWeek(getWeekForDay(getTodayDayIndex(startDate))), [startDate])
@@ -117,8 +122,6 @@ export function useMealPlan() {
     weekDays,
     weekStartDate,
     weekEndDate,
-    activeFilter,
-    setActiveFilter,
     selectedDay,
     setSelectedDay,
     goToPrevWeek,
@@ -126,10 +129,12 @@ export function useMealPlan() {
     goToToday,
     jumpToWeek,
     saveStartDate,
-    swapMeal,
     calcEntries,
     addCalcEntry,
     removeCalcEntry,
     clearCalc,
+    grocerySelection,
+    toggleGrocery,
+    clearGrocery,
   }
 }

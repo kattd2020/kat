@@ -1,5 +1,4 @@
-const FILTERS = [
-  { key: 'all',         label: 'All' },
+const PROTEINS = [
   { key: 'beef',        label: '🥩 Beef' },
   { key: 'pork',        label: '🥓 Pork' },
   { key: 'chicken',     label: '🍗 Chicken' },
@@ -7,16 +6,16 @@ const FILTERS = [
   { key: 'seafood',     label: '🐟 Seafood' },
 ]
 
-export default function FilterBar({ active, onChange }) {
+export default function FilterBar({ onSelect }) {
   return (
-    <div className="filter-bar" role="group" aria-label="Filter by protein">
-      {FILTERS.map(f => (
+    <div className="filter-bar" role="group" aria-label="Browse recipes by protein">
+      {PROTEINS.map(p => (
         <button
-          key={f.key}
-          className={`filter-btn ${f.key !== 'all' ? f.key : ''} ${active === f.key ? 'active' : ''}`}
-          onClick={() => onChange(f.key)}
+          key={p.key}
+          className={`filter-btn ${p.key}`}
+          onClick={() => onSelect(p.key)}
         >
-          {f.label}
+          {p.label}
         </button>
       ))}
     </div>

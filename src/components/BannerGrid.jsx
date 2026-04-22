@@ -21,13 +21,6 @@ const BANNERS = [
     className: 'banner-mint',
   },
   {
-    key: 'swap',
-    icon: '⚡',
-    title: 'Quick-swap recipes',
-    desc: 'Kid said no to salmon? Swap for an alternative in one tap.',
-    className: 'banner-cobalt',
-  },
-  {
     key: 'cost',
     icon: '💰',
     title: 'Cost calculator',

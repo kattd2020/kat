@@ -8,8 +8,8 @@ import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
 import GroceryListModal from './components/GroceryListModal'
 import SeasonalModal from './components/SeasonalModal'
-import SwapModal from './components/SwapModal'
 import CostModal from './components/CostModal'
+import ProteinRecipesModal from './components/ProteinRecipesModal'
 import { useMealPlan } from './hooks/useMealPlan'
 import './styles.css'
 
@@ -41,18 +41,18 @@ function buildWeekPrintHTML(weekDays, weekNum) {
 export default function App() {
   const {
     startDate, currentWeek, totalWeeks, weekDays,
-    weekStartDate, weekEndDate, activeFilter, setActiveFilter,
+    weekStartDate, weekEndDate,
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
-    swapMeal,
     calcEntries, addCalcEntry, removeCalcEntry, clearCalc,
+    grocerySelection, toggleGrocery, clearGrocery,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
   const [showGrocery, setShowGrocery] = useState(false)
   const [showSeasonal, setShowSeasonal] = useState(false)
-  const [showSwap, setShowSwap] = useState(false)
   const [showCost, setShowCost] = useState(false)
+  const [browseProtein, setBrowseProtein] = useState(null)
   const weekViewRef = useRef(null)
 
   const handlePrintWeek = useCallback(() => {
@@ -69,8 +69,6 @@ export default function App() {
       setShowGrocery(true)
     } else if (key === 'seasonal') {
       setShowSeasonal(true)
-    } else if (key === 'swap') {
-      setShowSwap(true)
     } else if (key === 'cost') {
       setShowCost(true)
     }
@@ -82,7 +80,7 @@ export default function App() {
 
       <BannerGrid onSelect={handleBanner} />
 
-      <FilterBar active={activeFilter} onChange={setActiveFilter} />
+      <FilterBar onSelect={setBrowseProtein} />
 
       <WeekNav
         currentWeek={currentWeek}
@@ -100,7 +98,6 @@ export default function App() {
           <DayCard
             key={day.dayNumber}
             day={day}
-            dimmed={activeFilter !== 'all' && day.protein !== activeFilter}
             onClick={setSelectedDay}
           />
         ))}
@@ -122,21 +119,15 @@ export default function App() {
         <GroceryListModal
           weekDays={weekDays}
           weekNum={currentWeek + 1}
+          grocerySelection={grocerySelection}
+          toggleGrocery={toggleGrocery}
+          clearGrocery={clearGrocery}
           onClose={() => setShowGrocery(false)}
         />
       )}
 
       {showSeasonal && (
         <SeasonalModal onClose={() => setShowSeasonal(false)} />
-      )}
-
-      {showSwap && (
-        <SwapModal
-          weekDays={weekDays}
-          weekNum={currentWeek + 1}
-          onSwap={swapMeal}
-          onClose={() => setShowSwap(false)}
-        />
       )}
 
       {showCost && (
@@ -146,6 +137,13 @@ export default function App() {
           removeCalcEntry={removeCalcEntry}
           clearCalc={clearCalc}
           onClose={() => setShowCost(false)}
+        />
+      )}
+
+      {browseProtein && (
+        <ProteinRecipesModal
+          protein={browseProtein}
+          onClose={() => setBrowseProtein(null)}
         />
       )}
 

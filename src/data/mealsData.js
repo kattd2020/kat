@@ -205,6 +205,7 @@ export const MEALS = {
       'Dry-Rub BBQ Wings',
       'Sweet Chili Wings',
       'Salt & Pepper Crispy Wings',
+      'Chicken Stew with Vegetables',
     ],
   },
 

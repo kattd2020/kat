@@ -7,7 +7,7 @@ import DayCard from './components/DayCard'
 import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
 import GroceryListModal from './components/GroceryListModal'
-import SeasonalModal from './components/SeasonalModal'
+import EventsModal from './components/EventsModal'
 import CostModal from './components/CostModal'
 import ProteinRecipesModal from './components/ProteinRecipesModal'
 import { useMealPlan } from './hooks/useMealPlan'
@@ -51,7 +51,7 @@ export default function App() {
 
   const [showSettings, setShowSettings] = useState(false)
   const [showGrocery, setShowGrocery] = useState(false)
-  const [showSeasonal, setShowSeasonal] = useState(false)
+  const [showEvents, setShowEvents] = useState(false)
   const [showCost, setShowCost] = useState(false)
   const [browseProtein, setBrowseProtein] = useState(null)
   const weekViewRef = useRef(null)
@@ -68,8 +68,8 @@ export default function App() {
       weekViewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     } else if (key === 'grocery') {
       setShowGrocery(true)
-    } else if (key === 'seasonal') {
-      setShowSeasonal(true)
+    } else if (key === 'events') {
+      setShowEvents(true)
     } else if (key === 'cost') {
       setShowCost(true)
     }
@@ -140,13 +140,13 @@ export default function App() {
         />
       )}
 
-      {showSeasonal && (
-        <SeasonalModal
+      {showEvents && (
+        <EventsModal
           grocerySelection={grocerySelection}
           toggleGrocery={toggleGrocery}
           servings={servings}
           setServings={setServings}
-          onClose={() => setShowSeasonal(false)}
+          onClose={() => setShowEvents(false)}
         />
       )}
 

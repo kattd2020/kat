@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
 import { getRecipeSteps, getRecipeIngredients, scaleIngredients } from '../data/recipes'
+import { CUTS, classifyCut } from '../data/cuts'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 
@@ -64,14 +65,34 @@ function RecipeRow({ name, protein, servings, setServings, picked, onToggleGroce
 export default function ProteinRecipesModal({ protein, grocerySelection, toggleGrocery, servings, setServings, onClose }) {
   const pool = MEALS[protein]
   const { label, emoji } = PROTEIN_LABELS[protein]
-  const totalCount =
-    pool.breakfast.length + pool.lunch.length + pool.dinner.length
+  const cuts = CUTS[protein] || [{ key: 'all', label: 'All' }]
+  const [activeCut, setActiveCut] = useState('all')
 
   const pickedKeys = useMemo(
     () => new Set((grocerySelection || []).map(i => i.key)),
     [grocerySelection]
   )
   const isPicked = (title) => pickedKeys.has(makeGroceryKey(protein, title))
+
+  const filteredPool = useMemo(() => {
+    if (activeCut === 'all') return pool
+    const filter = (list) => list.filter(n => classifyCut(protein, n) === activeCut)
+    return {
+      breakfast: filter(pool.breakfast),
+      lunch:     filter(pool.lunch),
+      dinner:    filter(pool.dinner),
+    }
+  }, [protein, pool, activeCut])
+
+  const countFor = (cutKey) => {
+    if (cutKey === 'all') return pool.breakfast.length + pool.lunch.length + pool.dinner.length
+    return [...pool.breakfast, ...pool.lunch, ...pool.dinner]
+      .filter(n => classifyCut(protein, n) === cutKey)
+      .length
+  }
+
+  const filteredTotal =
+    filteredPool.breakfast.length + filteredPool.lunch.length + filteredPool.dinner.length
 
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-labelledby="pr-title">
@@ -80,33 +101,64 @@ export default function ProteinRecipesModal({ protein, grocerySelection, toggleG
         <div className="modal-header">
           <div>
             <h2 id="pr-title">{emoji} {label} recipes</h2>
-            <p className="modal-date">{totalCount} recipes · tap any to see the steps</p>
+            <p className="modal-date">
+              {filteredTotal} {filteredTotal === 1 ? 'recipe' : 'recipes'}
+              {activeCut !== 'all' && ` · ${cuts.find(c => c.key === activeCut)?.label}`}
+            </p>
           </div>
           <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
         <div className="modal-body">
-          {MEAL_TYPES.map(t => (
-            <section key={t.key} className="pr-section">
-              <h3 className="pr-section-title">
-                {t.emoji} {t.label}
-                <span className="pr-count">{pool[t.key].length}</span>
-              </h3>
-              <ul className="pr-list">
-                {pool[t.key].map(name => (
-                  <RecipeRow
-                    key={name}
-                    name={name}
-                    protein={protein}
-                    servings={servings}
-                    setServings={setServings}
-                    picked={isPicked(name)}
-                    onToggleGrocery={toggleGrocery}
-                  />
-                ))}
-              </ul>
-            </section>
-          ))}
+          <div className="pr-cuts" role="group" aria-label="Filter by cut">
+            {cuts.map(c => {
+              const count = countFor(c.key)
+              const disabled = count === 0 && c.key !== 'all'
+              return (
+                <button
+                  key={c.key}
+                  type="button"
+                  className={`pr-cut ${activeCut === c.key ? 'active' : ''}`}
+                  onClick={() => setActiveCut(c.key)}
+                  disabled={disabled}
+                  aria-pressed={activeCut === c.key}
+                >
+                  <span aria-hidden="true">{c.emoji}</span> {c.label}
+                  <span className="pr-cut-count">{count}</span>
+                </button>
+              )
+            })}
+          </div>
+
+          {filteredTotal === 0 ? (
+            <p className="setting-hint" style={{ marginTop: '1rem' }}>
+              No recipes for that cut yet. Try "All" or another option.
+            </p>
+          ) : (
+            MEAL_TYPES.map(t => (
+              filteredPool[t.key].length > 0 && (
+                <section key={t.key} className="pr-section">
+                  <h3 className="pr-section-title">
+                    {t.emoji} {t.label}
+                    <span className="pr-count">{filteredPool[t.key].length}</span>
+                  </h3>
+                  <ul className="pr-list">
+                    {filteredPool[t.key].map(name => (
+                      <RecipeRow
+                        key={name}
+                        name={name}
+                        protein={protein}
+                        servings={servings}
+                        setServings={setServings}
+                        picked={isPicked(name)}
+                        onToggleGrocery={toggleGrocery}
+                      />
+                    ))}
+                  </ul>
+                </section>
+              )
+            ))
+          )}
 
           <div className="qr-actions" style={{ marginTop: '1.25rem' }}>
             <button className="btn btn-secondary" onClick={onClose}>Close</button>

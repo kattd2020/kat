@@ -14,10 +14,10 @@ const BANNERS = [
     className: 'banner-sky',
   },
   {
-    key: 'seasonal',
-    icon: '🌿',
-    title: 'Seasonal suggestions',
-    desc: "Recipes shift with the seasons so you're eating what's fresh, cheap, and in peak flavor.",
+    key: 'events',
+    icon: '🎉',
+    title: 'Event menus',
+    desc: 'Curated recipe packs — cookout, 4th of July, football party, holiday dinner, brunch, more.',
     className: 'banner-mint',
   },
   {

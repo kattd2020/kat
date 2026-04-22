@@ -6,6 +6,7 @@ import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 import CutTag from './CutTag'
 import TimeTag from './TimeTag'
+import StepText from './StepText'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -48,7 +49,7 @@ function RecipeRow({ name, protein, servings, setServings, picked, onToggleGroce
           <h4 className="pr-recipe-subhead">Steps</h4>
           <ol className="pr-recipe-steps">
             {steps.map((s, i) => (
-              <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
+              <li key={i}><span className="recipe-num">{i + 1}</span><StepText text={s} /></li>
             ))}
           </ol>
           <button

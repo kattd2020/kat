@@ -6,6 +6,7 @@ import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 import CutTag from './CutTag'
 import TimeTag from './TimeTag'
+import StepText from './StepText'
 
 function resolveRecipe(recipe) {
   if (recipe.custom) {
@@ -67,7 +68,7 @@ function EventRecipeRow({ resolved, picked, servings, setServings, onToggleAdd }
           <h4 className="pr-recipe-subhead">Steps</h4>
           <ol className="pr-recipe-steps">
             {resolved.steps.map((s, i) => (
-              <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
+              <li key={i}><span className="recipe-num">{i + 1}</span><StepText text={s} /></li>
             ))}
           </ol>
           <button

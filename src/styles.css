@@ -1711,6 +1711,27 @@ body::after {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
+
+/* Inline duration highlight inside a step — small amber chip that
+   sits in the middle of the step text so cook times pop while
+   reading the directions. */
+.step-time {
+  display: inline-flex;
+  align-items: center;
+  gap: .2rem;
+  padding: .05rem .45rem;
+  margin: 0 .1rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #78350F;
+  background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(249,115,22,0.14));
+  border: 1px solid rgba(245,158,11,0.30);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  vertical-align: baseline;
+}
 /* Tint the tag to the meat color family where it's helpful */
 .cut-ribeye, .cut-nyStrip, .cut-tbone, .cut-filet, .cut-sirloin,
 .cut-topRound, .cut-bottomRound, .cut-londonBroil, .cut-ground,

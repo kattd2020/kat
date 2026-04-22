@@ -147,6 +147,7 @@ export const MEALS = {
       'Chicken Banh Mi',
       'Lemon Pepper Wings',
       'Buffalo Chicken Salad',
+      'Classic Chicken Salad Sandwich',
     ],
     dinner: [
       'Baked Lemon Herb Chicken',

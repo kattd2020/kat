@@ -42,18 +42,18 @@ const ARCHETYPES = [
     match: /soup|stew|chili|ramen|pho|gumbo|bean (soup|stew)|braised|cacciatore|and dumplings|paprikash/i,
     steps: (m) => [
       `Season ${m.proteinNoun} with salt and pepper.`,
-      `In a heavy pot, heat 1 tbsp oil and brown the ${m.proteinNoun} in batches; transfer to a plate.`,
-      `Sauté diced onion, carrot, and celery in the rendered fat until soft, 5–7 minutes. Add garlic the last minute.`,
+      `In a heavy pot, heat 1 tbsp oil and brown the ${m.proteinNoun} 4–5 minutes per batch; transfer to a plate.`,
+      `Sauté diced onion, carrot, and celery in the rendered fat 5–7 minutes until soft. Add garlic the last minute.`,
       `Deglaze with a splash of stock, scraping up the browned bits.`,
       `Return the ${m.proteinNoun}, add 4 cups stock and any canned tomatoes/beans, and bring to a simmer.`,
-      `Simmer 25–40 minutes until everything is tender; taste and adjust salt. Finish with fresh herbs.`,
+      `Simmer 25–40 minutes (chicken must reach 165°F internal) until everything is tender; taste and adjust salt. Finish with fresh herbs.`,
     ],
   },
   {
     key: 'sandwich',
     match: /sandwich|sub|panini|bánh mì|banh mi|wrap|gyro|hoagie|club|burger|slider|cheesesteak|philly|melt|sloppy joe|egg muffin|egg (wrap|burrito)/i,
     steps: (m) => [
-      `Cook the ${m.proteinNoun} to temperature: griddle, grill, or pan-sear depending on the cut. Season well.`,
+      `Cook the ${m.proteinNoun} 5–6 min per side via griddle, grill, or pan-sear. Season well. Chicken must hit 165°F internal; pork 145°F; beef to your preferred doneness.`,
       `Toast or warm the bread/bun so it holds up to the fillings.`,
       `Spread condiments on both sides of the bread (mayo, mustard, aioli, or a house sauce).`,
       `Layer the ${m.proteinNoun} with cheese and any hot toppings so the cheese melts from residual heat.`,
@@ -65,7 +65,7 @@ const ARCHETYPES = [
     key: 'salad',
     match: /salad|cobb|caesar|grain bowl|pasta salad/i,
     steps: (m) => [
-      `Cook the ${m.proteinNoun} and let it rest, then slice or dice into bite-sized pieces.`,
+      `Cook the ${m.proteinNoun} 5–7 min per side (chicken to 165°F internal), rest 5 min, then slice or dice into bite-sized pieces.`,
       `Whisk the dressing: oil, acid (lemon/vinegar), Dijon, salt, pepper — taste until it tingles.`,
       `Wash and dry the greens thoroughly; a salad spinner is your friend.`,
       `Prep the mix-ins: cheese, nuts, fruit, pickled veg, soft-boiled eggs as the recipe suggests.`,
@@ -78,7 +78,7 @@ const ARCHETYPES = [
     match: /taco|burrito|enchilada|quesadilla|fajita|carnitas|tortilla|tostada|nacho|chilaquiles/i,
     steps: (m) => [
       `Season the ${m.proteinNoun} with cumin, chili powder, smoked paprika, garlic powder, salt, and pepper.`,
-      `Cook the ${m.proteinNoun}: sear ground meat until browned, or sear whole cuts and shred once tender.`,
+      `Cook the ${m.proteinNoun}: brown ground meat 8 min; or sear whole cuts 4 min per side, then simmer 15–20 min to shred (chicken must reach 165°F internal; pork 145°F).`,
       `Warm the tortillas in a dry skillet or directly over a flame for 15 seconds per side until pliable and charred.`,
       `Prep toppings: diced onion, cilantro, lime wedges, crumbled cheese or crema, hot sauce, salsa.`,
       `Build each tortilla with ${m.proteinNoun} first, then toppings — not too full, or it'll split.`,
@@ -90,8 +90,8 @@ const ARCHETYPES = [
     match: /omelet|omelette|scramble|frittata|hash|skillet|breakfast bowl|breakfast burrito|biscuits & gravy|gravy on biscuits|breakfast plate|breakfast wrap/i,
     steps: (m) => [
       `Dice the ${m.proteinNoun} and any vegetables (onion, peppers, potatoes) into uniform ½-inch pieces.`,
-      `Heat a heavy skillet over medium-high with a glug of oil. Render or brown the ${m.proteinNoun} first.`,
-      `Add the vegetables and cook until tender and lightly caramelized, 6–8 minutes.`,
+      `Heat a heavy skillet over medium-high with a glug of oil. Render bacon 5–6 min or brown diced ${m.proteinNoun} 6–8 min (chicken to 165°F internal).`,
+      `Add the vegetables and cook 6–8 minutes until tender and lightly caramelized.`,
       `Beat the eggs with salt, pepper, and a splash of milk until uniform.`,
       `Pour the eggs into the skillet, lower the heat, and stir gently as they set into soft curds.`,
       `Finish with cheese, herbs, or hot sauce; plate and serve immediately while hot.`,
@@ -115,8 +115,8 @@ const ARCHETYPES = [
     steps: (m) => [
       `Pat the ${m.proteinNoun} dry and season generously with salt, pepper, and herbs (rosemary, thyme, garlic).`,
       `Let it sit at room temp 30 minutes while the oven heats to 400°F (or 325°F for large cuts).`,
-      `Sear on the stovetop in a heavy oven-proof pan until deeply browned on all sides.`,
-      `Transfer to the oven and roast to internal temperature (135°F beef, 145°F pork, 165°F chicken).`,
+      `Sear on the stovetop in a heavy oven-proof pan 3–4 min per side until deeply browned all around.`,
+      `Transfer to the oven and roast: chicken thighs ~35 min at 400°F, whole chicken ~45 min (3-lb bird), pork loin ~1 hr at 350°F, beef roast 1½–2 hr at 325°F — target 165°F chicken / 145°F pork / 135°F beef internal.`,
       `Baste with pan juices halfway through; add root vegetables around the meat for a one-pan meal.`,
       `Rest 10–15 minutes tented with foil before slicing across the grain. Spoon pan juices over each serving.`,
     ],
@@ -126,7 +126,7 @@ const ARCHETYPES = [
     match: /pasta|lasagna|bolognese|spaghetti|ravioli|alfredo|marsala|parmesan|piccata|noodle(s)?|ziti|penne|rigatoni/i,
     steps: (m) => [
       `Bring a large pot of heavily salted water to a rolling boil.`,
-      `While it heats, brown the ${m.proteinNoun} in olive oil until nicely crusted; remove and set aside.`,
+      `While it heats, brown the ${m.proteinNoun} in olive oil 5–6 min until nicely crusted (chicken to 165°F internal); remove and set aside.`,
       `Build the sauce in the same pan: aromatics → tomato or cream base → simmer 10 minutes to meld flavors.`,
       `Cook the pasta 1 minute shy of the package time. Reserve a mug of pasta water before draining.`,
       `Return the ${m.proteinNoun} to the sauce, then toss in the pasta with a splash of pasta water to emulsify.`,
@@ -138,7 +138,7 @@ const ARCHETYPES = [
     match: /pot pie|shepherd'?s pie|casserole|meatloaf|stuffed pepper|stuffed pork|stuffed|zucchini boat|enchilada/i,
     steps: (m) => [
       `Preheat the oven to 375°F and butter or oil a 9×13 baking dish.`,
-      `Cook the ${m.proteinNoun} with onion, garlic, and seasoning until browned and fragrant. Drain excess fat.`,
+      `Cook the ${m.proteinNoun} with onion, garlic, and seasoning 8–10 min until browned and fragrant (chicken to 165°F internal). Drain excess fat.`,
       `Build the filling: combine cooked ${m.proteinNoun} with vegetables, sauce or gravy, and herbs. Taste for salt.`,
       `Layer or stuff into the dish, then top with mashed potato, biscuit, crust, cheese, or breadcrumbs as fits the recipe.`,
       `Bake uncovered 25–35 minutes until the top is deep golden and the edges are bubbling.`,
@@ -174,7 +174,7 @@ const ARCHETYPES = [
     match: /bowl|burrito bowl|rice bowl|grain bowl|buddha bowl|poke|lettuce wrap/i,
     steps: (m) => [
       `Cook the base (rice, quinoa, or cauliflower rice) and keep warm. Season with salt and a little acid.`,
-      `Cook the ${m.proteinNoun}: sear, grill, or slow-cook as the recipe suggests. Slice or shred.`,
+      `Cook the ${m.proteinNoun} 5–6 min per side until done (chicken to 165°F internal; pork 145°F; beef to your preferred temp). Slice or shred.`,
       `Prep 2–3 toppings: roasted veg, raw slaw, beans, avocado, pickled onion — whatever adds color and texture.`,
       `Whisk a quick sauce: soy + sesame, tahini + lemon, or lime + chili, depending on the flavor direction.`,
       `Assemble: base on the bottom, ${m.proteinNoun} next, then toppings arranged in bright wedges around the bowl.`,
@@ -185,7 +185,7 @@ const ARCHETYPES = [
     key: 'pancakes',
     match: /pancake(s)?|waffle(s)?/i,
     steps: (m) => [
-      `Cook the ${m.proteinNoun} first so it stays warm on a low sheet tray while you cook the pancakes/waffles.`,
+      `Cook the ${m.proteinNoun} 3–4 min per side on a medium skillet; keep warm on a low sheet tray while you make the pancakes/waffles.`,
       `Whisk the dry (flour, sugar, baking powder, salt) and wet (milk, egg, melted butter) separately, then fold together until just combined — lumps are fine.`,
       `Rest the batter 5 minutes while the skillet or waffle iron heats to medium.`,
       `Cook the pancakes until bubbles form and the edges look set (about 2 minutes), flip, and cook 1 more minute.`,
@@ -198,7 +198,7 @@ const ARCHETYPES = [
     match: /avocado toast/i,
     steps: (m) => [
       `Toast thick slices of sourdough or seeded bread until deep golden and crisp.`,
-      `Cook the ${m.proteinNoun} (crisp-edged, with fond) so it contrasts the creamy avocado.`,
+      `Cook the ${m.proteinNoun} 4–5 min until crisp-edged with fond (chicken to 165°F internal).`,
       `Mash ripe avocado with a fork, lemon juice, flaky salt, and chili flakes — keep some texture.`,
       `Spread the avocado generously on each toast slice, right up to the edges.`,
       `Top with the cooked ${m.proteinNoun} and a soft-fried or jammy egg if serving for brunch.`,
@@ -224,7 +224,7 @@ const DEFAULT_STEPS = (m) => {
     `Pat the ${m.proteinNoun} dry and season it with salt and pepper at least 15 minutes ahead.`,
     `Prep everything else first: measure sauces, chop vegetables, and have plates warming.`,
     `Heat a heavy pan over medium-high with a tablespoon of oil until it shimmers.`,
-    `Sear the ${m.proteinNoun} until deeply browned on one side, then flip and finish cooking through.`,
+    `Sear the ${m.proteinNoun} 5–6 min per side until deeply browned and cooked through (chicken to 165°F internal; pork to 145°F; beef to your preferred doneness). For bone-in pieces add 5–10 min in a 400°F oven to finish.`,
     `Rest the ${m.proteinNoun} on a warm plate for 5 minutes while you reduce any pan sauce or plate the sides.`,
     `Slice against the grain, plate with the sides, and finish with a squeeze of lemon or fresh herbs.`,
   ]

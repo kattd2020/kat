@@ -35,23 +35,50 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500)
 }
 
-function RecipeSteps({ name, protein, day, servings, setServings, onToggleGrocery, isPicked }) {
+function MealRow({ mealType, name, protein, day, servings, setServings, onToggleGrocery, isPicked }) {
   const [open, setOpen] = useState(false)
+  const picked = isPicked(protein, name)
   const steps = open ? getRecipeSteps(name, protein) : null
   const ingredients = open ? scaleIngredients(getRecipeIngredients(name, protein), servings) : null
-  const picked = isPicked(protein, name)
+
+  const handleAddToGrocery = (e) => {
+    e.stopPropagation()
+    onToggleGrocery({
+      title: name,
+      protein,
+      mealType: null,
+      ingredients: getRecipeIngredients(name, protein),
+      dayNumber: day.dayNumber,
+      dateLabel: day.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+    })
+  }
+
   return (
-    <div className={`recipe-steps ${open ? 'open' : ''}`}>
-      <button
-        type="button"
-        className="recipe-toggle"
-        aria-expanded={open}
-        onClick={() => setOpen(v => !v)}
-      >
-        {open ? '▾ Hide recipe' : '▸ Show recipe'}
-      </button>
+    <li className="meal-row">
+      <div className="meal-row-head">
+        <span className="meal-time">{mealType.emoji} {mealType.label}</span>
+        <span className="meal-name">{name}</span>
+      </div>
+      <div className="meal-row-actions">
+        <button
+          type="button"
+          className="recipe-toggle"
+          aria-expanded={open}
+          onClick={() => setOpen(v => !v)}
+        >
+          {open ? '▾ Hide recipe' : '▸ Show recipe'}
+        </button>
+        <button
+          type="button"
+          className={`add-to-grocery-btn compact ${picked ? 'picked' : ''}`}
+          onClick={handleAddToGrocery}
+          aria-pressed={picked}
+        >
+          {picked ? '✓ Added' : '🛒 Add to list'}
+        </button>
+      </div>
       {open && (
-        <>
+        <div className="recipe-steps open">
           <div className="recipe-subhead-row">
             <h4 className="recipe-subhead">Ingredients</h4>
             <ServingsPicker servings={servings} onChange={setServings} />
@@ -67,24 +94,9 @@ function RecipeSteps({ name, protein, day, servings, setServings, onToggleGrocer
               <li key={i}><span className="recipe-num">{i + 1}</span>{s}</li>
             ))}
           </ol>
-          <button
-            type="button"
-            className={`add-to-grocery-btn ${picked ? 'picked' : ''}`}
-            onClick={() => onToggleGrocery({
-              title: name,
-              protein,
-              mealType: null,
-              ingredients: getRecipeIngredients(name, protein),
-              dayNumber: day.dayNumber,
-              dateLabel: day.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-            })}
-            aria-pressed={picked}
-          >
-            {picked ? '✓ Added to grocery list' : '🛒 Add to grocery list'}
-          </button>
-        </>
+        </div>
       )}
-    </div>
+    </li>
   )
 }
 
@@ -186,21 +198,17 @@ export default function DayModal({ day, grocerySelection, toggleGrocery, serving
         <div className="modal-body">
           <ul className="modal-meals with-recipes">
             {MEAL_TYPES.map(t => (
-              <li key={t.key} className="meal-row">
-                <div className="meal-row-head">
-                  <span className="meal-time">{t.emoji} {t.label}</span>
-                  <span className="meal-name">{day[t.key]}</span>
-                </div>
-                <RecipeSteps
-                  name={day[t.key]}
-                  protein={day.protein}
-                  day={day}
-                  servings={servings}
-                  setServings={setServings}
-                  onToggleGrocery={toggleGrocery}
-                  isPicked={isPicked}
-                />
-              </li>
+              <MealRow
+                key={t.key}
+                mealType={t}
+                name={day[t.key]}
+                protein={day.protein}
+                day={day}
+                servings={servings}
+                setServings={setServings}
+                onToggleGrocery={toggleGrocery}
+                isPicked={isPicked}
+              />
             ))}
           </ul>
 

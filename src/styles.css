@@ -1131,6 +1131,21 @@ body::after {
   box-shadow: 0 8px 18px rgba(14,165,233,0.35);
 }
 .add-to-grocery-btn.picked:hover { filter: brightness(1.05); }
+.add-to-grocery-btn.compact {
+  margin-top: 0;
+  padding: .4rem .8rem;
+  font-size: .78rem;
+}
+
+/* ── DayModal meal rows ─────────────────────────────────*/
+.meal-row-actions {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-top: .55rem;
+}
+.meal-row-actions .recipe-toggle { padding: .1rem 0; }
 
 .pr-recipe-actions { padding: 0 1rem 1rem; }
 .pr-recipe-body { padding: 0 1rem 1rem; }

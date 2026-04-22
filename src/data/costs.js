@@ -1,7 +1,8 @@
-// Rough USD cost-per-serving estimates. These are deliberately coarse —
+// Default USD cost-per-serving estimates. These are deliberately coarse —
 // US grocery averages (late 2025) for a single adult portion, cooked at home.
+// Users can override any of these via the Cost calculator.
 
-const PROTEIN_BASE = {
+export const DEFAULT_PROTEIN_BASE = {
   beef:         4.00,
   pork:         3.00,
   chicken:      2.50,
@@ -9,13 +10,15 @@ const PROTEIN_BASE = {
   seafood:      5.50,
 }
 
-const MEAL_PANTRY = {
+export const DEFAULT_MEAL_PANTRY = {
   breakfast: 1.50,
   lunch:     2.50,
   dinner:    3.50,
 }
 
-// Name-based modifiers. First match wins.
+// Name-based modifiers. First match wins. These aren't user-editable today
+// — they capture "this meal uses a premium ingredient" (lobster, ribeye, etc.)
+// rather than the base store prices users want to tweak.
 const PREMIUMS = [
   { match: /lobster/i,                                          add: 8.00 },
   { match: /prime rib|wellington|ribeye|ny strip|filet mignon/i,add: 6.00 },
@@ -35,23 +38,37 @@ function premium(name) {
   return 0
 }
 
-export function estimateMealCost(name, protein, mealType) {
-  const base   = PROTEIN_BASE[protein] ?? 3.50
-  const pantry = MEAL_PANTRY[mealType] ?? 2.50
+function pick(overrides, category, key, fallback) {
+  const v = overrides?.[category]?.[key]
+  if (v === undefined || v === null || v === '' || Number.isNaN(Number(v))) return fallback
+  return Number(v)
+}
+
+export function getProteinBase(protein, overrides) {
+  return pick(overrides, 'proteinBase', protein, DEFAULT_PROTEIN_BASE[protein] ?? 3.50)
+}
+
+export function getMealPantry(mealType, overrides) {
+  return pick(overrides, 'mealPantry', mealType, DEFAULT_MEAL_PANTRY[mealType] ?? 2.50)
+}
+
+export function estimateMealCost(name, protein, mealType, overrides) {
+  const base   = getProteinBase(protein, overrides)
+  const pantry = getMealPantry(mealType, overrides)
   const extra  = premium(name)
   return Math.round((base + pantry + extra) * 100) / 100
 }
 
-export function estimateDayCost(day) {
-  const b = estimateMealCost(day.breakfast, day.protein, 'breakfast')
-  const l = estimateMealCost(day.lunch,     day.protein, 'lunch')
-  const d = estimateMealCost(day.dinner,    day.protein, 'dinner')
+export function estimateDayCost(day, overrides) {
+  const b = estimateMealCost(day.breakfast, day.protein, 'breakfast', overrides)
+  const l = estimateMealCost(day.lunch,     day.protein, 'lunch',     overrides)
+  const d = estimateMealCost(day.dinner,    day.protein, 'dinner',    overrides)
   return Math.round((b + l + d) * 100) / 100
 }
 
-export function estimateWeekCost(weekDays) {
+export function estimateWeekCost(weekDays, overrides) {
   return Math.round(
-    weekDays.reduce((sum, day) => sum + estimateDayCost(day), 0) * 100
+    weekDays.reduce((sum, day) => sum + estimateDayCost(day, overrides), 0) * 100
   ) / 100
 }
 

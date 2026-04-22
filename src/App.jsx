@@ -46,6 +46,7 @@ export default function App() {
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
     swapMeal,
+    priceOverrides, setPrice, resetPrices,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
@@ -89,7 +90,7 @@ export default function App() {
         totalWeeks={totalWeeks}
         weekStartDate={weekStartDate}
         weekEndDate={weekEndDate}
-        weekCost={estimateWeekCost(weekDays)}
+        weekCost={estimateWeekCost(weekDays, priceOverrides)}
         onPrev={goToPrevWeek}
         onNext={goToNextWeek}
         onToday={goToToday}
@@ -102,6 +103,7 @@ export default function App() {
             key={day.dayNumber}
             day={day}
             dimmed={activeFilter !== 'all' && day.protein !== activeFilter}
+            priceOverrides={priceOverrides}
             onClick={setSelectedDay}
           />
         ))}
@@ -145,6 +147,9 @@ export default function App() {
           weekDays={weekDays}
           weekNum={currentWeek + 1}
           totalWeeks={totalWeeks}
+          priceOverrides={priceOverrides}
+          setPrice={setPrice}
+          resetPrices={resetPrices}
           onClose={() => setShowCost(false)}
         />
       )}
@@ -154,7 +159,7 @@ export default function App() {
           <strong>Plateful365</strong> · A full year of meals, planned
         </span>
         <span className="app-footer-meta">
-          365 days · 3 meals · 4 proteins · works offline
+          365 days · 3 meals · 5 proteins · works offline
         </span>
       </footer>
 

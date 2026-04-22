@@ -4,10 +4,10 @@ import { estimateDayCost, formatUSD } from '../data/costs'
 const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 const fmt = (d) => d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''
 
-export default function DayCard({ day, dimmed, onClick }) {
+export default function DayCard({ day, dimmed, priceOverrides, onClick }) {
   const { label, emoji } = PROTEIN_LABELS[day.protein]
   const dayName = DAY_NAMES[day.date.getDay()]
-  const cost = estimateDayCost(day)
+  const cost = estimateDayCost(day, priceOverrides)
 
   return (
     <article

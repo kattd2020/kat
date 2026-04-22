@@ -30,8 +30,8 @@ const BANNERS = [
   {
     key: 'cost',
     icon: '💰',
-    title: 'Cost estimator',
-    desc: 'See weekly grocery spend at a glance — plus a yearly projection and per-diner scaling.',
+    title: 'Cost calculator',
+    desc: 'Enter your store prices and see weekly, daily, and yearly spend update live.',
     className: 'banner-gold',
   },
 ]

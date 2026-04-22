@@ -125,9 +125,9 @@ export function classifyCut(protein, name) {
     if (/\bwings?\b/.test(n))                              return 'wings'
     if (/\bdrumsticks?\b/.test(n))                         return 'drumstick'
     if (/\bleg quarters?\b/.test(n))                       return 'legQuarter'
-    if (/\bthighs?\b/.test(n))                             return 'thigh'
+    if (/\bthighs?\b|\bcacciatore\b|\band dumplings\b|\bshawarma\b|\bsouvlaki\b|\bpaprikash\b|\bjerk chicken\b/.test(n)) return 'thigh'
     if (/\bchicken tenders?\b|\bchicken tenderloins?\b/.test(n)) return 'tenders'
-    if (/\bground chicken\b|\bchicken meatballs?\b|\bchicken burger\b|\bchicken meatloaf\b|\bchicken lettuce wraps?\b|\bchicken patty\b/.test(n)) return 'ground'
+    if (/\bground chicken\b|\bchicken meatballs?\b|\bchicken burger\b|\bchicken meatloaf\b|\bchicken lettuce wraps?\b|\bchicken patty\b|\bbreakfast patties\b|\bthai basil chicken\b/.test(n)) return 'ground'
     return 'breast'
   }
 

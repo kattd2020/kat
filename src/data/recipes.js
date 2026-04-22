@@ -39,7 +39,7 @@ const ARCHETYPES = [
   },
   {
     key: 'soup',
-    match: /soup|stew|chili|ramen|pho|gumbo|bean (soup|stew)|braised/i,
+    match: /soup|stew|chili|ramen|pho|gumbo|bean (soup|stew)|braised|cacciatore|and dumplings|paprikash/i,
     steps: (m) => [
       `Season ${m.proteinNoun} with salt and pepper.`,
       `In a heavy pot, heat 1 tbsp oil and brown the ${m.proteinNoun} in batches; transfer to a plate.`,
@@ -75,7 +75,7 @@ const ARCHETYPES = [
   },
   {
     key: 'mexican',
-    match: /taco|burrito|enchilada|quesadilla|fajita|carnitas|tortilla|tostada|nacho/i,
+    match: /taco|burrito|enchilada|quesadilla|fajita|carnitas|tortilla|tostada|nacho|chilaquiles/i,
     steps: (m) => [
       `Season the ${m.proteinNoun} with cumin, chili powder, smoked paprika, garlic powder, salt, and pepper.`,
       `Cook the ${m.proteinNoun}: sear ground meat until browned, or sear whole cuts and shred once tender.`,
@@ -99,7 +99,7 @@ const ARCHETYPES = [
   },
   {
     key: 'grill',
-    match: /grilled|grill|steak|ribeye|ny strip|bbq (ribs|baby back|pork)|baby back|chop(s)?|kebab|skewer/i,
+    match: /grilled|grill|steak|ribeye|ny strip|bbq (ribs|baby back|pork)|baby back|chop(s)?|kebab|skewer|shawarma|jerk chicken|souvlaki/i,
     steps: (m) => [
       `Bring the ${m.proteinNoun} to room temperature 30 minutes before cooking. Pat dry.`,
       `Season generously with salt, pepper, and a light drizzle of oil just before grilling.`,
@@ -159,7 +159,7 @@ const ARCHETYPES = [
   },
   {
     key: 'breaded',
-    match: /schnitzel|parmesan|piccata|nashville|fried chicken|katsu|\btenders?\b|\bnuggets?\b/i,
+    match: /schnitzel|parmesan|piccata|nashville|fried chicken|katsu|\btenders?\b|\bnuggets?\b|cordon bleu|general tso/i,
     steps: (m) => [
       `Pound the ${m.proteinNoun} to even ½-inch thickness between sheets of plastic so it cooks evenly.`,
       `Set up three shallow dishes: seasoned flour, beaten eggs, and breadcrumbs (panko is crispest).`,

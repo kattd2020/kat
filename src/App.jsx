@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback } from 'react'
 import Header from './components/Header'
 import BannerGrid from './components/BannerGrid'
 import FilterBar from './components/FilterBar'
@@ -9,6 +9,7 @@ import SettingsModal from './components/SettingsModal'
 import GroceryListModal from './components/GroceryListModal'
 import EventsModal from './components/EventsModal'
 import CostModal from './components/CostModal'
+import DessertsModal from './components/DessertsModal'
 import ProteinRecipesModal from './components/ProteinRecipesModal'
 import { useMealPlan } from './hooks/useMealPlan'
 import './styles.css'
@@ -53,8 +54,8 @@ export default function App() {
   const [showGrocery, setShowGrocery] = useState(false)
   const [showEvents, setShowEvents] = useState(false)
   const [showCost, setShowCost] = useState(false)
+  const [showDesserts, setShowDesserts] = useState(false)
   const [browseProtein, setBrowseProtein] = useState(null)
-  const weekViewRef = useRef(null)
 
   const handlePrintWeek = useCallback(() => {
     const win = window.open('', '_blank')
@@ -64,15 +65,10 @@ export default function App() {
   }, [weekDays, currentWeek])
 
   const handleBanner = useCallback((key) => {
-    if (key === 'planYear') {
-      weekViewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    } else if (key === 'grocery') {
-      setShowGrocery(true)
-    } else if (key === 'events') {
-      setShowEvents(true)
-    } else if (key === 'cost') {
-      setShowCost(true)
-    }
+    if (key === 'cost') setShowCost(true)
+    else if (key === 'grocery') setShowGrocery(true)
+    else if (key === 'events') setShowEvents(true)
+    else if (key === 'desserts') setShowDesserts(true)
   }, [])
 
   return (
@@ -97,7 +93,7 @@ export default function App() {
         onJump={jumpToWeek}
       />
 
-      <main className="week-view" ref={weekViewRef} aria-live="polite">
+      <main className="week-view" aria-live="polite">
         {weekDays.map(day => (
           <DayCard
             key={day.dayNumber}
@@ -157,6 +153,16 @@ export default function App() {
           removeCalcEntry={removeCalcEntry}
           clearCalc={clearCalc}
           onClose={() => setShowCost(false)}
+        />
+      )}
+
+      {showDesserts && (
+        <DessertsModal
+          grocerySelection={grocerySelection}
+          toggleGrocery={toggleGrocery}
+          servings={servings}
+          setServings={setServings}
+          onClose={() => setShowDesserts(false)}
         />
       )}
 

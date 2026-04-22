@@ -1,10 +1,10 @@
 const BANNERS = [
   {
-    key: 'planYear',
-    icon: '📅',
-    title: 'Plan a whole year',
-    desc: 'Drag, drop, and shuffle meals across 52 weeks. Repeat favorites or mix it up.',
-    className: 'banner-electric',
+    key: 'cost',
+    icon: '💰',
+    title: 'Cost calculator',
+    desc: 'Punch in prices as you shop and watch the running total tally up.',
+    className: 'banner-gold',
   },
   {
     key: 'grocery',
@@ -21,11 +21,11 @@ const BANNERS = [
     className: 'banner-mint',
   },
   {
-    key: 'cost',
-    icon: '💰',
-    title: 'Cost calculator',
-    desc: 'Punch in prices as you shop and watch the running total tally up.',
-    className: 'banner-gold',
+    key: 'desserts',
+    icon: '🍰',
+    title: 'Cheap easy desserts',
+    desc: 'Pantry-friendly sweets — mug brownies, apple crisp, icebox pies, banana muffins, s’mores dip.',
+    className: 'banner-rose',
   },
 ]
 

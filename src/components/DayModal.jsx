@@ -61,8 +61,10 @@ function MealRow({ mealType, name, protein, day, servings, setServings, onToggle
       <div className="meal-row-head">
         <span className="meal-time">{mealType.emoji} {mealType.label}</span>
         <span className="meal-name">{name}</span>
-        <CutTag protein={protein} name={name} />
-        <TimeTag protein={protein} name={name} />
+        <span className="recipe-tag-row">
+          <CutTag protein={protein} name={name} />
+          <TimeTag protein={protein} name={name} />
+        </span>
       </div>
       <div className="meal-row-actions">
         <button

@@ -1069,6 +1069,11 @@ body::after {
   font-size: .92rem;
   font-weight: 600;
   color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .2rem;
+  min-width: 0;
 }
 .grocery-pick-action {
   font-size: .72rem;
@@ -1140,6 +1145,11 @@ body::after {
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .2rem;
+  min-width: 0;
 }
 .grocery-summary-meta {
   display: inline-flex;
@@ -1288,7 +1298,15 @@ body::after {
   background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(99,102,241,0.18));
   font-size: 1rem;
 }
-.event-recipe-name { font-size: .92rem; font-weight: 600; }
+.event-recipe-name {
+  font-size: .92rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .2rem;
+  min-width: 0;
+}
 .event-recipe-chevron { font-size: .85rem; color: var(--primary-600); font-weight: 800; text-align: center; }
 .event-recipe-body {
   padding: .25rem 1rem 1rem;
@@ -1669,11 +1687,11 @@ body::after {
 
 /* ── Recipe tag row (wraps Cut + Time tags together) ──── */
 .recipe-tag-row {
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: .3rem;
-  margin-top: .15rem;
+  margin-top: .2rem;
 }
 
 /* ── Cut tag ───────────────────────────────────────────── */
@@ -1716,10 +1734,8 @@ body::after {
    sits in the middle of the step text so cook times pop while
    reading the directions. */
 .step-time {
-  display: inline-flex;
-  align-items: center;
-  gap: .2rem;
-  padding: .05rem .45rem;
+  display: inline-block;
+  padding: 0 .45rem;
   margin: 0 .1rem;
   border-radius: 999px;
   font-size: .78rem;
@@ -1730,6 +1746,7 @@ body::after {
   border: 1px solid rgba(245,158,11,0.30);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+  line-height: inherit;
   vertical-align: baseline;
 }
 /* Tint the tag to the meat color family where it's helpful */

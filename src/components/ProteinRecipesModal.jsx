@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react'
 import { MEALS, PROTEIN_LABELS } from '../data/mealsData'
-import { getRecipeSteps, getRecipeIngredients, scaleIngredients, estimateStepMinutes, formatStepMinutes } from '../data/recipes'
+import { getRecipeSteps, getRecipeIngredients, scaleIngredients } from '../data/recipes'
 import { CUTS, classifyCut } from '../data/cuts'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 import CutTag from './CutTag'
 import TimeTag from './TimeTag'
 import StepText from './StepText'
+import MeatCookCallout from './MeatCookCallout'
 
 const MEAL_TYPES = [
   { key: 'breakfast', emoji: '🌅', label: 'Breakfast' },
@@ -46,12 +47,12 @@ function RecipeRow({ name, protein, servings, setServings, picked, onToggleGroce
               <li key={i}>{ing}</li>
             ))}
           </ul>
+          <MeatCookCallout name={name} protein={protein} />
           <h4 className="pr-recipe-subhead">Steps</h4>
           <ol className="pr-recipe-steps">
             {steps.map((s, i) => (
               <li key={i}>
                 <span className="recipe-num">{i + 1}</span>
-                <span className="step-minutes">⏱ {formatStepMinutes(estimateStepMinutes(s))}</span>
                 <StepText text={s} />
               </li>
             ))}

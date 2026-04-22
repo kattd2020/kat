@@ -589,3 +589,73 @@ export function formatStepMinutes(minutes) {
   }
   return `${minutes}m`
 }
+
+// ── Meat cook callout ─────────────────────────────────
+// The ONE directive that tells you exactly how to cook the protein
+// in this recipe: method, temperature, and time. Shown above the
+// step-by-step so shoppers/cooks know the critical spec at a glance
+// ("Roast chicken at 400°F for 45 min").
+
+export function getMeatCookInfo(name, protein) {
+  if (!protein) return null
+  const noun = proteinNoun(name, protein)
+  const key = findArchetype(name)?.key || 'default'
+
+  switch (key) {
+    case 'roast':
+      if (protein === 'beef')    return { noun, method: 'Roast', temp: '325°F', time: '1½–2 hr (internal 135°F)' }
+      if (protein === 'pork')    return { noun, method: 'Roast', temp: '350°F', time: '45 min–1 hr (internal 145°F)' }
+      if (protein === 'chicken') return { noun, method: 'Roast', temp: '400°F', time: '45 min (internal 165°F)' }
+      if (protein === 'seafood') return { noun, method: 'Bake',  temp: '400°F', time: '12–15 min (flakes easily)' }
+      return { noun, method: 'Roast', temp: '350°F', time: '45 min' }
+
+    case 'grill':
+      if (protein === 'seafood') return { noun, method: 'Grill', temp: 'medium-high', time: '4 min per side' }
+      if (protein === 'chicken') return { noun, method: 'Grill', temp: 'medium-high', time: '6 min per side (internal 165°F)' }
+      if (protein === 'pork')    return { noun, method: 'Grill', temp: 'medium-high', time: '4 min per side (internal 145°F)' }
+      return { noun, method: 'Grill', temp: 'high',          time: '3–4 min per side (internal 135°F medium)' }
+
+    case 'breaded':
+      return { noun, method: 'Pan-fry', temp: '350°F oil', time: '3–4 min per side' }
+
+    case 'stirFry':
+      return { noun, method: 'Stir-fry', temp: 'high heat', time: '2–3 min' }
+
+    case 'soup':
+      return { noun, method: 'Simmer', temp: 'low',        time: '25–40 min until tender' }
+
+    case 'casserole':
+      return { noun, method: 'Bake',   temp: '375°F',      time: '25–35 min uncovered' }
+
+    case 'pasta':
+      return { noun, method: 'Brown',  temp: 'medium-high',time: '5–8 min' }
+
+    case 'sandwich':
+      return { noun, method: 'Cook to temp', time: '5–8 min' }
+
+    case 'salad':
+      return { noun, method: 'Cook + slice', time: '6–8 min' }
+
+    case 'mexican':
+      return { noun, method: 'Brown or shred', time: '8–10 min' }
+
+    case 'breakfastSkillet':
+      return { noun, method: 'Render / brown', temp: 'medium-high', time: '6–8 min' }
+
+    case 'risotto':
+      return { noun, method: 'Sear separately, fold in', time: '6 min' }
+
+    case 'bowl':
+      return { noun, method: 'Sear or grill', time: '3–6 min per side' }
+
+    case 'pancakes':
+      return { noun, method: 'Cook per package', time: '4–6 min' }
+
+    case 'avocadoToast':
+      return { noun, method: 'Crisp in pan', time: '4–5 min' }
+
+    default:
+      if (protein === 'seafood') return { noun, method: 'Pan-sear', time: '3–4 min per side (flakes easily)' }
+      return { noun, method: 'Sear to temp', temp: 'medium-high', time: '5–8 min' }
+  }
+}

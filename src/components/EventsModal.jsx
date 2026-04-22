@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react'
 import { PROTEIN_LABELS } from '../data/mealsData'
 import { EVENT_MENUS } from '../data/eventMenus'
-import { getRecipeIngredients, getRecipeSteps, scaleIngredients, estimateStepMinutes, formatStepMinutes } from '../data/recipes'
+import { getRecipeIngredients, getRecipeSteps, scaleIngredients } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 import CutTag from './CutTag'
 import TimeTag from './TimeTag'
 import StepText from './StepText'
+import MeatCookCallout from './MeatCookCallout'
 
 function resolveRecipe(recipe) {
   if (recipe.custom) {
@@ -65,12 +66,12 @@ function EventRecipeRow({ resolved, picked, servings, setServings, onToggleAdd }
               <li key={i}>{ing}</li>
             ))}
           </ul>
+          <MeatCookCallout name={resolved.title} protein={resolved.protein} />
           <h4 className="pr-recipe-subhead">Steps</h4>
           <ol className="pr-recipe-steps">
             {resolved.steps.map((s, i) => (
               <li key={i}>
                 <span className="recipe-num">{i + 1}</span>
-                <span className="step-minutes">⏱ {formatStepMinutes(estimateStepMinutes(s))}</span>
                 <StepText text={s} />
               </li>
             ))}

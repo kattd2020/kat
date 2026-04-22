@@ -603,20 +603,20 @@ export function getMeatCookInfo(name, protein) {
 
   switch (key) {
     case 'roast':
-      if (protein === 'beef')    return { noun, method: 'Roast', temp: '325°F', time: '1½–2 hr (internal 135°F)' }
-      if (protein === 'pork')    return { noun, method: 'Roast', temp: '350°F', time: '45 min–1 hr (internal 145°F)' }
-      if (protein === 'chicken') return { noun, method: 'Roast', temp: '400°F', time: '45 min (internal 165°F)' }
-      if (protein === 'seafood') return { noun, method: 'Bake',  temp: '400°F', time: '12–15 min (flakes easily)' }
-      return { noun, method: 'Roast', temp: '350°F', time: '45 min' }
+      if (protein === 'beef')    return { noun, method: 'Roast', temp: '325°F', time: '1½–2 hr (internal 135°F)', airFryer: '360°F · 25 min/lb, flip halfway' }
+      if (protein === 'pork')    return { noun, method: 'Roast', temp: '350°F', time: '45 min–1 hr (internal 145°F)', airFryer: '380°F · 20 min/lb, flip halfway' }
+      if (protein === 'chicken') return { noun, method: 'Roast', temp: '400°F', time: '45 min (internal 165°F)', airFryer: '380°F · 20–25 min for thighs/drumsticks; 360°F · 60 min for a small whole bird' }
+      if (protein === 'seafood') return { noun, method: 'Bake',  temp: '400°F', time: '12–15 min (flakes easily)', airFryer: '380°F · 8–10 min' }
+      return { noun, method: 'Roast', temp: '350°F', time: '45 min', airFryer: '380°F · 20 min/lb' }
 
     case 'grill':
-      if (protein === 'seafood') return { noun, method: 'Grill', temp: 'medium-high', time: '4 min per side' }
-      if (protein === 'chicken') return { noun, method: 'Grill', temp: 'medium-high', time: '6 min per side (internal 165°F)' }
-      if (protein === 'pork')    return { noun, method: 'Grill', temp: 'medium-high', time: '4 min per side (internal 145°F)' }
-      return { noun, method: 'Grill', temp: 'high',          time: '3–4 min per side (internal 135°F medium)' }
+      if (protein === 'seafood') return { noun, method: 'Grill', temp: 'medium-high', time: '4 min per side', airFryer: '380°F · 8–10 min' }
+      if (protein === 'chicken') return { noun, method: 'Grill', temp: 'medium-high', time: '6 min per side (internal 165°F)', airFryer: '400°F · 22 min for wings, 20 min for drumsticks, flip halfway' }
+      if (protein === 'pork')    return { noun, method: 'Grill', temp: 'medium-high', time: '4 min per side (internal 145°F)', airFryer: '400°F · 12 min for chops, flip halfway' }
+      return { noun, method: 'Grill', temp: 'high',          time: '3–4 min per side (internal 135°F medium)', airFryer: '400°F · 8–10 min for steak, flip halfway' }
 
     case 'breaded':
-      return { noun, method: 'Pan-fry', temp: '350°F oil', time: '3–4 min per side' }
+      return { noun, method: 'Pan-fry', temp: '350°F oil', time: '3–4 min per side', airFryer: '400°F · 10–12 min, flip halfway (tenders/cutlets); nuggets 8 min' }
 
     case 'stirFry':
       return { noun, method: 'Stir-fry', temp: 'high heat', time: '2–3 min' }
@@ -655,7 +655,8 @@ export function getMeatCookInfo(name, protein) {
       return { noun, method: 'Crisp in pan', time: '4–5 min' }
 
     default:
-      if (protein === 'seafood') return { noun, method: 'Pan-sear', time: '3–4 min per side (flakes easily)' }
-      return { noun, method: 'Sear to temp', temp: 'medium-high', time: '5–8 min' }
+      if (protein === 'seafood') return { noun, method: 'Pan-sear', time: '3–4 min per side (flakes easily)', airFryer: '380°F · 8–10 min' }
+      if (protein === 'chicken') return { noun, method: 'Sear to temp', temp: 'medium-high', time: '5–8 min (internal 165°F)', airFryer: '380°F · 15–18 min for breasts; 400°F · 20–22 min for thighs' }
+      return { noun, method: 'Sear to temp', temp: 'medium-high', time: '5–8 min', airFryer: '400°F · 10–12 min, flip halfway' }
   }
 }

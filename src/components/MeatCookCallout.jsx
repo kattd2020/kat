@@ -11,10 +11,16 @@ export default function MeatCookCallout({ name, protein }) {
       <span className="meat-cook-body">
         <span className="meat-cook-label">Cook the {info.noun}</span>
         <span className="meat-cook-spec">
+          <span className="meat-cook-method-label">Oven / stove:</span>{' '}
           <strong>{info.method}</strong>
           {info.temp && <span> · <strong>{info.temp}</strong></span>}
           {info.time && <span> · <strong>{info.time}</strong></span>}
         </span>
+        {info.airFryer && (
+          <span className="meat-cook-alt">
+            <span className="meat-cook-method-label">Air fryer:</span> {info.airFryer}
+          </span>
+        )}
       </span>
     </div>
   )

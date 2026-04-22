@@ -1593,8 +1593,9 @@ body::after {
 }
 .recipe-list li {
   display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: .6rem;
+  grid-template-columns: 28px auto 1fr;
+  align-items: start;
+  gap: .5rem;
   font-size: .9rem;
   line-height: 1.5;
   color: var(--text);
@@ -1730,25 +1731,26 @@ body::after {
   font-variant-numeric: tabular-nums;
 }
 
-/* Inline duration highlight inside a step — small amber chip that
-   sits in the middle of the step text so cook times pop while
-   reading the directions. */
-.step-time {
-  display: inline-block;
-  padding: 0 .45rem;
-  margin: 0 .1rem;
+/* Per-step cook-time chip — lives in its own grid column between the
+   step number and the step body. */
+.step-minutes {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: .18rem .5rem;
   border-radius: 999px;
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
   color: #78350F;
-  background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(249,115,22,0.14));
-  border: 1px solid rgba(245,158,11,0.30);
+  background: linear-gradient(135deg, rgba(245,158,11,0.20), rgba(249,115,22,0.18));
+  border: 1px solid rgba(245,158,11,0.35);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  line-height: inherit;
-  vertical-align: baseline;
+  margin-top: .1rem;
 }
+.step-text { min-width: 0; }
 /* Tint the tag to the meat color family where it's helpful */
 .cut-ribeye, .cut-nyStrip, .cut-tbone, .cut-filet, .cut-sirloin,
 .cut-topRound, .cut-bottomRound, .cut-londonBroil, .cut-ground,
@@ -1802,8 +1804,9 @@ body::after {
 }
 .pr-recipe-steps li {
   display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: .55rem;
+  grid-template-columns: 28px auto 1fr;
+  align-items: start;
+  gap: .5rem;
   font-size: .88rem;
   line-height: 1.45;
   color: var(--text);

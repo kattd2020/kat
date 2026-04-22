@@ -549,3 +549,43 @@ export function formatCookTime(minutes) {
   }
   return `${minutes} min`
 }
+
+// Per-step cook-time estimate — uses an explicit duration in the text
+// when present, otherwise a verb-based heuristic.
+export function estimateStepMinutes(text) {
+  if (!text) return 5
+  const t = text.toLowerCase()
+
+  // Explicit duration — take the TOP of any range.
+  const m = t.match(/(\d+)(?:\s*[-–]\s*(\d+))?\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?)/i)
+  if (m) {
+    const hi = m[2] ? parseInt(m[2], 10) : parseInt(m[1], 10)
+    const unit = m[3].toLowerCase()
+    if (unit.startsWith('hour') || unit.startsWith('hr')) return hi * 60
+    if (unit.startsWith('sec')) return Math.max(1, Math.round(hi / 60))
+    return hi
+  }
+
+  // Verb-based fallbacks
+  if (/\bsimmer|\bbraise|\bstew\b|\bslow[- ]cook|\bcook covered/.test(t)) return 20
+  if (/\bmarinate|\bbrine\b/.test(t))                                   return 30
+  if (/\broast|\bbake\b/.test(t))                                       return 30
+  if (/\bboil|\bsteam\b/.test(t))                                       return 10
+  if (/\bsear\b|\bfry\b|\bsaut[ée]|\bbrown\b|\bgrill\b|\bcook\b/.test(t)) return 8
+  if (/\bheat\b|\bpreheat\b|\bwarm\b/.test(t))                          return 3
+  if (/\brest\b|\blet sit\b|\blet cool\b|\bchill\b|\brefrigerate/.test(t)) return 5
+  if (/\bslice\b|\bchop\b|\bdice\b|\bcut\b|\bpat\b|\bseason\b|\bdrizzle\b|\bwhisk\b|\bmix\b|\bcombine\b|\bprep\b|\barrange\b|\bspread\b|\btoss\b|\bfold\b|\bstir\b|\bmash\b|\bbeat\b/.test(t)) return 3
+  if (/\bserve\b|\bplate\b|\bfinish\b|\bgarnish\b|\btop\b/.test(t))    return 1
+
+  return 5
+}
+
+export function formatStepMinutes(minutes) {
+  if (!minutes) return ''
+  if (minutes >= 60) {
+    const h = Math.floor(minutes / 60)
+    const m = minutes % 60
+    return m ? `${h}h ${m}m` : `${h}h`
+  }
+  return `${minutes}m`
+}

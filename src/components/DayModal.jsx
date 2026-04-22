@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 import { PROTEIN_LABELS } from '../data/mealsData'
-import { getRecipeSteps, getRecipeIngredients, scaleIngredients } from '../data/recipes'
+import { getRecipeSteps, getRecipeIngredients, scaleIngredients, estimateStepMinutes, formatStepMinutes } from '../data/recipes'
 import { makeGroceryKey } from '../hooks/useMealPlan'
 import ServingsPicker from './ServingsPicker'
 import CutTag from './CutTag'
@@ -98,7 +98,11 @@ function MealRow({ mealType, name, protein, day, servings, setServings, onToggle
           <h4 className="recipe-subhead">Steps</h4>
           <ol className="recipe-list">
             {steps.map((s, i) => (
-              <li key={i}><span className="recipe-num">{i + 1}</span><StepText text={s} /></li>
+              <li key={i}>
+                <span className="recipe-num">{i + 1}</span>
+                <span className="step-minutes">⏱ {formatStepMinutes(estimateStepMinutes(s))}</span>
+                <StepText text={s} />
+              </li>
             ))}
           </ol>
         </div>

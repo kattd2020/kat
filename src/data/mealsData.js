@@ -52,6 +52,12 @@ export const MEALS = {
       'Sirloin Stroganoff',
       'Herb-Marinated London Broil',
       'Slow-Roasted Top Round with Gravy',
+      'Classic Sunday Beef Roast with Gravy',
+      'Garlic Herb Rib Roast',
+      'Rosemary Beef Roast with Root Vegetables',
+      'Coffee-Rubbed Beef Roast',
+      'Horseradish Crusted Rib Roast',
+      'Mustard-Crusted Beef Roast',
     ],
   },
 

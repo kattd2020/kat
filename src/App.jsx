@@ -5,11 +5,6 @@ import WeekNav from './components/WeekNav'
 import DayCard from './components/DayCard'
 import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
-import BannerGrid from './components/BannerGrid'
-import CostCalculatorModal from './components/CostCalculatorModal'
-import GroceryListModal from './components/GroceryListModal'
-import EventMenusModal from './components/EventMenusModal'
-import DessertsModal from './components/DessertsModal'
 import { useMealPlan } from './hooks/useMealPlan'
 import './styles.css'
 
@@ -47,7 +42,6 @@ export default function App() {
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
-  const [activeBanner, setActiveBanner] = useState(null)
 
   const handlePrintWeek = useCallback(() => {
     const win = window.open('', '_blank')
@@ -58,14 +52,9 @@ export default function App() {
 
   return (
     <div id="app">
-      <Header
-        onPrintWeek={handlePrintWeek}
-        onOpenSettings={() => setShowSettings(true)}
-      />
+      <Header onPrintWeek={handlePrintWeek} onOpenSettings={() => setShowSettings(true)} />
 
       <FilterBar active={activeFilter} onChange={setActiveFilter} />
-
-      <BannerGrid onSelect={setActiveBanner} />
 
       <WeekNav
         currentWeek={currentWeek}
@@ -100,11 +89,6 @@ export default function App() {
           onClose={() => setShowSettings(false)}
         />
       )}
-
-      {activeBanner === 'cost'     && <CostCalculatorModal onClose={() => setActiveBanner(null)} />}
-      {activeBanner === 'grocery'  && <GroceryListModal weekDays={weekDays} weekNum={currentWeek + 1} onClose={() => setActiveBanner(null)} />}
-      {activeBanner === 'events'   && <EventMenusModal onClose={() => setActiveBanner(null)} />}
-      {activeBanner === 'desserts' && <DessertsModal onClose={() => setActiveBanner(null)} />}
 
       <div id="toast" role="status" aria-live="polite" />
     </div>

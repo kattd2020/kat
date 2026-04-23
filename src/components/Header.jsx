@@ -4,7 +4,7 @@ export default function Header({ onPrintWeek, onOpenSettings }) {
       <div className="header-content">
         <div className="header-left">
           <span className="app-icon">🍽️</span>
-          <h1>Plateful365</h1>
+          <h1>365 Meal Planner</h1>
         </div>
         <div className="header-right">
           <button className="icon-btn" title="Settings" onClick={onOpenSettings} aria-label="Settings">⚙️</button>

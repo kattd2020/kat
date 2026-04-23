@@ -1,4 +1,4 @@
-export default function Header({ onPrintWeek, onOpenSettings, isPro, onUpgrade, user, onLogin, onLogout }) {
+export default function Header({ onPrintWeek, onOpenSettings, isPro, onUpgrade }) {
   return (
     <header className="app-header">
       <div className="header-content">
@@ -11,20 +11,6 @@ export default function Header({ onPrintWeek, onOpenSettings, isPro, onUpgrade, 
           {!isPro && (
             <button className="upgrade-btn" onClick={onUpgrade} title="Upgrade to Pro">
               ✨ Upgrade
-            </button>
-          )}
-          {user ? (
-            <div className="user-menu">
-              <span className="user-avatar" title={user.email}>
-                {user.email[0].toUpperCase()}
-              </span>
-              <button className="icon-btn" title={`Signed in as ${user.email} — click to sign out`} onClick={onLogout} aria-label="Sign out">
-                ↩
-              </button>
-            </div>
-          ) : (
-            <button className="icon-btn auth-login-btn" onClick={onLogin} title="Sign in / Create account" aria-label="Sign in">
-              👤
             </button>
           )}
           <button className="icon-btn" title="Settings" onClick={onOpenSettings} aria-label="Settings">⚙️</button>

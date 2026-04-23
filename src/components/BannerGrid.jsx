@@ -1,31 +1,24 @@
 const BANNERS = [
   {
-    key: 'planYear',
-    icon: '📅',
-    title: 'Plan a whole year',
-    desc: 'Drag, drop, and shuffle meals across 52 weeks. Repeat favorites or mix it up.',
-    className: 'banner-electric',
+    key: 'cost',
+    icon: '💰',
+    title: 'Cost calculator',
+    desc: 'See your estimated weekly spend by protein and get tips to stretch your budget further.',
+    className: 'banner-gold',
   },
   {
     key: 'grocery',
     icon: '🛒',
-    title: 'Smart grocery lists',
-    desc: 'Auto-generated shopping lists by week, sorted by meal. No more forgotten garlic.',
+    title: 'Smart grocery list',
+    desc: 'Auto-generated shopping list for the week, grouped by protein. Print it before you shop.',
     className: 'banner-sky',
   },
   {
-    key: 'seasonal',
-    icon: '🌿',
-    title: 'Seasonal suggestions',
-    desc: "Recipes shift with the seasons so you're eating what's fresh, cheap, and in peak flavor.",
-    className: 'banner-mint',
-  },
-  {
-    key: 'swap',
-    icon: '⚡',
-    title: 'Quick-swap recipes',
-    desc: 'Kid said no to salmon? Swap for an alternative in one tap.',
-    className: 'banner-cobalt',
+    key: 'desserts',
+    icon: '🍰',
+    title: 'Cheap easy desserts',
+    desc: 'Sweet finishers under $2 a serving. Most take under 10 minutes.',
+    className: 'banner-rose',
   },
 ]
 

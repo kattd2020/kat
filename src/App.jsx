@@ -5,6 +5,7 @@ import WeekNav from './components/WeekNav'
 import DayCard from './components/DayCard'
 import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
+import UpgradeModal from './components/UpgradeModal'
 import { useMealPlan } from './hooks/useMealPlan'
 import './styles.css'
 
@@ -39,22 +40,45 @@ export default function App() {
     weekStartDate, weekEndDate, activeFilter, setActiveFilter,
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
+    isPro,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
+  const [showUpgrade, setShowUpgrade] = useState(false)
 
   const handlePrintWeek = useCallback(() => {
+    if (!isPro) {
+      setShowUpgrade(true)
+      return
+    }
     const win = window.open('', '_blank')
     win.document.write(buildWeekPrintHTML(weekDays, currentWeek + 1))
     win.document.close()
     win.print()
-  }, [weekDays, currentWeek])
+  }, [weekDays, currentWeek, isPro])
 
   return (
     <div id="app">
-      <Header onPrintWeek={handlePrintWeek} onOpenSettings={() => setShowSettings(true)} />
+      <Header
+        onPrintWeek={handlePrintWeek}
+        onOpenSettings={() => setShowSettings(true)}
+        isPro={isPro}
+        onUpgrade={() => setShowUpgrade(true)}
+      />
 
       <FilterBar active={activeFilter} onChange={setActiveFilter} />
+
+      {/* Ad slot — replace data-ad-slot with your AdSense slot ID once approved */}
+      <div className="ad-slot">
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+          data-ad-slot="XXXXXXXXXX"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </div>
 
       <WeekNav
         currentWeek={currentWeek}
@@ -89,6 +113,8 @@ export default function App() {
           onClose={() => setShowSettings(false)}
         />
       )}
+
+      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
 
       <div id="toast" role="status" aria-live="polite" />
     </div>

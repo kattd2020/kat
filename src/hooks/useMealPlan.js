@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { MEAL_PLAN } from '../data/mealsData'
 
 const STORAGE_KEY = 'mealplanner_startdate'
 const SWAPS_KEY = 'mealplanner_swaps'
+const PRO_KEY = 'plateful365_pro'
 
 function getStoredSwaps() {
   try {
@@ -39,6 +40,16 @@ export function useMealPlan() {
   const [activeFilter, setActiveFilter] = useState('all')
   const [selectedDay, setSelectedDay] = useState(null)
   const [swaps, setSwaps] = useState(getStoredSwaps)
+  const [isPro, setIsPro] = useState(() => localStorage.getItem(PRO_KEY) === 'true')
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('pro') === 'activated') {
+      localStorage.setItem(PRO_KEY, 'true')
+      setIsPro(true)
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [])
 
   const totalWeeks = Math.ceil(MEAL_PLAN.length / 7)
 
@@ -92,5 +103,6 @@ export function useMealPlan() {
     jumpToWeek,
     saveStartDate,
     swapMeal,
+    isPro,
   }
 }

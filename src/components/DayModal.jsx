@@ -115,6 +115,36 @@ export default function DayModal({ day, onClose }) {
             <li><span className="meal-time">🌙 Dinner</span> {day.dinner}</li>
           </ul>
 
+          <div className="affiliate-section">
+            <p className="affiliate-label">Shop ingredients</p>
+            <div className="affiliate-links">
+              <a
+                className="affiliate-btn affiliate-instacart"
+                href={`https://www.instacart.com/store/s?k=${encodeURIComponent(day.dinner)}`}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+              >
+                🛒 Instacart
+              </a>
+              <a
+                className="affiliate-btn affiliate-amazon"
+                href={`https://www.amazon.com/s?k=${encodeURIComponent(day.dinner + ' recipe ingredients')}&i=amazonfresh`}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+              >
+                📦 Amazon Fresh
+              </a>
+              <a
+                className="affiliate-btn affiliate-hellofresh"
+                href="https://www.hellofresh.com/plans"
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+              >
+                🥗 HelloFresh
+              </a>
+            </div>
+          </div>
+
           <div className="qr-section">
             <h3>QR Code</h3>
             <p className="qr-desc">Scan to share this day's meals</p>

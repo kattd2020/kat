@@ -5,6 +5,7 @@ import WeekNav from './components/WeekNav'
 import DayCard from './components/DayCard'
 import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
+import UpgradeModal from './components/UpgradeModal'
 import BannerGrid from './components/BannerGrid'
 import CostCalculatorModal from './components/CostCalculatorModal'
 import GroceryListModal from './components/GroceryListModal'
@@ -47,9 +48,11 @@ export default function App() {
     weekStartDate, weekEndDate, activeFilter, setActiveFilter,
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
+    isPro,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
+  const [showUpgrade, setShowUpgrade]   = useState(false)
   const [activeBanner, setActiveBanner] = useState(null)
 
   useEffect(() => {
@@ -57,17 +60,20 @@ export default function App() {
   }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePrintWeek = useCallback(() => {
+    if (!isPro) { setShowUpgrade(true); return }
     const win = window.open('', '_blank')
     win.document.write(buildWeekPrintHTML(weekDays, currentWeek + 1))
     win.document.close()
     win.print()
-  }, [weekDays, currentWeek])
+  }, [weekDays, currentWeek, isPro])
 
   return (
     <div id="app">
       <Header
         onPrintWeek={handlePrintWeek}
         onOpenSettings={() => setShowSettings(true)}
+        isPro={isPro}
+        onUpgrade={() => setShowUpgrade(true)}
       />
 
       <FilterBar active={activeFilter} onChange={setActiveFilter} />
@@ -111,6 +117,8 @@ export default function App() {
           onLogout={logout}
         />
       )}
+
+      {showUpgrade   && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
 
       {activeBanner === 'cost'     && <CostCalculatorModal onClose={() => setActiveBanner(null)} />}
       {activeBanner === 'grocery'  && <GroceryListModal weekDays={weekDays} weekNum={currentWeek + 1} onClose={() => setActiveBanner(null)} />}

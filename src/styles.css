@@ -149,6 +149,15 @@ body::after {
 .icon-btn:active { transform: translateY(0) scale(0.96); }
 
 /* ── Filter Bar ───────────────────────────────────────── */
+.filter-bar-wrap { display: flex; flex-direction: column; }
+
+.filter-sub-bar { padding-top: 0; }
+
+.filter-btn.beef-sub {
+  font-size: .8rem;
+  padding: .4rem .85rem;
+}
+
 .filter-bar {
   display: flex;
   gap: .5rem;

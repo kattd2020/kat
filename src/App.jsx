@@ -47,6 +47,8 @@ export default function App() {
     swapMeal,
   } = useMealPlan()
 
+  const [beefSub, setBeefSub] = useState('all')
+
   const [showSettings,  setShowSettings]  = useState(false)
   const [showCost,      setShowCost]      = useState(false)
   const [showGrocery,   setShowGrocery]   = useState(false)
@@ -59,6 +61,15 @@ export default function App() {
     win.document.close()
     win.print()
   }, [weekDays, currentWeek])
+
+  const matchesBeefSub = (day, sub) => {
+    if (sub === 'all') return true
+    const d = (day.dinner || '').toLowerCase()
+    if (sub === 'roast') return d.includes('prime rib') || d.includes('pot roast') || d.includes('short rib') || d.includes('beef stew') || d.includes('beef wellington')
+    if (sub === 'steak') return d.includes('ribeye') || d.includes('ny strip') || d.includes('steak')
+    if (sub === 'ground') return d.includes('lasagna') || d.includes('bolognese') || d.includes('taco') || d.includes('shepherd') || d.includes('enchilada') || d.includes('chili') || d.includes('stuffed pepper') || d.includes('bulgogi') || d.includes('meatball')
+    return true
+  }
 
   const handleBanner = useCallback((key) => {
     if (key === 'cost')     setShowCost(true)
@@ -73,7 +84,12 @@ export default function App() {
 
       <BannerGrid onSelect={handleBanner} />
 
-      <FilterBar active={activeFilter} onChange={setActiveFilter} />
+      <FilterBar
+        active={activeFilter}
+        onChange={setActiveFilter}
+        beefSub={beefSub}
+        onBeefSub={setBeefSub}
+      />
 
       <WeekNav
         currentWeek={currentWeek}
@@ -91,7 +107,10 @@ export default function App() {
           <DayCard
             key={day.dayNumber}
             day={day}
-            dimmed={activeFilter !== 'all' && day.protein !== activeFilter}
+            dimmed={
+              (activeFilter !== 'all' && day.protein !== activeFilter) ||
+              (activeFilter === 'beef' && day.protein === 'beef' && beefSub !== 'all' && !matchesBeefSub(day, beefSub))
+            }
             onClick={setSelectedDay}
           />
         ))}

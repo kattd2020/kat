@@ -5,7 +5,6 @@ import WeekNav from './components/WeekNav'
 import DayCard from './components/DayCard'
 import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
-import UpgradeModal from './components/UpgradeModal'
 import BannerGrid from './components/BannerGrid'
 import CostCalculatorModal from './components/CostCalculatorModal'
 import GroceryListModal from './components/GroceryListModal'
@@ -48,53 +47,32 @@ export default function App() {
     weekStartDate, weekEndDate, activeFilter, setActiveFilter,
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
-    isPro,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
-  const [showUpgrade, setShowUpgrade] = useState(false)
   const [activeBanner, setActiveBanner] = useState(null)
 
-  // Sync server start_date down on login
   useEffect(() => {
     if (user?.start_date) saveStartDate(user.start_date)
   }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePrintWeek = useCallback(() => {
-    if (!isPro) {
-      setShowUpgrade(true)
-      return
-    }
     const win = window.open('', '_blank')
     win.document.write(buildWeekPrintHTML(weekDays, currentWeek + 1))
     win.document.close()
     win.print()
-  }, [weekDays, currentWeek, isPro])
+  }, [weekDays, currentWeek])
 
   return (
     <div id="app">
       <Header
         onPrintWeek={handlePrintWeek}
         onOpenSettings={() => setShowSettings(true)}
-        isPro={isPro}
-        onUpgrade={() => setShowUpgrade(true)}
       />
 
       <FilterBar active={activeFilter} onChange={setActiveFilter} />
 
       <BannerGrid onSelect={setActiveBanner} />
-
-      {/* Ad slot — replace data-ad-slot with your AdSense slot ID once approved */}
-      <div className="ad-slot">
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block' }}
-          data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
-          data-ad-slot="XXXXXXXXXX"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </div>
 
       <WeekNav
         currentWeek={currentWeek}
@@ -133,8 +111,6 @@ export default function App() {
           onLogout={logout}
         />
       )}
-
-      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
 
       {activeBanner === 'cost'     && <CostCalculatorModal onClose={() => setActiveBanner(null)} />}
       {activeBanner === 'grocery'  && <GroceryListModal weekDays={weekDays} weekNum={currentWeek + 1} onClose={() => setActiveBanner(null)} />}

@@ -4,7 +4,7 @@ export default function Header({ onPrintWeek, onOpenSettings, isPro, onUpgrade, 
       <div className="header-content">
         <div className="header-left">
           <span className="app-icon">🍽️</span>
-          <h1>365 Meal Planner</h1>
+          <h1>Plateful365</h1>
           {isPro && <span className="pro-badge">PRO</span>}
         </div>
         <div className="header-right">

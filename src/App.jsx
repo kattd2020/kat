@@ -7,6 +7,11 @@ import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
 import UpgradeModal from './components/UpgradeModal'
 import AuthModal from './components/AuthModal'
+import BannerGrid from './components/BannerGrid'
+import CostCalculatorModal from './components/CostCalculatorModal'
+import GroceryListModal from './components/GroceryListModal'
+import EventMenusModal from './components/EventMenusModal'
+import DessertsModal from './components/DessertsModal'
 import { useMealPlan } from './hooks/useMealPlan'
 import { useAuth } from './hooks/useAuth'
 import './styles.css'
@@ -51,6 +56,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
   const [showUpgrade, setShowUpgrade] = useState(false)
   const [showAuth, setShowAuth] = useState(false)
+  const [activeBanner, setActiveBanner] = useState(null)
 
   // Sync server user data into local state on login
   useEffect(() => {
@@ -92,6 +98,8 @@ export default function App() {
       />
 
       <FilterBar active={activeFilter} onChange={setActiveFilter} />
+
+      <BannerGrid onSelect={setActiveBanner} />
 
       {/* Ad slot — replace data-ad-slot with your AdSense slot ID once approved */}
       <div className="ad-slot">
@@ -141,6 +149,11 @@ export default function App() {
 
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       {showAuth && <AuthModal onAuth={handleAuth} onClose={() => setShowAuth(false)} />}
+
+      {activeBanner === 'cost'     && <CostCalculatorModal onClose={() => setActiveBanner(null)} />}
+      {activeBanner === 'grocery'  && <GroceryListModal weekDays={weekDays} weekNum={currentWeek + 1} onClose={() => setActiveBanner(null)} />}
+      {activeBanner === 'events'   && <EventMenusModal onClose={() => setActiveBanner(null)} />}
+      {activeBanner === 'desserts' && <DessertsModal onClose={() => setActiveBanner(null)} />}
 
       <div id="toast" role="status" aria-live="polite" />
     </div>

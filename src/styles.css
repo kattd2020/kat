@@ -608,6 +608,264 @@ body::after {
   }
 }
 
+/* ── Banner Grid ──────────────────────────────────────── */
+.banner-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: .5rem 1.25rem 1rem;
+}
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .6rem;
+  width: 100%;
+  padding: 1.25rem 1.4rem 1.4rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: #fff;
+  transition: transform .18s ease, box-shadow .2s;
+  position: relative;
+  overflow: hidden;
+}
+.banner:hover  { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.18); }
+.banner:active { transform: scale(.98); }
+
+.banner-gold { background: linear-gradient(135deg, #F97316 0%, #EAB308 100%); box-shadow: 0 8px 24px rgba(249,115,22,0.30); }
+.banner-sky  { background: linear-gradient(135deg, #0EA5E9 0%, #06B6D4 100%); box-shadow: 0 8px 24px rgba(14,165,233,0.30); }
+.banner-mint { background: linear-gradient(135deg, #059669 0%, #10B981 100%); box-shadow: 0 8px 24px rgba(5,150,105,0.30); }
+.banner-rose { background: linear-gradient(135deg, #F43F5E 0%, #FB923C 100%); box-shadow: 0 8px 24px rgba(244,63,94,0.30); }
+
+.banner-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+.banner-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin: 0;
+}
+.banner-desc {
+  font-size: .88rem;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.45;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ── Grocery Modal ────────────────────────────────────── */
+.grocery-modal { max-width: 480px; }
+.grocery-group { margin-bottom: 1.25rem; }
+.grocery-protein {
+  font-size: .85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--primary);
+  margin-bottom: .5rem;
+}
+.grocery-list { list-style: none; display: flex; flex-direction: column; gap: .45rem; }
+.grocery-list li {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  padding: .65rem .9rem;
+  background: rgba(99,102,241,0.06);
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+}
+.grocery-day  { font-size: .75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+.grocery-meals { font-size: .9rem; font-weight: 600; color: var(--text); }
+
+/* ── Cost Calculator Modal ────────────────────────────── */
+.cost-modal { max-width: 440px; }
+.cost-total-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #F97316, #EAB308);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  color: #fff;
+}
+.cost-total-label { font-size: .85rem; font-weight: 700; opacity: .9; }
+.cost-total-value { font-size: 2rem; font-weight: 900; letter-spacing: -0.03em; }
+
+.cost-items { display: flex; flex-direction: column; gap: .55rem; margin-bottom: .75rem; }
+.cost-item-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.cost-item-name {
+  flex: 1;
+  padding: .6rem .8rem;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 10px;
+  font-size: .9rem;
+  background: rgba(255,255,255,0.9);
+  color: var(--text);
+  transition: border-color .2s, box-shadow .2s;
+}
+.cost-item-name:focus { outline: none; border-color: var(--primary); box-shadow: var(--ring); }
+
+.cost-item-price-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.9);
+  padding: 0 .6rem;
+  width: 90px;
+  transition: border-color .2s;
+}
+.cost-item-price-wrap:focus-within { border-color: var(--primary); box-shadow: var(--ring); }
+.cost-dollar { font-size: .9rem; color: var(--text-muted); font-weight: 700; margin-right: .2rem; }
+.cost-item-price {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: .6rem 0;
+  font-size: .9rem;
+  color: var(--text);
+  font-weight: 700;
+}
+.cost-item-price:focus { outline: none; }
+.cost-item-price::-webkit-inner-spin-button,
+.cost-item-price::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.cost-remove {
+  background: rgba(239,68,68,0.1);
+  border: none;
+  color: #EF4444;
+  border-radius: 8px;
+  width: 32px; height: 32px;
+  cursor: pointer;
+  font-size: .8rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+.cost-remove:hover { background: rgba(239,68,68,0.2); }
+.cost-add-btn { width: 100%; margin-top: .25rem; }
+
+/* ── Event Menus Modal ────────────────────────────────── */
+.events-modal { max-width: 440px; }
+.event-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin-bottom: .5rem;
+}
+.event-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  padding: 1.1rem .75rem;
+  background: linear-gradient(135deg, rgba(99,102,241,0.07), rgba(236,72,153,0.07));
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .2s;
+}
+.event-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.event-emoji { font-size: 2rem; }
+.event-name { font-size: .88rem; font-weight: 700; color: var(--text); }
+
+.event-back {
+  background: none; border: none; cursor: pointer;
+  color: var(--primary); font-weight: 700; font-size: .9rem;
+  padding: 0; margin-bottom: 1rem;
+}
+.event-detail-header {
+  display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem;
+}
+.event-emoji-lg { font-size: 2.5rem; }
+.event-detail-header h3 { font-size: 1.3rem; font-weight: 800; }
+.event-meal-list {
+  list-style: none;
+  display: flex; flex-direction: column; gap: .5rem;
+}
+.event-meal-list li {
+  padding: .7rem .9rem;
+  background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(236,72,153,0.06));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  font-size: .95rem;
+  font-weight: 600;
+}
+
+/* ── Desserts Modal ───────────────────────────────────── */
+.desserts-modal { max-width: 440px; }
+.desserts-list { display: flex; flex-direction: column; gap: .5rem; }
+.dessert-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem .9rem;
+  background: linear-gradient(135deg, rgba(244,63,94,0.06), rgba(251,146,60,0.06));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+.dessert-emoji { font-size: 1.3rem; flex-shrink: 0; }
+.dessert-name  { flex: 1; font-size: .93rem; font-weight: 700; color: var(--text); }
+.dessert-meta  { display: flex; flex-direction: column; align-items: flex-end; gap: .1rem; flex-shrink: 0; }
+.dessert-cost  { font-size: .78rem; font-weight: 800; color: #10B981; }
+.dessert-time  { font-size: .75rem; color: var(--text-muted); font-weight: 600; }
+
+/* ── Swap Modal ───────────────────────────────────────── */
+.swap-modal { max-width: 480px; }
+.swap-day { margin-bottom: 1.25rem; }
+.swap-day-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .6rem; font-size: .9rem;
+}
+.protein-tag {
+  font-size: .72rem; font-weight: 800; padding: .2rem .6rem;
+  border-radius: 999px; color: #fff; text-transform: uppercase; letter-spacing: .05em;
+}
+.protein-tag.beef         { background: var(--beef-grad); }
+.protein-tag.pork         { background: var(--pork-grad); }
+.protein-tag.chicken      { background: var(--chicken-grad); }
+.protein-tag.groundTurkey { background: var(--turkey-grad); }
+.protein-tag.seafood      { background: var(--seafood-grad); }
+.swap-meals { list-style: none; display: flex; flex-direction: column; gap: .4rem; }
+.swap-meals li {
+  display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+  padding: .65rem .9rem;
+  background: rgba(99,102,241,0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+.swap-meal-info { display: flex; flex-direction: column; gap: .15rem; }
+.swap-btn { padding: .4rem .8rem; font-size: .8rem; flex-shrink: 0; }
+
+/* ── Seasonal Modal ───────────────────────────────────── */
+.seasonal-modal { max-width: 400px; }
+.seasonal-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.seasonal-chip {
+  padding: .45rem .9rem;
+  background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(6,182,212,0.12));
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 999px;
+  font-size: .88rem;
+  font-weight: 700;
+  color: #065F46;
+}
+
 /* ── Pro Badge & Upgrade Button ──────────────────────── */
 .pro-badge {
   display: inline-flex;

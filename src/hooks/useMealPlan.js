@@ -103,6 +103,7 @@ export function useMealPlan() {
     jumpToWeek,
     saveStartDate,
     swapMeal,
+    swaps,
     isPro,
   }
 }

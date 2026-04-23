@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Header from './components/Header'
 import FilterBar from './components/FilterBar'
 import WeekNav from './components/WeekNav'
@@ -6,7 +6,9 @@ import DayCard from './components/DayCard'
 import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
 import UpgradeModal from './components/UpgradeModal'
+import AuthModal from './components/AuthModal'
 import { useMealPlan } from './hooks/useMealPlan'
+import { useAuth } from './hooks/useAuth'
 import './styles.css'
 
 function buildWeekPrintHTML(weekDays, weekNum) {
@@ -35,27 +37,47 @@ function buildWeekPrintHTML(weekDays, weekNum) {
 }
 
 export default function App() {
+  const { user, loading: authLoading, signup, login, logout, updateUser, isLoggedIn } = useAuth()
+
   const {
     startDate, currentWeek, totalWeeks, weekDays,
     weekStartDate, weekEndDate, activeFilter, setActiveFilter,
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
+    swapMeal, swaps,
     isPro,
   } = useMealPlan()
 
   const [showSettings, setShowSettings] = useState(false)
   const [showUpgrade, setShowUpgrade] = useState(false)
+  const [showAuth, setShowAuth] = useState(false)
+
+  // Sync server user data into local state on login
+  useEffect(() => {
+    if (!user) return
+    if (user.start_date) saveStartDate(user.start_date)
+  }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Push local changes to server when logged in
+  const handleSaveStartDate = useCallback((dateStr) => {
+    saveStartDate(dateStr)
+    if (isLoggedIn) updateUser({ start_date: dateStr })
+  }, [saveStartDate, isLoggedIn, updateUser])
 
   const handlePrintWeek = useCallback(() => {
-    if (!isPro) {
-      setShowUpgrade(true)
-      return
-    }
+    if (!isPro) { setShowUpgrade(true); return }
     const win = window.open('', '_blank')
     win.document.write(buildWeekPrintHTML(weekDays, currentWeek + 1))
     win.document.close()
     win.print()
   }, [weekDays, currentWeek, isPro])
+
+  const handleAuth = useCallback(async (mode, email, password) => {
+    const u = mode === 'signup' ? await signup(email, password) : await login(email, password)
+    setShowAuth(false)
+    // Sync local swaps up to server after login
+    if (u && Object.keys(swaps).length > 0) updateUser({ swaps })
+  }, [signup, login, swaps, updateUser])
 
   return (
     <div id="app">
@@ -64,6 +86,9 @@ export default function App() {
         onOpenSettings={() => setShowSettings(true)}
         isPro={isPro}
         onUpgrade={() => setShowUpgrade(true)}
+        user={user}
+        onLogin={() => setShowAuth(true)}
+        onLogout={logout}
       />
 
       <FilterBar active={activeFilter} onChange={setActiveFilter} />
@@ -109,12 +134,13 @@ export default function App() {
       {showSettings && (
         <SettingsModal
           startDate={startDate}
-          onSave={saveStartDate}
+          onSave={handleSaveStartDate}
           onClose={() => setShowSettings(false)}
         />
       )}
 
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
+      {showAuth && <AuthModal onAuth={handleAuth} onClose={() => setShowAuth(false)} />}
 
       <div id="toast" role="status" aria-live="polite" />
     </div>

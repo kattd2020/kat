@@ -553,6 +553,31 @@ body::after {
 
 /* ── Settings Modal ───────────────────────────────────── */
 .settings-modal { max-width: 420px; }
+.settings-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+.settings-account-heading {
+  font-size: .92rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: .25rem;
+}
+.settings-account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .85rem 1rem;
+  background: rgba(99,102,241,0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+}
+.settings-account-info { display: flex; align-items: center; gap: .75rem; }
+.settings-account-label { font-size: .72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+.settings-account-email { font-size: .9rem; font-weight: 700; color: var(--text); word-break: break-all; }
+.settings-signout-btn { padding: .4rem .85rem; font-size: .82rem; flex-shrink: 0; }
 .setting-group { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.5rem; }
 .setting-group label { font-weight: 700; font-size: .92rem; }
 .setting-group input[type="date"] {

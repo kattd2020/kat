@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Header from './components/Header'
 import FilterBar from './components/FilterBar'
 import WeekNav from './components/WeekNav'
@@ -12,6 +12,7 @@ import GroceryListModal from './components/GroceryListModal'
 import EventMenusModal from './components/EventMenusModal'
 import DessertsModal from './components/DessertsModal'
 import { useMealPlan } from './hooks/useMealPlan'
+import { useAuth } from './hooks/useAuth'
 import './styles.css'
 
 function buildWeekPrintHTML(weekDays, weekNum) {
@@ -40,6 +41,8 @@ function buildWeekPrintHTML(weekDays, weekNum) {
 }
 
 export default function App() {
+  const { user, signup, login, logout } = useAuth()
+
   const {
     startDate, currentWeek, totalWeeks, weekDays,
     weekStartDate, weekEndDate, activeFilter, setActiveFilter,
@@ -51,6 +54,11 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
   const [showUpgrade, setShowUpgrade] = useState(false)
   const [activeBanner, setActiveBanner] = useState(null)
+
+  // Sync server start_date down on login
+  useEffect(() => {
+    if (user?.start_date) saveStartDate(user.start_date)
+  }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePrintWeek = useCallback(() => {
     if (!isPro) {
@@ -119,6 +127,10 @@ export default function App() {
           startDate={startDate}
           onSave={saveStartDate}
           onClose={() => setShowSettings(false)}
+          user={user}
+          onLogin={login}
+          onSignup={signup}
+          onLogout={logout}
         />
       )}
 

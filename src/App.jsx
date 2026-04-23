@@ -1,10 +1,15 @@
 import { useState, useCallback } from 'react'
 import Header from './components/Header'
+import BannerGrid from './components/BannerGrid'
 import FilterBar from './components/FilterBar'
 import WeekNav from './components/WeekNav'
 import DayCard from './components/DayCard'
 import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
+import CostCalculatorModal from './components/CostCalculatorModal'
+import GroceryListModal from './components/GroceryListModal'
+import EventMenusModal from './components/EventMenusModal'
+import DessertsModal from './components/DessertsModal'
 import { useMealPlan } from './hooks/useMealPlan'
 import './styles.css'
 
@@ -39,9 +44,14 @@ export default function App() {
     weekStartDate, weekEndDate, activeFilter, setActiveFilter,
     selectedDay, setSelectedDay,
     goToPrevWeek, goToNextWeek, goToToday, jumpToWeek, saveStartDate,
+    swapMeal,
   } = useMealPlan()
 
-  const [showSettings, setShowSettings] = useState(false)
+  const [showSettings,  setShowSettings]  = useState(false)
+  const [showCost,      setShowCost]      = useState(false)
+  const [showGrocery,   setShowGrocery]   = useState(false)
+  const [showEvents,    setShowEvents]    = useState(false)
+  const [showDesserts,  setShowDesserts]  = useState(false)
 
   const handlePrintWeek = useCallback(() => {
     const win = window.open('', '_blank')
@@ -50,9 +60,18 @@ export default function App() {
     win.print()
   }, [weekDays, currentWeek])
 
+  const handleBanner = useCallback((key) => {
+    if (key === 'cost')     setShowCost(true)
+    if (key === 'grocery')  setShowGrocery(true)
+    if (key === 'events')   setShowEvents(true)
+    if (key === 'desserts') setShowDesserts(true)
+  }, [])
+
   return (
     <div id="app">
       <Header onPrintWeek={handlePrintWeek} onOpenSettings={() => setShowSettings(true)} />
+
+      <BannerGrid onSelect={handleBanner} />
 
       <FilterBar active={activeFilter} onChange={setActiveFilter} />
 
@@ -89,6 +108,11 @@ export default function App() {
           onClose={() => setShowSettings(false)}
         />
       )}
+
+      {showCost     && <CostCalculatorModal onClose={() => setShowCost(false)} />}
+      {showGrocery  && <GroceryListModal weekDays={weekDays} weekNum={currentWeek + 1} onClose={() => setShowGrocery(false)} />}
+      {showEvents   && <EventMenusModal onClose={() => setShowEvents(false)} />}
+      {showDesserts && <DessertsModal onClose={() => setShowDesserts(false)} />}
 
       <div id="toast" role="status" aria-live="polite" />
     </div>

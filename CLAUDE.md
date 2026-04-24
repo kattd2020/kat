@@ -95,6 +95,29 @@ Automatic price estimates per ingredient were shipped once and then removed. Don
 - `wrangler.jsonc` has `run_worker_first: true` — this is required. Without it Workers Static Assets bypasses the fetch handler for asset matches and the Cache-Control overrides never run, causing stale HTML at the edge after every deploy.
 - No `public/_redirects` — Workers Static Assets uses `not_found_handling: "single-page-application"` for SPA fallback. The Pages-style `_redirects` file triggered Cloudflare validation error 10021 ("infinite loop") when it existed.
 
+## Workflow — plan before build
+
+**Before writing or editing any code**, post a short numbered plan in the assistant message with:
+
+1. What's changing (files to touch; new files to create).
+2. Why (the user's intent in one line).
+3. The expected end-state (what the user will see on plateful365.com).
+4. Verification step (spot-check curl or grep that confirms it shipped).
+
+Then write the plan into `TodoWrite` with one todo per concrete step. Mark each item `in_progress` before starting it, `completed` the moment it's done — never batch. For any multi-step task (≥3 steps or ≥2 files), `TodoWrite` is mandatory, not optional.
+
+**If something goes wrong mid-task**, the todo list is the diagnostic — the last `in_progress` item is the exact step that failed. Leave it `in_progress` until you've actually resolved it, and add follow-up todos for whatever blocked you. Never silently mark something `completed` when it isn't.
+
+**Deploy is a separate explicit step.** Never bundle "push code" and "deploy to Cloudflare" into the same todo — they can fail for different reasons and need to be diagnosed separately. Typical end-of-task todo sequence:
+
+- Build (`npm run build`) passes
+- Commit with a descriptive message
+- Push to `claude/plateful365-continue-R4mLu`
+- Deploy (`npm run deploy`) — requires `CLOUDFLARE_API_TOKEN`
+- Verify live (curl + grep for the new string)
+
+**Coordination with other Claude sessions.** Only one session should deploy at a time — whoever runs `wrangler deploy` last wins, and an older branch can trample a newer one on the same `plateful` Worker. If a deploy from this session mysteriously reverts the live site, another session likely pushed over it; just redeploy from this branch to recover.
+
 ## House rules (stable across sessions)
 
 - React 19 + Vite only. No Next.js, no vanilla rewrites.

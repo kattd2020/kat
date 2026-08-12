@@ -244,9 +244,75 @@ export const MEALS = {
       'Bouillabaisse',
     ],
   },
+
+  highProtein: {
+    breakfast: [
+      'Greek Yogurt Parfait with Granola & Berries',
+      'Cottage Cheese & Pineapple Bowl',
+      'Protein Smoothie Bowl with Banana & Peanut Butter',
+      'Greek Yogurt with Honey & Walnuts',
+      'High Protein Overnight Oats with Protein Powder',
+      'Cottage Cheese Scrambled Eggs',
+      'Greek Yogurt Bark with Mixed Berries',
+      'Peanut Butter Banana Protein Smoothie',
+      'Cottage Cheese & Berry Parfait',
+      'Strawberry Cheesecake Protein Smoothie',
+    ],
+    lunch: [
+      'High Protein Chicken & Quinoa Bowl',
+      'Cottage Cheese Tuna Salad Wrap',
+      'Greek Yogurt Chicken Salad Sandwich',
+      'High Protein Burrito Bowl with Extra Beans',
+      'Edamame & Chicken Power Bowl',
+      'High Protein Cobb Salad',
+      'Lentil & Chicken Soup',
+      'Cottage Cheese & Veggie Stuffed Peppers',
+      'High Protein Egg Salad Wrap',
+      'Greek Yogurt Chicken Gyro Bowl',
+      'Protein-Packed Black Bean Bowl',
+      'High Protein Pasta with Cottage Cheese Sauce',
+      'Tempeh & Veggie Stir-Fry Bowl',
+      'High Protein Salmon Quinoa Bowl',
+      'Cottage Cheese & Avocado Toast with Everything Bagel Seasoning',
+    ],
+    dinner: [
+      'High Protein Chicken & Lentil Stew',
+      'Cottage Cheese Lasagna',
+      'Greek Yogurt Marinated Grilled Chicken',
+      'High Protein Turkey & Bean Chili',
+      'Protein-Packed Stuffed Sweet Potatoes',
+      'High Protein Shrimp & Quinoa Bowl',
+      'Cottage Cheese Chicken Enchiladas',
+      'Edamame & Tofu Stir-Fry with Brown Rice',
+      'High Protein Egg & Veggie Frittata',
+      'Greek Yogurt Chicken Shawarma Bowl',
+      'Lentil & Ground Turkey Bolognese',
+      'High Protein Tuna Casserole',
+      'Cottage Cheese Stuffed Chicken Breast',
+      'Black Bean & Chicken Power Bowl',
+      'High Protein Salmon & Broccoli Sheet Pan',
+    ],
+    snacks: [
+      'Greek Yogurt with Almond Butter & Honey',
+      'Cottage Cheese with Sliced Peaches',
+      'Peanut Butter Banana Protein Smoothie',
+      'Hard Boiled Eggs & String Cheese',
+      'Greek Yogurt Dip with Veggies',
+      'Cottage Cheese & Cucumber Bites',
+      'Chocolate Peanut Butter Protein Shake',
+      'Edamame with Sea Salt',
+      'High Protein Trail Mix with Nuts & Seeds',
+      'Strawberry Vanilla Protein Smoothie',
+      'Cottage Cheese Deviled Eggs',
+      'Greek Yogurt Frozen Bark Bites',
+      'Peanut Butter Protein Energy Balls',
+      'Vanilla Almond Protein Shake',
+      'Cottage Cheese & Salsa Dip with Tortilla Chips',
+    ],
+  },
 }
 
-const PROTEINS = ['beef', 'pork', 'chicken', 'groundTurkey', 'seafood']
+const PROTEINS = ['beef', 'pork', 'chicken', 'groundTurkey', 'seafood', 'highProtein']
 
 function pick(arr, index) {
   return arr[index % arr.length]
@@ -257,13 +323,17 @@ export function generateMealPlan() {
   for (let i = 0; i < 365; i++) {
     const protein = PROTEINS[i % PROTEINS.length]
     const pool = MEALS[protein]
-    // Stagger index per meal to avoid repetition
+    // For highProtein days use snacks instead of a second lunch option
+    const lunchPool = protein === 'highProtein' ? pool.lunch : pool.lunch
     days.push({
       dayNumber: i + 1,
       protein,
       breakfast: pick(pool.breakfast, Math.floor(i / 4)),
-      lunch:     pick(pool.lunch,     Math.floor(i / 4) + 3),
+      lunch:     pick(lunchPool,      Math.floor(i / 4) + 3),
       dinner:    pick(pool.dinner,    Math.floor(i / 4) + 7),
+      ...(protein === 'highProtein' && {
+        snack: pick(pool.snacks, Math.floor(i / 4) + 5),
+      }),
     })
   }
   return days
@@ -275,6 +345,7 @@ export const PROTEIN_LABELS = {
   chicken:      { label: 'Chicken',       emoji: '🍗' },
   groundTurkey: { label: 'Ground Turkey', emoji: '🦃' },
   seafood:      { label: 'Seafood',       emoji: '🐟' },
+  highProtein:  { label: 'High Protein',  emoji: '💪' },
 }
 
 export const MEAL_PLAN = generateMealPlan()

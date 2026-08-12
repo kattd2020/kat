@@ -617,3 +617,79 @@ body::after {
   .day-card { page-break-inside: avoid; margin-bottom: 1rem; box-shadow: none; border: 1px solid #ccc; }
   .day-card::after, .day-card::before { display: none; }
 }
+/* ── Recipe Browser ───────────────────────────────────── */
+.recipe-browser { max-width: 560px; }
+
+.browser-tabs {
+  display: flex;
+  gap: .5rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.browser-tab {
+  padding: .5rem 1rem;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.7);
+  cursor: pointer;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: all .2s ease;
+}
+.browser-tab:hover {
+  background: #fff;
+  color: var(--text);
+  transform: translateY(-1px);
+}
+.browser-tab.active {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(99,102,241,0.35);
+}
+
+.browser-body {
+  padding: 1.25rem 1.5rem;
+}
+
+.recipe-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.recipe-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(236,72,153,0.05));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  font-size: .9rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: transform .2s, background .2s;
+}
+.recipe-item:hover {
+  transform: translateX(4px);
+  background: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(236,72,153,0.10));
+}
+
+.recipe-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.filter-btn.highProtein.active {
+  background: linear-gradient(135deg, #10B981, #059669);
+  box-shadow: 0 10px 22px rgba(16,185,129,0.40);
+}
+
+.day-card.highProtein::after { background: linear-gradient(135deg, #34D399, #059669); }
+.day-card.highProtein { box-shadow: 0 10px 30px rgba(16,185,129,0.12), var(--shadow); }
+.day-card.highProtein .protein-tag { background: linear-gradient(135deg, #34D399, #059669); }

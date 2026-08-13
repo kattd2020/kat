@@ -7,6 +7,8 @@ import DayModal from './components/DayModal'
 import SettingsModal from './components/SettingsModal'
 import RecipeBrowser from './components/RecipeBrowser'
 import { useMealPlan } from './hooks/useMealPlan'
+import HomePage from './components/HomePage'
+import './redesign.css'
 import './styles.css'
 
 function buildWeekPrintHTML(weekDays, weekNum) {
@@ -26,7 +28,7 @@ export default function App() {
 
   const [showSettings, setShowSettings] = useState(false)
   const [browseProtein, setBrowseProtein] = useState(null)
-
+const [showPlanner, setShowPlanner] = useState(false)
   const handleFilterChange = useCallback((key) => {
     if (key === 'all') {
       setActiveFilter('all')
@@ -45,7 +47,9 @@ export default function App() {
     win.document.close()
     win.print()
   }, [weekDays, currentWeek])
-
+if (!showPlanner) {
+  return <HomePage onStartPlanning={() => setShowPlanner(true)} />
+}
   return (
     <div id="app">
       <Header onPrintWeek={handlePrintWeek} onOpenSettings={() => setShowSettings(true)} />

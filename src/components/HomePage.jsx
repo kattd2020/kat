@@ -37,6 +37,24 @@ const steps = [
 export default function HomePage({ onStartPlanning }) {
   return (
     <main className="p365-home">
+      <header className="p365-site-header">
+  <a className="p365-brand" href="#">
+    <span className="p365-brand-mark">P365</span>
+    <span>Plateful365</span>
+  </a>
+
+  <nav className="p365-site-nav" aria-label="Main navigation">
+    <a href="#features">Why Plateful365</a>
+    <a href="#how-it-works">How it works</a>
+
+    <button
+      className="p365-nav-button"
+      onClick={onStartPlanning}
+    >
+      Plan my meals
+    </button>
+  </nav>
+</header>
       <section className="p365-hero">
         <div className="p365-hero-copy">
           <p className="p365-eyebrow">MEAL PLANNING FOR REAL LIFE</p>

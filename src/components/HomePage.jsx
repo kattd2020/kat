@@ -93,8 +93,12 @@ export default function HomePage({ onStartPlanning }) {
 
         <div className="p365-hero-visual">
           <div className="p365-food-placeholder">
-            <span>Fresh food photo coming soon</span>
-          </div>
+  <img
+    src="/plateful365-hero.png"
+    alt="Fresh chicken, avocado, tomato and greens meal bowl"
+    className="p365-hero-image"
+  />
+</div>
 
           <div className="p365-floating-card p365-week-card">
             <small>This week</small>

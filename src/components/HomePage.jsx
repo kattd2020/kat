@@ -98,6 +98,13 @@ export default function HomePage({ onStartPlanning }) {
               alt="Fresh chicken, avocado, tomato and greens meal bowl"
               className="p365-hero-image"
             />
+            <span className="p365-week-card-patch" aria-hidden="true">
+              <img
+                src="/plateful365-hero.png"
+                alt=""
+                className="p365-week-card-image"
+              />
+            </span>
           </div>
         </div>
       </section>
@@ -187,4 +194,3 @@ export default function HomePage({ onStartPlanning }) {
     </main>
   );
 }
-

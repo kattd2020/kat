@@ -456,8 +456,41 @@
 
 .p365-hero-image {
   position: absolute;
+  z-index: 0;
   top: -13.333%;
   right: 0;
+  width: auto;
+  max-width: none;
+  height: 120%;
+  min-height: 0;
+  display: block;
+}
+
+.p365-food-placeholder > .p365-week-card-patch {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border-radius: 0;
+  background: var(--p365-cream);
+  overflow: hidden;
+  -webkit-mask-image: radial-gradient(
+    ellipse 28% 15% at 20% 16%,
+    #000 72%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 28% 15% at 20% 16%,
+    #000 72%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.p365-week-card-image {
+  position: absolute;
+  top: -13.333%;
+  right: -8%;
   width: auto;
   max-width: none;
   height: 120%;
@@ -475,4 +508,3 @@
     min-height: 0;
   }
 }
-

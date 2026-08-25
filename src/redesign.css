@@ -119,12 +119,17 @@
 
 .p365-hero-visual {
   position: relative;
-  min-height: 520px;
+  width: min(100%, 520px);
+  aspect-ratio: 4 / 5;
+  min-height: 0;
+  justify-self: end;
 }
 
 .p365-food-placeholder {
+  position: relative;
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
   min-height: 480px;
   border: 10px solid rgba(255, 253, 248, 0.8);
   border-radius: 190px 190px 28px 28px;
@@ -147,49 +152,6 @@
   color: var(--p365-sage-dark);
   font-size: 12px;
   font-weight: 800;
-}
-
-.p365-floating-card {
-  position: absolute;
-  padding: 16px;
-  border-radius: 18px;
-  background: rgba(255, 253, 248, 0.95);
-  box-shadow: 0 16px 40px rgba(57, 74, 62, 0.16);
-}
-
-.p365-floating-card small,
-.p365-floating-card strong {
-  display: block;
-}
-
-.p365-floating-card small {
-  margin-bottom: 4px;
-  color: var(--p365-muted);
-}
-
-.p365-week-card {
-  top: 55px;
-  left: -25px;
-  width: 185px;
-}
-
-.p365-list-card {
-  right: -20px;
-  bottom: 55px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.p365-list-card > span {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--p365-sage-light);
-  color: var(--p365-sage-dark);
-  font-weight: 900;
 }
 
 .p365-message {
@@ -370,20 +332,13 @@
   }
 
   .p365-hero-visual {
-    min-height: 410px;
+    width: min(100%, 520px);
+    min-height: 0;
+    justify-self: center;
   }
 
   .p365-food-placeholder {
     min-height: 390px;
-  }
-
-  .p365-week-card {
-    left: 0;
-  }
-
-  .p365-list-card {
-    right: 0;
-    bottom: 25px;
   }
 
   .p365-section {
@@ -493,8 +448,6 @@
   }
 }
 
-  
-}
 /* ===== Plateful365 Hero Food Image ===== */
 
 .p365-food-placeholder {
@@ -502,17 +455,24 @@
 }
 
 .p365-hero-image {
-  width: 100%;
-  height: 100%;
-  min-height: 460px;
+  position: absolute;
+  top: -13.333%;
+  right: 0;
+  width: auto;
+  max-width: none;
+  height: 120%;
+  min-height: 0;
   display: block;
-  object-fit: cover;
-  object-position: center;
-  border-radius: inherit;
 }
 
 @media (max-width: 760px) {
+  .p365-hero-visual,
+  .p365-food-placeholder {
+    aspect-ratio: 4 / 5;
+  }
+
   .p365-hero-image {
-    min-height: 400px;
+    min-height: 0;
   }
 }
+
